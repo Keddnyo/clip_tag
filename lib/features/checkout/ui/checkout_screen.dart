@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../shared/constants.dart';
 import '../../../utils/copy_to_clipboard.dart';
 import '../../../utils/open_url.dart';
+import '../../../utils/show_snackbar.dart';
 import '../model/forum_tags.dart';
 import 'widgets/forum_tag.dart';
 
@@ -65,10 +66,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Checkout'),
+        title: const Text('Предосмотр'),
         actions: [
           IconButton(
-            onPressed: () => copyToClipboard(widget.choosenRules),
+            onPressed: () {
+              copyToClipboard(widget.choosenRules);
+              showSnackbar(context: context, message: 'Текст скопирован');
+            },
             icon: const Icon(Icons.copy),
           ),
           IconButton(

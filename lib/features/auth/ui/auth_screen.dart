@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
+import '../../../shared/firebase/firebase_auth_decode_error_code.dart';
+import '../../../shared/firebase/firebase_auth_error_codes.dart';
 import '../../../utils/show_snackbar.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -36,16 +38,13 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() => _isResetPassword = !_isResetPassword);
   }
 
-  void _signIn() =>
-      auth.signInWithEmailAndPassword(email: email, password: password).then(
-        (_) {
-          showSnackbar(
-              context: context,
-              message: 'Welcome back, ${auth.currentUser!.displayName}');
-        },
-      ).catchError((error) {
-        showSnackbar(context: context, message: error.code);
-      });
+  void _signIn() => auth
+      .signInWithEmailAndPassword(email: email, password: password)
+      .then((_) => showSnackbar(
+          context: context,
+          message: 'Рады приветствовать, ${auth.currentUser!.displayName}!'))
+      .catchError((error) => showSnackbar(
+          context: context, message: decodeFirebaseAuthErrorCode(error.code)));
 
   void _signUp() => auth
           .createUserWithEmailAndPassword(email: email, password: password)
@@ -54,20 +53,24 @@ class _AuthScreenState extends State<AuthScreen> {
           auth.currentUser?.updateDisplayName(username);
           showSnackbar(
             context: context,
-            message: 'Please confirm your email address...',
+            message: 'Пожалуйста подтвердите свою почту',
           );
         },
       ).catchError((error) {
-        showSnackbar(context: context, message: error.code);
+        if (error.code == FirebaseAuthErrorCodes.emailAlreadyInUse) {
+          _switchSignUp();
+        }
+        showSnackbar(
+          context: context,
+          message: decodeFirebaseAuthErrorCode(error.code),
+        );
       });
 
-  void _resetPassword() => auth.sendPasswordResetEmail(email: email).then(
-        (_) {
-          _switchResetPassword();
-        },
-      ).catchError((error) {
-        showSnackbar(context: context, message: error.code);
-      });
+  void _resetPassword() => auth
+      .sendPasswordResetEmail(email: email)
+      .then((_) => _switchResetPassword())
+      .catchError((error) => showSnackbar(
+          context: context, message: decodeFirebaseAuthErrorCode(error.code)));
 
   void _submit() {
     if (formKey.currentState?.validate() == false) return;
@@ -95,19 +98,18 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     const margin = 12.0;
-    const contentPadding =
-        EdgeInsets.only(left: margin, right: margin, bottom: margin);
+    const contentPadding = EdgeInsets.all(margin);
 
     final submitButtonTitle = _isResetPassword
-        ? 'Reset password'
+        ? 'Сбросить пароль'
         : _isSignUp
-            ? 'Sign Up'
-            : 'Sign In';
+            ? 'Создать аккаунт'
+            : 'Войти';
 
     final resetPasswordButtonTitle =
-        _isResetPassword ? 'Sign In' : 'Reset password';
+        _isResetPassword ? 'Вход' : 'Забыли пароль?';
 
-    final signUpButtonTitle = _isSignUp ? 'Sign In' : 'Sign Up';
+    final signUpButtonTitle = _isSignUp ? 'Вход' : 'Регистрация';
 
     return Scaffold(
       appBar: AppBar(
@@ -125,12 +127,13 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: TextFormField(
                     controller: usernameController,
                     decoration: const InputDecoration(
-                      label: Text('Username'),
+                      label: Text('Имя пользователя'),
+                      border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.name,
                     validator: (username) {
                       if (username?.isEmpty == true) {
-                        return 'You need a username';
+                        return 'Введите имя пользователя';
                       }
                       return null;
                     },
@@ -141,12 +144,13 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(
-                    label: Text('Email'),
+                    label: Text('Почта'),
+                    border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (email) {
                     if (email?.isEmpty == true) {
-                      return 'You need a email address';
+                      return 'Введите актуальную почту';
                     }
                     return null;
                   },
@@ -158,13 +162,14 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: TextFormField(
                     controller: passwordController,
                     decoration: const InputDecoration(
-                      label: Text('Password'),
+                      label: Text('Пароль'),
+                      border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     validator: (password) {
                       if (password?.isEmpty == true) {
-                        return 'You need a password';
+                        return 'Нужен надёжный пароль';
                       }
                       return null;
                     },
@@ -175,16 +180,17 @@ class _AuthScreenState extends State<AuthScreen> {
                   padding: contentPadding,
                   child: TextFormField(
                     decoration: const InputDecoration(
-                      label: Text('Confirm password'),
+                      label: Text('Подтвердите пароль'),
+                      border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     validator: (confirmPassword) {
                       if (confirmPassword?.isEmpty == true) {
-                        return 'You need to confirm your password';
+                        return 'Вы должны подтвердить пароль';
                       }
                       if (confirmPassword != password) {
-                        return 'Password mismatch';
+                        return 'Пароли не совпали';
                       }
                       return null;
                     },

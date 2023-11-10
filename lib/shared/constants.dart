@@ -1,6 +1,8 @@
 import 'package:url_launcher/url_launcher.dart';
 
 class Constants {
+  static const String appLanguageCode = 'ru';
+
   static const String appName = 'ClipTag';
   static const bool useMaterial3 = true;
 

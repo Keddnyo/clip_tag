@@ -16,18 +16,19 @@ class ForumSectionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => showAboutDialog(context),
+          icon: const Icon(Icons.info_outlined),
+        ),
         title: const Text(Constants.appName),
         actions: [
           IconButton(
             onPressed: () => showAccountDialog(context),
             icon: const Icon(Icons.account_circle_outlined),
           ),
-          IconButton(
-            onPressed: () => showAboutDialog(context),
-            icon: const Icon(Icons.info_outlined),
-          ),
         ],
         shadowColor: Colors.black,
+        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('rules').snapshots(),
@@ -55,13 +56,12 @@ class ForumSectionsScreen extends StatelessWidget {
               final section = forumSectionList.elementAt(index);
 
               return ListTile(
-                leading: const Icon(Icons.arrow_forward),
                 title: Text(
                   section.title,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: section.edition != null
-                    ? Text('Edition of ${section.editionDateAsString!}')
+                    ? Text('Редакция от ${section.editionDateAsString!}')
                     : null,
                 onTap: () => Navigator.pushNamed(
                   context,

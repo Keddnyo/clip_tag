@@ -5,6 +5,6 @@ import '../shared/constants.dart';
 void showAboutDialog(context) => material.showAboutDialog(
       context: context,
       applicationName: Constants.appName,
-      applicationVersion: '4PDA forum rules tag builder utility',
+      applicationVersion: 'Формирование тегов с правилами для 4PDA',
       applicationLegalese: Constants.applicationLegalese,
     );

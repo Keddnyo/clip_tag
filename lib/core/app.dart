@@ -17,6 +17,11 @@ class MainApp extends StatelessWidget {
       darkTheme: ThemeData(
         useMaterial3: Constants.useMaterial3,
         brightness: Brightness.dark,
+        dialogBackgroundColor: Colors.black,
+        scaffoldBackgroundColor: Colors.black,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+        ),
       ),
     );
   }

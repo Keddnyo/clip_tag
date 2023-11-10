@@ -45,7 +45,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Email Verification'),
+        title: const Text('Создание аккаунта'),
       ),
       body: Stack(
         children: [
@@ -54,7 +54,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'The confirmation link sent to "${_firebaseUser!.email}"',
+                'Ссылка отправлена по адресу: "${_firebaseUser!.email}"',
                 style: const TextStyle(fontSize: 18.0),
                 textAlign: TextAlign.center,
               ),
@@ -62,6 +62,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: FirebaseAuth.instance.currentUser?.delete,
+        icon: const Icon(Icons.cancel_outlined),
+        label: const Text('Отмена'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

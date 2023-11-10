@@ -1,34 +1,32 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../../shared/constants.dart';
 import '../../../utils/show_snackbar.dart';
 
 void showAccountDialog(BuildContext context) {
   final auth = FirebaseAuth.instance;
   final firebaseUser = auth.currentUser!;
 
-  void deleteAccount() => auth.currentUser
-      ?.delete()
-      .whenComplete(() {
-        Navigator.of(context).pop();
-      })
-      .catchError(
-        (error) => showSnackbar(
-          context: context,
-          message: 'Please sign in again and retry',
-        ),
-      )
-      .then(
-        (value) => showSnackbar(
-          context: context,
-          message: 'Your account has been deleted successfully',
-        ),
+  void deleteAccount() {
+    auth.currentUser?.delete().then((_) {
+      showSnackbar(
+        context: context,
+        message: 'Аккаунт удалён.',
       );
+    }).catchError((error) {
+      showSnackbar(
+        context: context,
+        message: 'Авторизуйтесь заново и повторите попытку.',
+      );
+    });
+    Navigator.of(context).pop();
+  }
 
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('ClipTag ID'),
+      title: const Text('${Constants.appName} ID'),
       content: ListTile(
         leading: const Icon(Icons.account_circle_outlined),
         title: Text(firebaseUser.displayName!),
@@ -37,15 +35,14 @@ void showAccountDialog(BuildContext context) {
       actions: [
         OutlinedButton(
           onPressed: deleteAccount,
-          child: const Text('Delete account'),
+          child: const Text('Удалить аккаунт'),
         ),
-        FilledButton.icon(
+        FilledButton(
           onPressed: () {
             Navigator.pop(context);
             auth.signOut();
           },
-          icon: const Icon(Icons.logout),
-          label: const Text('Sign Out'),
+          child: const Text('Выход'),
         ),
       ],
     ),

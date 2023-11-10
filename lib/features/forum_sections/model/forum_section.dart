@@ -16,7 +16,7 @@ class ForumSection {
   });
 
   String? get editionDateAsString => edition != null
-      ? '${edition!.day.toString().padLeft(2, '0')}.${edition!.month.toString().padLeft(2, '0')}.${edition!.year}' // TODO: Maybe replace with DateFormat
+      ? '${edition!.day.toString().padLeft(2, '0')}.${edition!.month.toString().padLeft(2, '0')}.${edition!.year}'
       : null;
 
   String combineChoosenRulesToString(List choosenRules) {

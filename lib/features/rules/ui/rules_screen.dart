@@ -51,11 +51,7 @@ class _RulesScreenState extends State<RulesScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            _choosenRules.isNotEmpty
-                ? 'Выбрано ${_choosenRules.length} элементов'
-                : widget.forumSection.title,
-          ),
+          title: Text(widget.forumSection.title),
           shadowColor: Colors.black,
         ),
         body: ListView.builder(
@@ -114,12 +110,12 @@ class _RulesScreenState extends State<RulesScreen> {
                           onPressed: clearChoosenRules,
                           icon: const Icon(
                               Icons.indeterminate_check_box_outlined),
-                          label: const Text('Clear all'),
+                          label: const Text('Снять всё'),
                         ),
                         FilledButton.icon(
                           onPressed: () => navigateToCheckout(),
                           icon: const Icon(Icons.visibility),
-                          label: const Text('Preview'),
+                          label: Text('Предосмотр (${_choosenRules.length})'),
                         ),
                       ],
                     ),
