@@ -147,7 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(
-                    labelText: 'Логин',
+                    labelText: 'Почта',
                     hintText: 'example@domain.com',
                     border: OutlineInputBorder(),
                   ),
