@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
       .signInWithEmailAndPassword(email: email, password: password)
       .then((_) => showSnackbar(
           context: context,
-          message: 'Добро пожаловать, ${auth.currentUser!.displayName}!'))
+          message: 'Добро пожаловать, ${auth.currentUser!.displayName}'))
       .catchError((error) => showSnackbar(
           context: context, message: decodeFirebaseAuthErrorCode(error.code)));
 
@@ -57,9 +57,12 @@ class _AuthScreenState extends State<AuthScreen> {
           );
         },
       ).catchError((error) {
+        if (FirebaseAuth.instance.currentUser != null) return;
+
         if (error.code == FirebaseAuthErrorCodes.emailAlreadyInUse) {
           _switchSignUp();
         }
+
         showSnackbar(
           context: context,
           message: decodeFirebaseAuthErrorCode(error.code),
@@ -127,7 +130,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: TextFormField(
                     controller: usernameController,
                     decoration: const InputDecoration(
-                      label: Text('Имя пользователя'),
+                      labelText: 'Имя пользователя',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.name,
@@ -144,7 +147,8 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(
-                    label: Text('Почта'),
+                    labelText: 'Логин',
+                    hintText: 'example@domain.com',
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -161,9 +165,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   padding: contentPadding,
                   child: TextFormField(
                     controller: passwordController,
-                    decoration: const InputDecoration(
-                      label: Text('Пароль'),
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: 'Пароль',
+                      hintText: _isSignUp ? 'Минимум 6 символов' : null,
+                      border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
@@ -180,7 +185,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   padding: contentPadding,
                   child: TextFormField(
                     decoration: const InputDecoration(
-                      label: Text('Подтвердите пароль'),
+                      labelText: 'Подтвердите пароль',
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.visiblePassword,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -52,8 +53,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     super.initState();
     FirebaseFirestore.instance.collection('users').snapshots().listen(
       (usersQuery) {
-        var isModerator = usersQuery.docs.any(
-            (usersSnapshot) => usersSnapshot.data()['isModerator'] == true);
+        final isModerator = usersQuery.docs.any((usersSnapshot) {
+          final user = usersSnapshot.data();
+
+          final email = user['email'];
+          final isModerator = user['isModerator'];
+
+          return email.trim() ==
+                  FirebaseAuth.instance.currentUser?.email?.trim() &&
+              isModerator;
+        });
 
         if (_isModerator != isModerator) {
           _setModerator(isModerator);
