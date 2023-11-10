@@ -17,5 +17,5 @@ class Constants {
       'https://4pda.to/forum/index.php?act=idx';
 
   static const String applicationLegalese =
-      'Copyright (c) 2023 Zhdikhanov Timur';
+      'Copyright (c) 2023 Timur Zhdikhanov';
 }
