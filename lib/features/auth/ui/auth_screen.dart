@@ -26,8 +26,8 @@ class _AuthScreenState extends State<AuthScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  String get username => usernameController.text;
-  String get email => emailController.text;
+  String get username => usernameController.text.trim();
+  String get email => emailController.text.trim();
   String get password => passwordController.text;
 
   void _switchSignUp() {
