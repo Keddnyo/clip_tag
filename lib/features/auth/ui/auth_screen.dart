@@ -169,7 +169,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     obscureText: true,
                     validator: (password) {
                       if (password?.isEmpty == true) {
-                        return 'Нужен надёжный пароль';
+                        return 'Пароль не должен быть пустым';
                       }
                       return null;
                     },
