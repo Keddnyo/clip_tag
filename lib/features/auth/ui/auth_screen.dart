@@ -57,8 +57,6 @@ class _AuthScreenState extends State<AuthScreen> {
           );
         },
       ).catchError((error) {
-        if (FirebaseAuth.instance.currentUser != null) return;
-
         if (error.code == FirebaseAuthErrorCodes.emailAlreadyInUse) {
           _switchSignUp();
         }
