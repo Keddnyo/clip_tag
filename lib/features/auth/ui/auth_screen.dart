@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
       .signInWithEmailAndPassword(email: email, password: password)
       .then((_) => showSnackbar(
           context: context,
-          message: 'Рады приветствовать, ${auth.currentUser!.displayName}!'))
+          message: 'Добро пожаловать, ${auth.currentUser!.displayName}!'))
       .catchError((error) => showSnackbar(
           context: context, message: decodeFirebaseAuthErrorCode(error.code)));
 

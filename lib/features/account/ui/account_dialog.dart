@@ -12,12 +12,12 @@ void showAccountDialog(BuildContext context) {
     auth.currentUser?.delete().then((_) {
       showSnackbar(
         context: context,
-        message: 'Аккаунт удалён.',
+        message: 'Аккаунт удалён',
       );
     }).catchError((error) {
       showSnackbar(
         context: context,
-        message: 'Авторизуйтесь заново и повторите попытку.',
+        message: 'Авторизуйтесь заново и повторите попытку',
       );
     });
     Navigator.of(context).pop();
