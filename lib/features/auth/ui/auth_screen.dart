@@ -46,10 +46,7 @@ class _AuthScreenState extends State<AuthScreen> {
       .catchError((error) => showSnackbar(
           context: context, message: decodeFirebaseAuthErrorCode(error.code)));
 
-  void _signUp() {
-    // This check is needed to prevent multiple sign up requests for the same session at the same time
-    if (FirebaseAuth.instance.currentUser == null) {
-      auth
+  void _signUp() => auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then(
         (_) {
@@ -69,8 +66,6 @@ class _AuthScreenState extends State<AuthScreen> {
           message: decodeFirebaseAuthErrorCode(error.code),
         );
       });
-    }
-  }
 
   void _resetPassword() => auth
       .sendPasswordResetEmail(email: email)
