@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "181042257603",
+    "project_id": "clip-tag",
+    "storage_bucket": "clip-tag.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181042257603:android:8c5163436c3633aeb04c76",
+        "android_client_info": {
+          "package_name": "io.github.keddnyo.clip_tag"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpbgV_hxASCWkLgyFxNk9mAy3gAm192vk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

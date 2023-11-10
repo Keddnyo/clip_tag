@@ -27,24 +27,29 @@ class ForumTag extends StatelessWidget {
             constraints: const BoxConstraints(
               minHeight: Constants.tagLeadingSymbolContainerMinHeight,
             ),
-            margin: margin,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Text(
-                tag.leadingSymbol,
-                style: const TextStyle(color: Colors.white, fontSize: 26.0),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  tag.leadingSymbol,
+                  style: const TextStyle(color: Colors.white, fontSize: 26.0),
+                ),
               ),
             ),
           ),
-          Container(
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              border: Border.all(color: background),
+          Flexible(
+            fit: FlexFit.tight,
+            child: Container(
+              alignment: Alignment.centerLeft,
+              decoration: BoxDecoration(
+                border: Border.all(color: background),
+              ),
+              child: Padding(
+                padding: margin,
+                child: BBCodeRenderer(content: content),
+              ),
             ),
-            margin: margin,
-            constraints: const BoxConstraints
-                .tightFor(), // TODO: Maybe replace with Flexible FlexFit.tight
-            child: BBCodeRenderer(content: content),
           ),
         ],
       ),

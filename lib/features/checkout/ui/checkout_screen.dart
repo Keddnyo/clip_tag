@@ -76,8 +76,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             icon: const Icon(Icons.send),
           ),
         ],
+        shadowColor: Colors.black,
       ),
-      body: ForumTag(content: widget.choosenRules, tag: _currentTag),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ForumTag(content: widget.choosenRules, tag: _currentTag),
+        ),
+      ),
       bottomNavigationBar: _isModerator
           ? NavigationBar(
               selectedIndex: _currentTagIndex,

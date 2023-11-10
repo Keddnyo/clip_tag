@@ -24,9 +24,8 @@ class BBCodeRenderer extends StatelessWidget {
           ImgTag(),
         ],
         defaultText: TextStyle(
-          color: getColorScheme(context)
-              .onSurface, // TODO: Maybe replace to onBackground but not needed
-          fontSize: 15.0, // TODO: Maybe replace to default 14.0 or remove
+          color: getColorScheme(context).onSurface,
+          fontSize: 15.0,
         ),
       ),
     );

@@ -27,6 +27,7 @@ class ForumSectionsScreen extends StatelessWidget {
             icon: const Icon(Icons.info_outlined),
           ),
         ],
+        shadowColor: Colors.black,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('rules').snapshots(),
@@ -44,20 +45,23 @@ class ForumSectionsScreen extends StatelessWidget {
             );
           }
 
-          final forumSectionList = snapshot.data!.docs.map(
-            (section) => ForumSection.decode(
-              section.data(),
-            ),
-          );
+          final forumSectionList = snapshot.data!.docs
+              .map((section) => ForumSection.decode(section.data()))
+              .toList()
+            ..sort((a, b) => a.order.compareTo(b.order));
 
           return ListView.separated(
             itemBuilder: (context, index) {
               final section = forumSectionList.elementAt(index);
 
               return ListTile(
-                title: Text(section.title),
+                leading: const Icon(Icons.arrow_forward),
+                title: Text(
+                  section.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 subtitle: section.edition != null
-                    ? Text(section.editionDateAsString!)
+                    ? Text('Edition of ${section.editionDateAsString!}')
                     : null,
                 onTap: () => Navigator.pushNamed(
                   context,

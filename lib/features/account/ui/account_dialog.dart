@@ -9,16 +9,28 @@ void showAccountDialog(BuildContext context) {
 
   void deleteAccount() => auth.currentUser
       ?.delete()
-      .whenComplete(Navigator.of(context).pop)
+      .whenComplete(() {
+        Navigator.of(context).pop();
+      })
       .catchError(
         (error) => showSnackbar(
-            context: context, message: 'Please sign in again and retry'),
+          context: context,
+          message: 'Please sign in again and retry',
+        ),
+      )
+      .then(
+        (value) => showSnackbar(
+          context: context,
+          message: 'Your account has been deleted successfully',
+        ),
       );
 
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: ListTile(
+      title: const Text('ClipTag ID'),
+      content: ListTile(
+        leading: const Icon(Icons.account_circle_outlined),
         title: Text(firebaseUser.displayName!),
         subtitle: Text(firebaseUser.email!),
       ),
@@ -28,7 +40,10 @@ void showAccountDialog(BuildContext context) {
           child: const Text('Delete account'),
         ),
         FilledButton.icon(
-          onPressed: auth.signOut,
+          onPressed: () {
+            Navigator.pop(context);
+            auth.signOut();
+          },
           icon: const Icon(Icons.logout),
           label: const Text('Sign Out'),
         ),

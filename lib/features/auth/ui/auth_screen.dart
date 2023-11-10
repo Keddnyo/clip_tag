@@ -44,18 +44,21 @@ class _AuthScreenState extends State<AuthScreen> {
               message: 'Welcome back, ${auth.currentUser!.displayName}');
         },
       ).catchError((error) {
-        showSnackbar(context: context, message: error);
+        showSnackbar(context: context, message: error.code);
       });
 
   void _signUp() => auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then(
         (_) {
+          auth.currentUser?.updateDisplayName(username);
           showSnackbar(
-              context: context, message: 'Please confirm your email address!');
+            context: context,
+            message: 'Please confirm your email address...',
+          );
         },
       ).catchError((error) {
-        showSnackbar(context: context, message: error);
+        showSnackbar(context: context, message: error.code);
       });
 
   void _resetPassword() => auth.sendPasswordResetEmail(email: email).then(
@@ -63,7 +66,7 @@ class _AuthScreenState extends State<AuthScreen> {
           _switchResetPassword();
         },
       ).catchError((error) {
-        showSnackbar(context: context, message: error);
+        showSnackbar(context: context, message: error.code);
       });
 
   void _submit() {
@@ -114,6 +117,7 @@ class _AuthScreenState extends State<AuthScreen> {
         key: formKey,
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               if (_isSignUp)
                 Padding(
@@ -157,7 +161,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       label: Text('Password'),
                     ),
                     keyboardType: TextInputType.visiblePassword,
-                    // TODO: obscureText: true,
+                    obscureText: true,
                     validator: (password) {
                       if (password?.isEmpty == true) {
                         return 'You need a password';
@@ -174,7 +178,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       label: Text('Confirm password'),
                     ),
                     keyboardType: TextInputType.visiblePassword,
-                    // TODO: obscureText: true,
+                    obscureText: true,
                     validator: (confirmPassword) {
                       if (confirmPassword?.isEmpty == true) {
                         return 'You need to confirm your password';

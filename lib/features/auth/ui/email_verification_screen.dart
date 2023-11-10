@@ -54,8 +54,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'The confirmation link sent to ${_firebaseUser!.email}',
-                // TODO: textAlign: TextAlign.center,
+                'The confirmation link sent to "${_firebaseUser!.email}"',
+                style: const TextStyle(fontSize: 18.0),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
