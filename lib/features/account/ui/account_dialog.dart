@@ -26,12 +26,8 @@ void showAccountDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('${Constants.appName} ID'),
-      content: ListTile(
-        leading: const Icon(Icons.account_circle_outlined),
-        title: Text(firebaseUser.displayName!),
-        subtitle: Text(firebaseUser.email!),
-      ),
+      title: Text(firebaseUser.displayName!),
+      content: Text(firebaseUser.email!),
       actions: [
         OutlinedButton(
           onPressed: deleteAccount,

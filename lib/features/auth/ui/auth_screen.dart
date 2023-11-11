@@ -39,12 +39,21 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _signIn() => auth
-      .signInWithEmailAndPassword(email: email, password: password)
-      .then((_) => showSnackbar(
-          context: context,
-          message: 'Добро пожаловать, ${auth.currentUser!.displayName}'))
-      .catchError((error) => showSnackbar(
-          context: context, message: decodeFirebaseAuthErrorCode(error.code)));
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((_) => showSnackbar(
+              context: context,
+              message: 'Добро пожаловать, ${auth.currentUser!.displayName}'))
+          .catchError(
+        (error) {
+          if (error.code == FirebaseAuthErrorCodes.invalidCredentials) {
+            passwordController.clear();
+          }
+          showSnackbar(
+            context: context,
+            message: decodeFirebaseAuthErrorCode(error.code),
+          );
+        },
+      );
 
   void _signUp() => auth
           .createUserWithEmailAndPassword(email: email, password: password)
@@ -75,15 +84,18 @@ class _AuthScreenState extends State<AuthScreen> {
 
   void _submit() {
     if (formKey.currentState?.validate() == false) return;
+    if (FirebaseAuth.instance.currentUser != null) return;
 
     if (_isResetPassword) {
       _resetPassword();
       return;
     }
+
     if (_isSignUp) {
       _signUp();
       return;
     }
+
     _signIn();
   }
 

@@ -13,15 +13,15 @@ class MainApp extends StatelessWidget {
       title: Constants.appName,
       theme: ThemeData(
         useMaterial3: Constants.useMaterial3,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
       ),
       darkTheme: ThemeData(
         useMaterial3: Constants.useMaterial3,
-        brightness: Brightness.dark,
-        dialogBackgroundColor: Colors.black,
-        scaffoldBackgroundColor: Colors.black,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.dark,
         ),
+        scaffoldBackgroundColor: Colors.black,
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../utils/get_color_scheme.dart';
+import '../../../utils/open_url.dart';
 import '../../checkout/ui/checkout_screen.dart';
 import '../../forum_sections/model/forum_section.dart';
 
@@ -52,7 +53,14 @@ class _RulesScreenState extends State<RulesScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.forumSection.title),
+          actions: [
+            IconButton(
+              onPressed: () => openUrl(widget.forumSection.rulesUrl),
+              icon: const Icon(Icons.open_in_new),
+            )
+          ],
           shadowColor: Colors.black,
+          centerTitle: true,
         ),
         body: ListView.builder(
           itemBuilder: (context, index) {
@@ -110,12 +118,12 @@ class _RulesScreenState extends State<RulesScreen> {
                           onPressed: clearChoosenRules,
                           icon: const Icon(
                               Icons.indeterminate_check_box_outlined),
-                          label: const Text('Снять всё'),
+                          label: const Text('Сброс'),
                         ),
                         FilledButton.icon(
                           onPressed: () => navigateToCheckout(),
                           icon: const Icon(Icons.visibility),
-                          label: Text('Предосмотр (${_choosenRules.length})'),
+                          label: Text('Предпросмотр (${_choosenRules.length})'),
                         ),
                       ],
                     ),

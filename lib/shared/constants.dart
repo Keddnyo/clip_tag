@@ -7,7 +7,7 @@ class Constants {
   static const bool useMaterial3 = true;
 
   static const Duration emailVerificationTimerRefreshRate =
-      Duration(seconds: 5);
+      Duration(seconds: 2);
 
   static const double tagLeadingSymbolContainerMinHeight = 48.0;
   static const double tagLeadingSymbolContainerWidth = 48.0;

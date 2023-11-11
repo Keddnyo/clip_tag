@@ -75,7 +75,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Предосмотр'),
+        title: const Text('Предпросмотр'),
         actions: [
           IconButton(
             onPressed: () {
@@ -102,10 +102,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               selectedIndex: _currentTagIndex,
               destinations: [
                 for (final tag in ForumTags.values)
-                  NavigationDestination(
-                    icon: Icon(tag.icon),
-                    label: tag.closure.toUpperCase(),
-                  ),
+                  NavigationDestination(icon: Icon(tag.icon), label: tag.title),
               ],
               onDestinationSelected: (index) => _setCurrentTagIndex(index),
             )
