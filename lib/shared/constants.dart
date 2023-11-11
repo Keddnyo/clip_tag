@@ -1,5 +1,3 @@
-import 'package:url_launcher/url_launcher.dart';
-
 class Constants {
   static const String appLanguageCode = 'ru';
 
@@ -12,7 +10,6 @@ class Constants {
   static const double tagLeadingSymbolContainerMinHeight = 48.0;
   static const double tagLeadingSymbolContainerWidth = 48.0;
 
-  static const LaunchMode urlLaunchMode = LaunchMode.externalApplication;
   static const String fourpdaDefaultUrl =
       'https://4pda.to/forum/index.php?act=idx';
 
