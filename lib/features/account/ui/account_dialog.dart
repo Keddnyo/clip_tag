@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../shared/constants.dart';
 import '../../../utils/show_snackbar.dart';
 
 void showAccountDialog(BuildContext context) {
