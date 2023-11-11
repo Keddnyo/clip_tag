@@ -124,117 +124,132 @@ class _AuthScreenState extends State<AuthScreen> {
 
     final signUpButtonTitle = _isSignUp ? 'Вход' : 'Регистрация';
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('${Constants.appName} ID'),
-      ),
-      body: Form(
-        key: formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (_isSignUp)
+    return WillPopScope(
+      onWillPop: () async {
+        if (_isResetPassword) {
+          _switchResetPassword();
+          return false;
+        }
+
+        if (_isSignUp) {
+          _switchSignUp();
+          return false;
+        }
+
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('${Constants.appName} ID'),
+        ),
+        body: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (_isSignUp)
+                  Padding(
+                    padding: contentPadding,
+                    child: TextFormField(
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Имя пользователя',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.name,
+                      validator: (username) {
+                        if (username?.isEmpty == true) {
+                          return 'Введите имя пользователя';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
                 Padding(
                   padding: contentPadding,
                   child: TextFormField(
-                    controller: usernameController,
+                    controller: emailController,
                     decoration: const InputDecoration(
-                      labelText: 'Имя пользователя',
+                      labelText: 'Почта',
+                      hintText: 'example@domain.com',
                       border: OutlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.name,
-                    validator: (username) {
-                      if (username?.isEmpty == true) {
-                        return 'Введите имя пользователя';
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (email) {
+                      if (email?.isEmpty == true) {
+                        return 'Введите актуальную почту';
                       }
                       return null;
                     },
                   ),
                 ),
-              Padding(
-                padding: contentPadding,
-                child: TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Почта',
-                    hintText: 'example@domain.com',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (email) {
-                    if (email?.isEmpty == true) {
-                      return 'Введите актуальную почту';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              if (!_isResetPassword)
-                Padding(
-                  padding: contentPadding,
-                  child: TextFormField(
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Пароль',
-                      hintText: _isSignUp ? 'Минимум 6 символов' : null,
-                      border: const OutlineInputBorder(),
+                if (!_isResetPassword)
+                  Padding(
+                    padding: contentPadding,
+                    child: TextFormField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Пароль',
+                        hintText: _isSignUp ? 'Минимум 6 символов' : null,
+                        border: const OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: true,
+                      validator: (password) {
+                        if (password?.isEmpty == true) {
+                          return 'Пароль не должен быть пустым';
+                        }
+                        return null;
+                      },
                     ),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                    validator: (password) {
-                      if (password?.isEmpty == true) {
-                        return 'Пароль не должен быть пустым';
-                      }
-                      return null;
-                    },
                   ),
-                ),
-              if (_isSignUp)
-                Padding(
-                  padding: contentPadding,
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Подтвердите пароль',
-                      border: OutlineInputBorder(),
+                if (_isSignUp)
+                  Padding(
+                    padding: contentPadding,
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Подтвердите пароль',
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: true,
+                      validator: (confirmPassword) {
+                        if (confirmPassword?.isEmpty == true) {
+                          return 'Вы должны подтвердить пароль';
+                        }
+                        if (confirmPassword != password) {
+                          return 'Пароли не совпали';
+                        }
+                        return null;
+                      },
                     ),
-                    keyboardType: TextInputType.visiblePassword,
-                    obscureText: true,
-                    validator: (confirmPassword) {
-                      if (confirmPassword?.isEmpty == true) {
-                        return 'Вы должны подтвердить пароль';
-                      }
-                      if (confirmPassword != password) {
-                        return 'Пароли не совпали';
-                      }
-                      return null;
-                    },
                   ),
-                ),
-              Padding(
-                padding: contentPadding,
-                child: FilledButton(
-                  onPressed: _submit,
-                  child: Text(submitButtonTitle),
-                ),
-              ),
-              if (!_isSignUp)
                 Padding(
                   padding: contentPadding,
-                  child: OutlinedButton(
-                    onPressed: _switchResetPassword,
-                    child: Text(resetPasswordButtonTitle),
+                  child: FilledButton(
+                    onPressed: _submit,
+                    child: Text(submitButtonTitle),
                   ),
                 ),
-              if (!_isResetPassword)
-                Padding(
-                  padding: contentPadding,
-                  child: OutlinedButton(
-                    onPressed: _switchSignUp,
-                    child: Text(signUpButtonTitle),
+                if (!_isSignUp)
+                  Padding(
+                    padding: contentPadding,
+                    child: OutlinedButton(
+                      onPressed: _switchResetPassword,
+                      child: Text(resetPasswordButtonTitle),
+                    ),
                   ),
-                ),
-            ],
+                if (!_isResetPassword)
+                  Padding(
+                    padding: contentPadding,
+                    child: OutlinedButton(
+                      onPressed: _switchSignUp,
+                      child: Text(signUpButtonTitle),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
