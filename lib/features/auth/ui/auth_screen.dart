@@ -17,26 +17,28 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   final auth = FirebaseAuth.instance;
+
   final formKey = GlobalKey<FormState>();
 
   bool _isSignUp = false;
+  void _switchSignUp() => setState(() => _isSignUp = !_isSignUp);
+
   bool _isResetPassword = false;
+  void _switchResetPassword() =>
+      setState(() => _isResetPassword = !_isResetPassword);
+
+  bool _isPasswordShown = false;
+  void _switchPasswordShown() =>
+      setState(() => _isPasswordShown = !_isPasswordShown);
 
   final usernameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
   String get username => usernameController.text.trim();
+
+  final emailController = TextEditingController();
   String get email => emailController.text.trim();
+
+  final passwordController = TextEditingController();
   String get password => passwordController.text;
-
-  void _switchSignUp() {
-    setState(() => _isSignUp = !_isSignUp);
-  }
-
-  void _switchResetPassword() {
-    setState(() => _isResetPassword = !_isResetPassword);
-  }
 
   void _signIn() => auth
           .signInWithEmailAndPassword(email: email, password: password)
@@ -76,11 +78,18 @@ class _AuthScreenState extends State<AuthScreen> {
         );
       });
 
-  void _resetPassword() => auth
-      .sendPasswordResetEmail(email: email)
-      .then((_) => _switchResetPassword())
-      .catchError((error) => showSnackbar(
-          context: context, message: decodeFirebaseAuthErrorCode(error.code)));
+  void _resetPassword() => auth.sendPasswordResetEmail(email: email).then((_) {
+        _switchResetPassword();
+        showSnackbar(
+          context: context,
+          message: 'Ссылка для сброса отправлена на почту',
+        );
+      }).catchError((error) {
+        showSnackbar(
+          context: context,
+          message: decodeFirebaseAuthErrorCode(error.code),
+        );
+      });
 
   void _submit() {
     if (formKey.currentState?.validate() == false) return;
@@ -126,6 +135,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
     return WillPopScope(
       onWillPop: () async {
+        if (_isPasswordShown) {
+          _switchPasswordShown();
+        }
+
         if (_isResetPassword) {
           _switchResetPassword();
           return false;
@@ -192,6 +205,14 @@ class _AuthScreenState extends State<AuthScreen> {
                       decoration: InputDecoration(
                         labelText: 'Пароль',
                         hintText: _isSignUp ? 'Минимум 6 символов' : null,
+                        suffixIcon: IconButton(
+                          onPressed: _switchPasswordShown,
+                          icon: Icon(
+                            _isPasswordShown
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                        ),
                         border: const OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.visiblePassword,
@@ -208,9 +229,17 @@ class _AuthScreenState extends State<AuthScreen> {
                   Padding(
                     padding: contentPadding,
                     child: TextFormField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Подтвердите пароль',
-                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          onPressed: _switchPasswordShown,
+                          icon: Icon(
+                            _isPasswordShown
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                        ),
+                        border: const OutlineInputBorder(),
                       ),
                       keyboardType: TextInputType.visiblePassword,
                       obscureText: true,
