@@ -1,14 +1,14 @@
 name: clip_tag
-description: 4PDA forum rules tag builder utility
+description: 4PDA website rules aggregator
 publish_to: 'none'
-version: 1.1.0+2
+version: 2.0.0+3
 
 environment:
   sdk: '>=3.1.5 <4.0.0'
 
 dependencies:
   cloud_firestore: ^4.12.2
-  firebase_auth: ^4.12.1
+  device_apps: ^2.2.0
   firebase_core: ^2.22.0
   flutter:
     sdk: flutter

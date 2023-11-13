@@ -1,14 +1,11 @@
 class Constants {
-  static const String appLanguageCode = 'ru';
-
   static const String appName = 'ClipTag';
   static const bool useMaterial3 = true;
 
-  static const Duration emailVerificationTimerRefreshRate =
-      Duration(seconds: 2);
-
   static const double tagLeadingSymbolContainerMinHeight = 48.0;
   static const double tagLeadingSymbolContainerWidth = 48.0;
+
+  static const String fourpdaClientPackageName = 'ru.fourpda.client';
 
   static const String fourpdaDefaultUrl =
       'https://4pda.to/forum/index.php?act=idx';

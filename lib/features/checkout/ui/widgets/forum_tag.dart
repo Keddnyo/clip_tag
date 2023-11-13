@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../shared/bbcode_renderer.dart';
 import '../../../../shared/constants.dart';
-import '../../../../shared/ui/bbcode_renderer.dart';
-import '../../../../utils/is_dark_theme.dart';
 import '../../model/forum_tags.dart';
 
 class ForumTag extends StatelessWidget {
@@ -13,7 +12,9 @@ class ForumTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final background = isDarkTheme(context) ? tag.darkColor : tag.lightColor;
+    final background = Theme.of(context).brightness == Brightness.dark
+        ? tag.darkColor
+        : tag.lightColor;
 
     const margin = EdgeInsets.all(4.0);
 
