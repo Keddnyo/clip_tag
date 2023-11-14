@@ -5,7 +5,7 @@ IconData? getForumSectionIcon(String title) {
     'Мультимедийные устройства': Icons.radio,
     'Носимые устройства': Icons.watch,
     'Автомобильные устройства': Icons.minor_crash,
-    'Игровые кносоли': Icons.gamepad,
+    'Игровые консоли': Icons.gamepad,
     'Квадрокоптеры': Icons.connecting_airports,
     'Кнопочные телефоны': Icons.dialpad,
     'Устройства для дома и развлечений': Icons.celebration,
