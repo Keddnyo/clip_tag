@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../shared/constants.dart';
 import '../../rules/ui/rules_screen.dart';
 import '../model/forum_section.dart';
+import '../utils/get_forum_section_icon.dart';
 
 class ForumSectionsScreen extends StatelessWidget {
   const ForumSectionsScreen({super.key});
@@ -58,13 +59,8 @@ class ForumSectionsScreen extends StatelessWidget {
                     (section) => ListTile(
                       leading: Icon(
                         section.order == 0
-                            ? Icons.menu_book
-                            : section.title.contains('Android')
-                                ? Icons.android
-                                : section.title.contains('Apple') ||
-                                        section.title.contains('iOS')
-                                    ? Icons.apple
-                                    : Icons.double_arrow,
+                            ? Icons.home
+                            : getForumSectionIcon(section.title),
                       ),
                       title: Text(section.title),
                       onTap: () => Navigator.pushNamed(

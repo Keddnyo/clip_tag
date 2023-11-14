@@ -1,10 +1,10 @@
 # ClipTag
 Агрегатор правил 4PDA
 
-![License](https://img.shields.io/github/license/Keddnyo/clip_tag?label=Лицензия)
-![Release](https://img.shields.io/github/v/release/Keddnyo/clip_tag?label=Актуальная%20версия)
-![Downloads](https://img.shields.io/github/downloads-pre/Keddnyo/clip_tag/latest/total?label=Последние%20загрузки)
-![Latest downloads](https://img.shields.io/github/downloads/Keddnyo/clip_tag/total?label=Всего%20загрузок)
+![Лицензия](https://img.shields.io/github/license/Keddnyo/clip_tag?label=Лицензия)
+![Релиз](https://img.shields.io/github/v/release/Keddnyo/clip_tag?label=Актуальная%20версия)
+![Последние загрузки](https://img.shields.io/github/downloads-pre/Keddnyo/clip_tag/latest/total?label=Последние%20загрузки)
+![Всего загрузок](https://img.shields.io/github/downloads/Keddnyo/clip_tag/total?label=Всего%20загрузок)
 
 ### Скриншоты:
 <img src='screenshots/ClipTag_1.png' height='512'> <img src='screenshots/ClipTag_4.png' height='512'>
