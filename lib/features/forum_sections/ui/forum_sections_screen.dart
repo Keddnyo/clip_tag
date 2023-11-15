@@ -21,8 +21,11 @@ class ForumSectionsScreen extends StatelessWidget {
                 context: context,
                 applicationName: Constants.appName,
                 applicationVersion: 'Агрегатор правил 4PDA',
-                applicationIcon: Image.asset('lib/core/assets/app_icon.png',
-                    width: 72.0, height: 72.0),
+                applicationIcon: Image.asset(
+                  'lib/core/assets/app_icon.png',
+                  width: 72.0,
+                  height: 72.0,
+                ),
                 applicationLegalese: Constants.applicationLegalese,
               ),
               icon: const Icon(Icons.info_outlined),
@@ -49,7 +52,7 @@ class ForumSectionsScreen extends StatelessWidget {
             }
 
             final forumSectionList = snapshot.data!.docs
-                .map((section) => ForumSection.decode(section.data()))
+                .map((section) => ForumSection.fromJson(section.data()))
                 .toList()
               ..sort((a, b) => a.order.compareTo(b.order));
 

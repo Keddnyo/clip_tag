@@ -4,9 +4,9 @@ class RulesCategory {
 
   RulesCategory({required this.categoryName, required this.rules});
 
-  static RulesCategory decode(Map<String, dynamic> map) => RulesCategory(
-        categoryName: map['categoryName'],
-        rules: map['rules'].map(
+  factory RulesCategory.fromJson(Map<String, dynamic> json) => RulesCategory(
+        categoryName: json['categoryName'],
+        rules: json['rules'].map(
           (rule) => rule.replaceAll('\\n', '\n'),
         ),
       );

@@ -35,12 +35,12 @@ class ForumSection {
     return buffer.toString().trim();
   }
 
-  static ForumSection decode(Map<String, dynamic> map) => ForumSection(
-        title: map['title'],
-        rulesUrl: map['rulesUrl'],
-        order: map['order'],
-        categories: map['categories'].map(
-          (category) => RulesCategory.decode(category),
+  factory ForumSection.fromJson(Map<String, dynamic> json) => ForumSection(
+        title: json['title'],
+        rulesUrl: json['rulesUrl'],
+        order: json['order'],
+        categories: json['categories'].map(
+          (category) => RulesCategory.fromJson(category),
         ),
       );
 }
