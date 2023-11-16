@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import '../features/auth/ui/auth_screen.dart';
 import '../features/auth/ui/email_verification_screen.dart';
 import '../features/checkout/ui/checkout_screen.dart';
-import '../features/forum_sections/model/forum_section.dart';
 import '../features/forum_sections/ui/forum_sections_screen.dart';
-import '../features/rules/ui/rules_screen.dart';
 import '../shared/constants.dart';
 import '../shared/firebase_controller.dart';
 
@@ -31,17 +29,9 @@ class MainApp extends StatelessWidget {
                     return const EmailVerificationScreen();
                   }
 
-                  switch (settings.name) {
-                    case RulesScreen.route:
-                      {
-                        final forumSetion = settings.arguments as ForumSection;
-                        return RulesScreen(forumSection: forumSetion);
-                      }
-                    case CheckoutScreen.route:
-                      {
-                        final rules = settings.arguments as dynamic;
-                        return CheckoutScreen(choosenRules: rules);
-                      }
+                  if (settings.name == CheckoutScreen.route) {
+                    final rules = settings.arguments as dynamic;
+                    return CheckoutScreen(choosenRules: rules);
                   }
 
                   return const ForumSectionsScreen();

@@ -1,6 +1,6 @@
-import 'package:clip_tag/shared/firebase_controller.dart';
 import 'package:flutter/material.dart';
 
+import '../../../shared/firebase_controller.dart';
 import '../controllers/auth_screen_controller.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -71,11 +71,13 @@ class AuthScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: authController.passwordController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.password),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.password),
                           labelText: 'Пароль',
-                          hintText: 'Не менее 6 символов',
-                          border: OutlineInputBorder(),
+                          hintText: authController.isSignUp
+                              ? 'Не менее 6 символов'
+                              : null,
+                          border: const OutlineInputBorder(),
                         ),
                         keyboardType: TextInputType.visiblePassword,
                         obscureText: true,

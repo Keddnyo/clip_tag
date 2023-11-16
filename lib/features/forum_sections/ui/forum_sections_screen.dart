@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../shared/constants.dart';
-import '../../../shared/firebase_controller.dart';
-import '../../auth/ui/auth_screen.dart';
-import '../../rules/ui/rules_screen.dart';
-import '../model/forum_section.dart';
+import '../../../shared/bbcode_renderer.dart';
+import '../controllers/sections_controller.dart';
 import '../utils/get_forum_section_icon.dart';
 
 class ForumSectionsScreen extends StatelessWidget {
@@ -14,96 +11,74 @@ class ForumSectionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firebaseController = FirebaseProvider.of(context);
+    final sectionsController = ForumSectionsController(context: context);
+    final scrollController = ScrollController();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(Constants.appName),
-        actions: [
-          IconButton(
-            onPressed: () => showAboutDialog(
-              context: context,
-              applicationName: Constants.appName,
-              applicationVersion: 'Агрегатор правил 4PDA',
-              applicationIcon: Image.asset(
-                'lib/core/assets/app_icon.png',
-                width: 72.0,
-                height: 72.0,
-              ),
-              applicationLegalese: Constants.applicationLegalese,
-            ),
-            icon: const Icon(Icons.info_outlined),
+    return ListenableBuilder(
+      listenable: sectionsController,
+      builder: (context, child) => Scaffold(
+        appBar: AppBar(
+          title: Text(
+            sectionsController.sections.isNotEmpty
+                ? sectionsController.section!.title
+                : 'ClipTag',
           ),
-        ],
-        shadowColor: Colors.black,
-      ),
-      body: StreamBuilder(
-        stream: firebaseController.rulesCollection,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(snapshot.error.toString()),
-              ),
-            );
-          }
-
-          final forumSectionList = snapshot.data!.docs
-              .map((section) => ForumSection.fromJson(section.data()))
-              .toList()
-            ..sort((a, b) => a.order.compareTo(b.order));
-
-          return ListView(
-            children: forumSectionList
-                .map(
-                  (section) => ListTile(
-                    leading: Icon(
-                      section.order == 0
-                          ? Icons.home
-                          : getForumSectionIcon(section.title),
-                    ),
-                    title: Text(section.title),
-                    onTap: () => Navigator.pushNamed(context, RulesScreen.route,
-                        arguments: section),
-                  ),
-                )
-                .toList(),
-          );
-        },
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              child: Text('ClipTag'),
-            ),
-            ListTile(
-              title: Text(
-                firebaseController.username ?? 'Войти',
-              ),
-              trailing: firebaseController.isSignedIn
-                  ? IconButton(
-                      onPressed: firebaseController.signOut,
-                      icon: const Icon(Icons.logout),
-                    )
-                  : IconButton(
-                      onPressed: () => Navigator.pushNamed(
-                        context,
-                        AuthScreen.route,
-                      ),
-                      icon: const Icon(Icons.login),
-                    ),
-            ),
-          ],
         ),
+        body: sectionsController.sections.isNotEmpty
+            ? ListView(
+                controller: scrollController,
+                children: [
+                  for (final category in sectionsController.section!.categories)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Divider(height: 1.0),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(category.categoryName),
+                          ),
+                        ),
+                        const Divider(height: 1.0),
+                        for (final rule in category.rules)
+                          ListTile(
+                            title: BBCodeRenderer(content: rule),
+                            onTap: () => sectionsController.navigateToCheckout(
+                              rule: rule,
+                            ),
+                          ),
+                      ],
+                    ),
+                ],
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
+        endDrawer: sectionsController.sections.isNotEmpty
+            ? NavigationDrawer(
+                onDestinationSelected: (index) {
+                  sectionsController.setSectionIndex(index);
+                  sectionsController.clearChoosenRules();
+                  Navigator.pop(context);
+                  scrollController.jumpTo(0);
+                },
+                selectedIndex: sectionsController.sectionIndex,
+                children: sectionsController.sections
+                    .map(
+                      (section) => NavigationDrawerDestination(
+                        icon: Icon(
+                          section.order == 0
+                              ? Icons.home
+                              : getForumSectionIcon(section.title),
+                        ),
+                        label: Flexible(
+                          child: Text(section.title),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              )
+            : null,
       ),
     );
   }

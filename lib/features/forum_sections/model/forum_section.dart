@@ -1,4 +1,4 @@
-import '../../rules/model/rules_category.dart';
+import 'rules_category.dart';
 
 class ForumSection {
   final String title;
