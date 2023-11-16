@@ -10,18 +10,18 @@ class EmailVerificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     FirebaseAuth.instance.currentUser?.sendEmailVerification();
 
-    // Timer.periodic(
-    //   const Duration(seconds: 3),
-    //   (timer) {
-    //     FirebaseAuth.instance.currentUser?.reload().then(
-    //       (_) {
-    //         if (FirebaseAuth.instance.currentUser?.emailVerified == true) {
-    //           timer.cancel();
-    //         }
-    //       },
-    //     );
-    //   },
-    // );
+    Timer.periodic(
+      const Duration(seconds: 3),
+      (timer) {
+        FirebaseAuth.instance.currentUser?.reload().then(
+          (_) {
+            if (FirebaseAuth.instance.currentUser?.emailVerified == true) {
+              timer.cancel();
+            }
+          },
+        );
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
