@@ -11,7 +11,7 @@ class BBCodeRenderer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BBCodeText(
-        data: content,
+        data: content.replaceAll('\\n', '\n'),
         stylesheet: BBStylesheet(
           tags: [
             BoldTag(),

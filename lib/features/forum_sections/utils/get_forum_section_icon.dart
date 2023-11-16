@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-IconData? getForumSectionIcon(String title) {
+IconData getForumSectionIcon(String title) {
   final currentSection = {
     'Мультимедийные устройства': Icons.radio,
     'Носимые устройства': Icons.watch,

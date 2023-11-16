@@ -6,8 +6,6 @@ class RulesCategory {
 
   factory RulesCategory.fromJson(Map<String, dynamic> json) => RulesCategory(
         categoryName: json['categoryName'],
-        rules: json['rules'].map(
-          (rule) => rule.replaceAll('\\n', '\n'),
-        ),
+        rules: json['rules'],
       );
 }
