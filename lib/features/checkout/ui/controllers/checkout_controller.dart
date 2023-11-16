@@ -11,6 +11,13 @@ class CheckoutController with ChangeNotifier {
 
   CheckoutController(this.choosenRules);
 
+  bool _isTagShown = true;
+  bool get isTagShown => _isTagShown;
+  void switchTagVisibility() {
+    _isTagShown = !_isTagShown;
+    notifyListeners();
+  }
+
   int _currentTagIndex = 0;
   int get currentTagIndex => _currentTagIndex;
   void setCurrentTagIndex(int index) {
@@ -32,12 +39,12 @@ class CheckoutController with ChangeNotifier {
     return buffer.toString();
   }
 
-  void copyChoosenRules({bool withTag = false}) => Clipboard.setData(
-        ClipboardData(text: withTag ? rulesWithTag : choosenRules),
+  void copyChoosenRules() => Clipboard.setData(
+        ClipboardData(text: _isTagShown ? rulesWithTag : choosenRules),
       );
 
   void sendChoosenRules() async {
-    copyChoosenRules(withTag: true);
+    copyChoosenRules();
 
     if (await DeviceApps.isAppInstalled(Constants.fourpdaClientPackageName)) {
       DeviceApps.openApp(Constants.fourpdaClientPackageName);

@@ -1,5 +1,7 @@
+import 'package:clip_tag/shared/firebase_controller.dart';
 import 'package:flutter/material.dart';
 
+import '../../../shared/bbcode_renderer.dart';
 import '../model/forum_tags.dart';
 import 'controllers/checkout_controller.dart';
 import 'widgets/forum_tag.dart';
@@ -8,10 +10,12 @@ class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key, required this.choosenRules});
 
   static const String route = '/checkout';
+
   final dynamic choosenRules;
 
   @override
   Widget build(BuildContext context) {
+    final firebaseController = FirebaseProvider.of(context);
     final checkoutController = CheckoutController(choosenRules);
 
     return ListenableBuilder(
@@ -20,20 +24,17 @@ class CheckoutScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Подготовка тега'),
           actions: [
-            PopupMenuButton(
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  onTap: () =>
-                      checkoutController.copyChoosenRules(withTag: true),
-                  child: const Text('С тегом'),
-                ),
-                PopupMenuItem(
-                  onTap: checkoutController.copyChoosenRules,
-                  child: const Text('Без тега'),
-                ),
-              ],
+            IconButton(
+              onPressed: checkoutController.copyChoosenRules,
               icon: const Icon(Icons.copy),
-              position: PopupMenuPosition.under,
+            ),
+            IconButton(
+              onPressed: checkoutController.switchTagVisibility,
+              icon: Icon(
+                checkoutController.isTagShown
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+              ),
             ),
             IconButton(
               onPressed: checkoutController.sendChoosenRules,
@@ -45,21 +46,27 @@ class CheckoutScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child: ForumTag(
-              content: choosenRules,
-              tag: checkoutController.currentForumTag,
-            ),
+            child: checkoutController.isTagShown
+                ? ForumTag(
+                    content: choosenRules,
+                    tag: checkoutController.currentForumTag,
+                  )
+                : BBCodeRenderer(content: choosenRules),
           ),
         ),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: checkoutController.currentTagIndex,
-          destinations: [
-            for (final tag in ForumTags.values)
-              NavigationDestination(icon: Icon(tag.icon), label: tag.title),
-          ],
-          onDestinationSelected: (index) =>
-              checkoutController.setCurrentTagIndex(index),
-        ),
+        bottomNavigationBar: firebaseController.isClipTagUserModerator &&
+                checkoutController.isTagShown
+            ? NavigationBar(
+                selectedIndex: checkoutController.currentTagIndex,
+                destinations: [
+                  for (final tag in ForumTags.values)
+                    NavigationDestination(
+                        icon: Icon(tag.icon), label: tag.title),
+                ],
+                onDestinationSelected: (index) =>
+                    checkoutController.setCurrentTagIndex(index),
+              )
+            : null,
       ),
     );
   }

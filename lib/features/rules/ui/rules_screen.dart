@@ -11,6 +11,7 @@ class RulesScreen extends StatelessWidget {
   const RulesScreen({super.key, required this.forumSection});
 
   static const String route = '/rules';
+
   final ForumSection forumSection;
 
   @override
