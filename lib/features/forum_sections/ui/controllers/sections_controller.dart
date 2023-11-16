@@ -53,7 +53,7 @@ class ForumSectionsController with ChangeNotifier {
     notifyListeners();
   }
 
-  void navigateToCheckout({dynamic rule}) => Navigator.pushNamed(
+  void navigateToCheckout([dynamic rule]) => Navigator.pushNamed(
         context,
         CheckoutScreen.route,
         arguments: section?.combineChoosenRulesToString(

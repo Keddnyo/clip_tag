@@ -1,3 +1,4 @@
+import 'package:clip_tag/features/auth/ui/auth_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,36 +13,48 @@ class ForumSectionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sectionsController = ForumSectionsController(context: context);
+    final controller = ForumSectionsController(context: context);
     final scrollController = ScrollController();
+
+    bool isSignedIn = FirebaseAuth.instance.currentUser != null;
 
     return WillPopScope(
       onWillPop: () async {
-        if (sectionsController.choosenRules.isNotEmpty) {
-          sectionsController.clearChoosenRules();
+        if (controller.choosenRules.isNotEmpty) {
+          controller.clearChoosenRules();
           return false;
         }
 
         return true;
       },
       child: ListenableBuilder(
-        listenable: sectionsController,
+        listenable: controller,
         builder: (context, child) => Scaffold(
           appBar: AppBar(
-            leading: sectionsController.choosenRules.isNotEmpty
+            leading: controller.choosenRules.isNotEmpty
                 ? IconButton(
-                    onPressed: sectionsController.clearChoosenRules,
+                    onPressed: controller.clearChoosenRules,
                     icon: const Icon(Icons.close),
                   )
-                : null,
+                : IconButton(
+                    onPressed: () => isSignedIn
+                        ? FirebaseAuth.instance.signOut()
+                        : Navigator.pushNamed(
+                            context,
+                            AuthScreen.route,
+                          ),
+                    icon: Icon(
+                      isSignedIn ? Icons.account_circle_outlined : Icons.login,
+                    ),
+                  ),
             title: Text(
-              sectionsController.sections.isNotEmpty
-                  ? sectionsController.choosenRules.isNotEmpty
-                      ? sectionsController.choosenRules.length.toString()
-                      : sectionsController.section!.title
+              controller.sections.isNotEmpty
+                  ? controller.choosenRules.isNotEmpty
+                      ? controller.choosenRules.length.toString()
+                      : controller.section!.title
                   : 'ClipTag',
             ),
-            actions: sectionsController.choosenRules.isNotEmpty
+            actions: controller.choosenRules.isNotEmpty
                 ? [
                     IconButton(
                       onPressed: () {},
@@ -49,13 +62,13 @@ class ForumSectionsScreen extends StatelessWidget {
                     ),
                   ]
                 : null,
+            centerTitle: controller.choosenRules.isEmpty,
           ),
-          body: sectionsController.sections.isNotEmpty
+          body: controller.sections.isNotEmpty
               ? ListView(
                   controller: scrollController,
                   children: [
-                    for (final category
-                        in sectionsController.section!.categories)
+                    for (final category in controller.section!.categories)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -70,25 +83,22 @@ class ForumSectionsScreen extends StatelessWidget {
                           for (final rule in category.rules)
                             ListTile(
                               title: BBCodeRenderer(content: rule),
-                              onTap: () =>
-                                  sectionsController.choosenRules.isNotEmpty
-                                      ? sectionsController.choosenRules
-                                              .contains(rule)
-                                          ? sectionsController.removeRule(rule)
-                                          : sectionsController.addRule(rule)
-                                      : sectionsController.navigateToCheckout(
-                                          rule: rule,
-                                        ),
-                              onLongPress: () =>
-                                  sectionsController.choosenRules.isEmpty
-                                      ? sectionsController.addRule(rule)
+                              onTap: () => isSignedIn
+                                  ? controller.choosenRules.isEmpty
+                                      ? controller.navigateToCheckout(rule)
+                                      : controller.choosenRules.contains(rule)
+                                          ? controller.removeRule(rule)
+                                          : controller.addRule(rule)
+                                  : null,
+                              onLongPress:
+                                  isSignedIn && controller.choosenRules.isEmpty
+                                      ? () => controller.addRule(rule)
                                       : null,
-                              tileColor:
-                                  sectionsController.choosenRules.contains(rule)
-                                      ? Theme.of(context)
-                                          .colorScheme
-                                          .secondaryContainer
-                                      : null,
+                              tileColor: controller.choosenRules.contains(rule)
+                                  ? Theme.of(context)
+                                      .colorScheme
+                                      .secondaryContainer
+                                  : null,
                             ),
                         ],
                       ),
@@ -97,16 +107,16 @@ class ForumSectionsScreen extends StatelessWidget {
               : const Center(
                   child: CircularProgressIndicator(),
                 ),
-          endDrawer: sectionsController.sections.isNotEmpty
+          endDrawer: controller.sections.isNotEmpty
               ? NavigationDrawer(
                   onDestinationSelected: (index) {
-                    sectionsController.setSectionIndex(index);
-                    sectionsController.clearChoosenRules();
+                    controller.setSectionIndex(index);
+                    controller.clearChoosenRules();
                     Navigator.pop(context);
                     scrollController.jumpTo(0);
                   },
-                  selectedIndex: sectionsController.sectionIndex,
-                  children: sectionsController.sections
+                  selectedIndex: controller.sectionIndex,
+                  children: controller.sections
                       .map(
                         (section) => NavigationDrawerDestination(
                           icon: Icon(
@@ -124,14 +134,16 @@ class ForumSectionsScreen extends StatelessWidget {
               : null,
           floatingActionButton: FirebaseAuth.instance.currentUser != null
               ? FloatingActionButton.extended(
-                  onPressed: () {},
+                  onPressed: controller.choosenRules.isNotEmpty
+                      ? controller.navigateToCheckout
+                      : null,
                   icon: Icon(
-                    sectionsController.choosenRules.isNotEmpty
+                    controller.choosenRules.isNotEmpty
                         ? Icons.visibility
                         : Icons.bookmark_outline,
                   ),
                   label: Text(
-                    sectionsController.choosenRules.isNotEmpty
+                    controller.choosenRules.isNotEmpty
                         ? 'Предпросмотр'
                         : 'Избранное',
                   ),

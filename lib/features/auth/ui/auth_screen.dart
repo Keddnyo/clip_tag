@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../shared/firebase_controller.dart';
+import 'controllers/firebase_auth_controller.dart';
 import 'controllers/auth_screen_controller.dart';
 
 class AuthScreen extends StatelessWidget {

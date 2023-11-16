@@ -5,7 +5,7 @@ import '../features/auth/ui/email_verification_screen.dart';
 import '../features/checkout/ui/checkout_screen.dart';
 import '../features/forum_sections/ui/forum_sections_screen.dart';
 import '../shared/constants.dart';
-import '../shared/firebase_controller.dart';
+import '../features/auth/ui/controllers/firebase_auth_controller.dart';
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -13,7 +13,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         onGenerateRoute: (RouteSettings settings) {
-          final firebaseController = FirebaseController();
+          final firebaseController = FirebaseAuthController();
 
           return MaterialPageRoute(
             builder: (context) => FirebaseProvider(
@@ -21,12 +21,12 @@ class MainApp extends StatelessWidget {
               child: StreamBuilder(
                 stream: firebaseController.userChanges,
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const AuthScreen();
-                  }
-
                   if (snapshot.data?.emailVerified == false) {
                     return const EmailVerificationScreen();
+                  }
+
+                  if (settings.name == AuthScreen.route) {
+                    return const AuthScreen();
                   }
 
                   if (settings.name == CheckoutScreen.route) {

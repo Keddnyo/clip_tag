@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../features/auth/model/clip_tag_user.dart';
+import '../../model/clip_tag_user.dart';
 
-class FirebaseController with ChangeNotifier {
+class FirebaseAuthController with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
 
@@ -16,7 +16,7 @@ class FirebaseController with ChangeNotifier {
   bool get isEmailVerified => _currentAuthUser?.emailVerified == true;
   String? get username => _currentAuthUser?.displayName;
 
-  FirebaseController() {
+  FirebaseAuthController() {
     _auth.setLanguageCode('ru');
 
     while (isSignedIn && !isEmailVerified) {
@@ -50,9 +50,6 @@ class FirebaseController with ChangeNotifier {
 
   Stream<User?> get userChanges => _auth.userChanges();
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> get rulesCollection =>
-      _firestore.collection('rules').snapshots();
-
   ClipTagUser? _currentClipTagUser;
   setClipTagUser(ClipTagUser? user) {
     _currentClipTagUser = user;
@@ -84,9 +81,9 @@ class FirebaseProvider extends InheritedNotifier {
           notifier: controller,
         );
 
-  final FirebaseController controller;
+  final FirebaseAuthController controller;
 
-  static FirebaseController of(BuildContext context) => context
+  static FirebaseAuthController of(BuildContext context) => context
       .dependOnInheritedWidgetOfExactType<FirebaseProvider>()!
       .controller;
 }

@@ -1,7 +1,7 @@
-import 'package:clip_tag/shared/firebase_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
+import '../../auth/ui/controllers/firebase_auth_controller.dart';
 import '../model/forum_tags.dart';
 import 'controllers/checkout_controller.dart';
 import 'widgets/forum_tag.dart';

@@ -1,13 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../shared/firebase_controller.dart';
+import 'firebase_auth_controller.dart';
 import '../../../../utils/show_snackbar.dart';
 
 class AuthScreenController with ChangeNotifier {
-  final FirebaseController firebaseController;
+  final FirebaseAuthController auth;
 
-  AuthScreenController(this.firebaseController);
+  AuthScreenController(this.auth);
 
   final formKey = GlobalKey<FormState>();
 
@@ -70,17 +69,13 @@ class AuthScreenController with ChangeNotifier {
 
   void submitAuth({required BuildContext context}) {
     if (formKey.currentState?.validate() == false) return;
-    if (firebaseController.isSignedIn) return;
+    if (auth.isSignedIn) return;
 
     if (_isSignUp) {
-      firebaseController.signUp(email: email, password: password).then(
+      auth.signUp(email: email, password: password).then(
         (userCredential) {
           userCredential.user?.updateDisplayName(username).then(
-                (_) => showSnackbar(
-                  context: context,
-                  message:
-                      '${FirebaseAuth.instance.currentUser?.displayName}, всё почти готово',
-                ),
+                (_) => Navigator.pop(context),
               );
         },
       ).catchError(
@@ -95,7 +90,7 @@ class AuthScreenController with ChangeNotifier {
     }
 
     if (_isPasswordReset) {
-      firebaseController.resetPassword(email).then(
+      auth.resetPassword(email).then(
         (_) {
           showSnackbar(
             context: context,
@@ -113,12 +108,9 @@ class AuthScreenController with ChangeNotifier {
       return;
     }
 
-    firebaseController.signIn(email: email, password: password).then(
+    auth.signIn(email: email, password: password).then(
       (userCredential) {
-        showSnackbar(
-          context: context,
-          message: 'Добро пожаловать, ${userCredential.user?.displayName}',
-        );
+        Navigator.pop(context);
       },
     ).catchError(
       (error) {
