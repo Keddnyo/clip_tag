@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
-import '../controllers/sections_controller.dart';
+import 'controllers/sections_controller.dart';
 import '../utils/get_forum_section_icon.dart';
 
 class ForumSectionsScreen extends StatelessWidget {
@@ -28,11 +28,27 @@ class ForumSectionsScreen extends StatelessWidget {
         listenable: sectionsController,
         builder: (context, child) => Scaffold(
           appBar: AppBar(
+            leading: sectionsController.choosenRules.isNotEmpty
+                ? IconButton(
+                    onPressed: sectionsController.clearChoosenRules,
+                    icon: const Icon(Icons.close),
+                  )
+                : null,
             title: Text(
               sectionsController.sections.isNotEmpty
-                  ? sectionsController.section!.title
+                  ? sectionsController.choosenRules.isNotEmpty
+                      ? sectionsController.choosenRules.length.toString()
+                      : sectionsController.section!.title
                   : 'ClipTag',
             ),
+            actions: sectionsController.choosenRules.isNotEmpty
+                ? [
+                    IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.bookmark_add_outlined),
+                    ),
+                  ]
+                : null,
           ),
           body: sectionsController.sections.isNotEmpty
               ? ListView(
@@ -109,12 +125,14 @@ class ForumSectionsScreen extends StatelessWidget {
           floatingActionButton: FirebaseAuth.instance.currentUser != null
               ? FloatingActionButton.extended(
                   onPressed: () {},
-                  icon: Icon(sectionsController.choosenRules.isNotEmpty
-                      ? Icons.bookmark_add_outlined
-                      : Icons.bookmark_outline),
+                  icon: Icon(
+                    sectionsController.choosenRules.isNotEmpty
+                        ? Icons.visibility
+                        : Icons.bookmark_outline,
+                  ),
                   label: Text(
                     sectionsController.choosenRules.isNotEmpty
-                        ? 'В избранное'
+                        ? 'Предпросмотр'
                         : 'Избранное',
                   ),
                 )

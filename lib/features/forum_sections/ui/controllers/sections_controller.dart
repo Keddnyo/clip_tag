@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../../checkout/ui/checkout_screen.dart';
-import '../model/forum_section.dart';
+import '../../../checkout/ui/checkout_screen.dart';
+import '../../model/forum_section.dart';
 
 class ForumSectionsController with ChangeNotifier {
   final BuildContext context;
