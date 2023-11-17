@@ -74,9 +74,9 @@ class AuthScreen extends StatelessWidget {
                   TextFormField(
                     controller: usernameController,
                     decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.account_circle_outlined),
                       labelText: 'Ник на 4PDA',
                       hintText: 'Ваш ник на 4PDA',
+                      prefixIcon: Icon(Icons.account_circle_outlined),
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.name,
@@ -87,9 +87,9 @@ class AuthScreen extends StatelessWidget {
                 TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.email),
                     labelText: 'Почта',
                     hintText: 'example@domain.com',
+                    prefixIcon: Icon(Icons.email),
                     border: OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -100,9 +100,9 @@ class AuthScreen extends StatelessWidget {
                   TextFormField(
                     controller: passwordController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.password),
                       labelText: 'Пароль',
                       hintText: auth.isSignUp ? 'Не менее 6 символов' : null,
+                      prefixIcon: const Icon(Icons.password),
                       border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.visiblePassword,
@@ -115,9 +115,9 @@ class AuthScreen extends StatelessWidget {
                   TextFormField(
                     controller: confirmPasswordController,
                     decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.password),
                       labelText: 'Подтвердите пароль',
                       hintText: 'Пароли должны совпадать',
+                      prefixIcon: Icon(Icons.password),
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.visiblePassword,
