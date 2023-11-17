@@ -119,23 +119,19 @@ class ForumSectionsScreen extends StatelessWidget {
                       .toList(),
                 )
               : null,
-          floatingActionButton: FirebaseAuth.instance.currentUser != null
-              ? FloatingActionButton.extended(
-                  onPressed: controller.choosenRules.isNotEmpty
-                      ? controller.navigateToCheckout
-                      : null,
-                  icon: Icon(
-                    controller.choosenRules.isNotEmpty
-                        ? Icons.visibility
-                        : Icons.bookmark_outline,
-                  ),
-                  label: Text(
-                    controller.choosenRules.isNotEmpty
-                        ? 'Предпросмотр'
-                        : 'Избранное',
-                  ),
-                )
-              : null,
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: controller.choosenRules.isNotEmpty
+                ? controller.navigateToCheckout
+                : null,
+            icon: Icon(
+              controller.choosenRules.isNotEmpty
+                  ? Icons.visibility
+                  : Icons.bookmark_outline,
+            ),
+            label: Text(
+              controller.choosenRules.isNotEmpty ? 'Предпросмотр' : 'Избранное',
+            ),
+          ),
         ),
       ),
     );
