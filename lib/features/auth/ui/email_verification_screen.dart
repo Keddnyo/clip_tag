@@ -38,7 +38,6 @@ class EmailVerificationScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Ссылка для потверждения отправлена по адресу "${FirebaseAuth.instance.currentUser?.email}".\n\nПосле перехода по ссылке, данная страница закроется автоматически.',
-                    style: const TextStyle(fontSize: 16.0),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16.0),

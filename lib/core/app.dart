@@ -21,12 +21,12 @@ class MainApp extends StatelessWidget {
               child: StreamBuilder(
                 stream: firebaseController.userChanges,
                 builder: (context, snapshot) {
-                  if (snapshot.data?.emailVerified == false) {
-                    return const EmailVerificationScreen();
+                  if (!snapshot.hasData) {
+                    return const AuthScreen();
                   }
 
-                  if (settings.name == AuthScreen.route) {
-                    return const AuthScreen();
+                  if (snapshot.data?.emailVerified == false) {
+                    return const EmailVerificationScreen();
                   }
 
                   if (settings.name == CheckoutScreen.route) {

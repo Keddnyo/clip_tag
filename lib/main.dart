@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'core/app.dart';
 import 'core/firebase_options.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  runApp(const MainApp());
+  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
+      .then((_) => runApp(const MainApp()));
 }

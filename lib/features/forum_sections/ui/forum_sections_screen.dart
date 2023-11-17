@@ -1,4 +1,3 @@
-import 'package:clip_tag/features/auth/ui/auth_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +14,6 @@ class ForumSectionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = ForumSectionsController(context: context);
     final scrollController = ScrollController();
-
-    bool isSignedIn = FirebaseAuth.instance.currentUser != null;
 
     return WillPopScope(
       onWillPop: () async {
@@ -37,15 +34,8 @@ class ForumSectionsScreen extends StatelessWidget {
                     icon: const Icon(Icons.close),
                   )
                 : IconButton(
-                    onPressed: () => isSignedIn
-                        ? FirebaseAuth.instance.signOut()
-                        : Navigator.pushNamed(
-                            context,
-                            AuthScreen.route,
-                          ),
-                    icon: Icon(
-                      isSignedIn ? Icons.account_circle_outlined : Icons.login,
-                    ),
+                    onPressed: FirebaseAuth.instance.signOut,
+                    icon: const Icon(Icons.logout),
                   ),
             title: Text(
               controller.sections.isNotEmpty
@@ -83,17 +73,14 @@ class ForumSectionsScreen extends StatelessWidget {
                           for (final rule in category.rules)
                             ListTile(
                               title: BBCodeRenderer(content: rule),
-                              onTap: () => isSignedIn
-                                  ? controller.choosenRules.isEmpty
-                                      ? controller.navigateToCheckout(rule)
-                                      : controller.choosenRules.contains(rule)
-                                          ? controller.removeRule(rule)
-                                          : controller.addRule(rule)
+                              onTap: () => controller.choosenRules.isEmpty
+                                  ? controller.navigateToCheckout(rule)
+                                  : controller.choosenRules.contains(rule)
+                                      ? controller.removeRule(rule)
+                                      : controller.addRule(rule),
+                              onLongPress: controller.choosenRules.isEmpty
+                                  ? () => controller.addRule(rule)
                                   : null,
-                              onLongPress:
-                                  isSignedIn && controller.choosenRules.isEmpty
-                                      ? () => controller.addRule(rule)
-                                      : null,
                               tileColor: controller.choosenRules.contains(rule)
                                   ? Theme.of(context)
                                       .colorScheme
