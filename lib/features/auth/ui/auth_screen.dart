@@ -7,7 +7,7 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = AuthScreenController();
+    final auth = AuthScreenProvider.of(context);
 
     final formKey = GlobalKey<FormState>();
 
@@ -41,7 +41,7 @@ class AuthScreen extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        if (auth.isSignIn) {
+        if (!auth.isSignIn) {
           auth.setSignIn();
           return false;
         }
@@ -154,7 +154,7 @@ class AuthScreen extends StatelessWidget {
                   const Text(
                     'Нажимая кнопку "Создать аккаунт", вы принимаете условия использования приложения ClipTag',
                     style: TextStyle(fontSize: 12.0),
-                    textAlign: TextAlign.end,
+                    textAlign: TextAlign.center,
                   ),
               ]
                   .map(

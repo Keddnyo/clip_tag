@@ -44,3 +44,19 @@ class AuthScreenController with ChangeNotifier {
   Future<void> resetPassword({required String email}) async =>
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 }
+
+class AuthScreenProvider extends InheritedNotifier {
+  const AuthScreenProvider({
+    super.key,
+    required this.controller,
+    required super.child,
+  }) : super(
+          notifier: controller,
+        );
+
+  final AuthScreenController controller;
+
+  static AuthScreenController of(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<AuthScreenProvider>()!
+      .controller;
+}

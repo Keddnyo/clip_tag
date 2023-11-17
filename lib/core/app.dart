@@ -1,3 +1,4 @@
+import 'package:clip_tag/features/auth/ui/controllers/auth_screen_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../features/auth/ui/auth_screen.dart';
@@ -22,7 +23,10 @@ class MainApp extends StatelessWidget {
                 stream: firebaseController.userChanges,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return const AuthScreen();
+                    return AuthScreenProvider(
+                      controller: AuthScreenController(),
+                      child: const AuthScreen(),
+                    );
                   }
 
                   if (snapshot.data?.emailVerified == false) {
