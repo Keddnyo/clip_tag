@@ -52,7 +52,7 @@ class AuthScreen extends StatelessWidget {
         appBar: AppBar(
           leading: !auth.isSignIn
               ? IconButton(
-                  onPressed: Navigator.of(context).pop,
+                  onPressed: Navigator.of(context).maybePop,
                   icon: const Icon(Icons.arrow_back),
                 )
               : null,
