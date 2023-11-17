@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
-import '../../auth/ui/controllers/firebase_auth_controller.dart';
+import '../../../shared/firebase_firestore_controller.dart';
 import '../model/forum_tags.dart';
 import 'controllers/checkout_controller.dart';
 import 'widgets/forum_tag.dart';
@@ -15,7 +15,7 @@ class CheckoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firebaseController = FirebaseProvider.of(context);
+    final firestoreController = FirebaseFirestoreProvider.of(context);
     final checkoutController = CheckoutController(choosenRules);
 
     return ListenableBuilder(
@@ -54,7 +54,7 @@ class CheckoutScreen extends StatelessWidget {
                 : BBCodeRenderer(content: choosenRules),
           ),
         ),
-        bottomNavigationBar: firebaseController.isClipTagUserModerator &&
+        bottomNavigationBar: firestoreController.isClipTagUserModerator &&
                 checkoutController.isTagShown
             ? NavigationBar(
                 selectedIndex: checkoutController.currentTagIndex,

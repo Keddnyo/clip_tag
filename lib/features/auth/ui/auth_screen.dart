@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../utils/show_snackbar.dart';
 import 'controllers/auth_screen_controller.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -22,20 +23,41 @@ class AuthScreen extends StatelessWidget {
 
     void submitAuth() {
       if (auth.isSignUp) {
-        auth.signUp(
-          username: getUsername(),
-          email: getEmail(),
-          password: getPassword(),
-        );
+        auth
+            .signUp(
+              username: getUsername(),
+              email: getEmail(),
+              password: getPassword(),
+            )
+            .catchError(
+              (error) => showSnackbar(
+                context: context,
+                message: error.toString(),
+              ),
+            );
       } else if (auth.isResetPassword) {
-        auth.resetPassword(
-          email: getEmail(),
-        );
+        auth
+            .resetPassword(
+              email: getEmail(),
+            )
+            .catchError(
+              (error) => showSnackbar(
+                context: context,
+                message: error.toString(),
+              ),
+            );
       } else {
-        auth.signIn(
-          email: getEmail(),
-          password: getPassword(),
-        );
+        auth
+            .signIn(
+              email: getEmail(),
+              password: getPassword(),
+            )
+            .catchError(
+              (error) => showSnackbar(
+                context: context,
+                message: error.toString(),
+              ),
+            );
       }
     }
 

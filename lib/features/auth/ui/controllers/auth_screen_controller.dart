@@ -12,7 +12,7 @@ class AuthScreenController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<UserCredential> signIn({
+  Future<void> signIn({
     required String email,
     required String password,
   }) async =>
