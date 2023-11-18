@@ -5,7 +5,7 @@ import '../utils/get_color_scheme.dart';
 import '../utils/open_url.dart';
 
 class BBCodeRenderer extends StatelessWidget {
-  const BBCodeRenderer({super.key, required this.content});
+  const BBCodeRenderer(this.content, {super.key});
 
   final String content;
 

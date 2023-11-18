@@ -48,7 +48,7 @@ class ForumTag extends StatelessWidget {
               ),
               child: Padding(
                 padding: margin,
-                child: BBCodeRenderer(content: content),
+                child: BBCodeRenderer(content),
               ),
             ),
           ),

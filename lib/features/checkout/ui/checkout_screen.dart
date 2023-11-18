@@ -51,7 +51,7 @@ class CheckoutScreen extends StatelessWidget {
                     content: choosenRules,
                     tag: checkoutController.currentForumTag,
                   )
-                : BBCodeRenderer(content: choosenRules),
+                : BBCodeRenderer(choosenRules),
           ),
         ),
         bottomNavigationBar: firestoreController.isClipTagUserModerator &&

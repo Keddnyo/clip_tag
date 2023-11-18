@@ -72,7 +72,7 @@ class ForumSectionsScreen extends StatelessWidget {
                           const Divider(height: 1.0),
                           for (final rule in category.rules)
                             ListTile(
-                              title: BBCodeRenderer(content: rule),
+                              title: BBCodeRenderer(rule),
                               onTap: () => controller.choosenRules.isEmpty
                                   ? controller.navigateToCheckout(rule)
                                   : controller.choosenRules.contains(rule)
