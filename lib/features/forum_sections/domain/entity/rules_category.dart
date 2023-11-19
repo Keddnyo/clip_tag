@@ -1,4 +1,4 @@
-import 'package:clip_tag/features/forum_sections/data/model/rules_category_model.dart';
+import '../../data/model/rules_category_model.dart';
 
 class RulesCategory {
   final String title;

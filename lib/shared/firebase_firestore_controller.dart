@@ -8,7 +8,9 @@ class FirebaseFirestoreController with ChangeNotifier {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
-        .then((snapshot) => snapshot.data()?['isModerator'] == true);
+        .then(
+          (snapshot) => setModerator(snapshot.data()?['isModerator'] == true),
+        );
   }
 
   bool _isModerator = false;

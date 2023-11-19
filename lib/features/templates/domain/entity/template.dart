@@ -1,13 +1,16 @@
-import 'package:clip_tag/features/templates/data/model/template_model.dart';
+import '../../data/model/template_model.dart';
 
 class Template {
-  final String template;
+  final String content;
   final DateTime createdAt;
 
-  Template({required this.template, required this.createdAt});
+  Template({
+    required this.content,
+    required this.createdAt,
+  });
 
   factory Template.fromModel(TemplateModel model) => Template(
-        template: model.template,
+        content: model.template,
         createdAt: model.createdAt.toDate(),
       );
 

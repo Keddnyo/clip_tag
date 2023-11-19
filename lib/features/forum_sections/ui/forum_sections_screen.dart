@@ -1,11 +1,15 @@
-import 'package:clip_tag/features/templates/ui/templates_screen.dart';
-import 'package:clip_tag/shared/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
+import '../../../shared/constants.dart';
 import '../../../shared/ui/loading_circle.dart';
-import 'controllers/sections_controller.dart';
+import '../../../utils/show_snackbar.dart';
+import '../../templates/data/model/template_model.dart';
+import '../../templates/ui/templates_screen.dart';
 import '../utils/get_forum_section_icon.dart';
+import 'controllers/sections_controller.dart';
 
 class ForumSectionsScreen extends StatelessWidget {
   const ForumSectionsScreen({super.key});
@@ -30,15 +34,12 @@ class ForumSectionsScreen extends StatelessWidget {
         listenable: controller,
         builder: (context, child) => Scaffold(
           appBar: AppBar(
-            // leading: controller.choosenRules.isNotEmpty
-            //     ? IconButton(
-            //         onPressed: controller.clearChoosenRules,
-            //         icon: const Icon(Icons.close),
-            //       )
-            //     : IconButton(
-            //         onPressed: FirebaseAuth.instance.signOut,
-            //         icon: const Icon(Icons.logout),
-            //       ),
+            leading: controller.choosenRules.isNotEmpty
+                ? IconButton(
+                    onPressed: controller.clearChoosenRules,
+                    icon: const Icon(Icons.close),
+                  )
+                : null,
             title: Text(
               controller.sections.isNotEmpty
                   ? controller.choosenRules.isNotEmpty
@@ -49,8 +50,28 @@ class ForumSectionsScreen extends StatelessWidget {
             actions: controller.choosenRules.isNotEmpty
                 ? [
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.bookmark_add_outlined),
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(FirebaseAuth.instance.currentUser?.uid)
+                            .collection('templates')
+                            .add(
+                              TemplateModel.toJson(
+                                content: controller.choosenRulesCombined,
+                                createdAt: DateTime.now(),
+                              ),
+                            )
+                            .then(
+                          (_) {
+                            controller.clearChoosenRules();
+                            showSnackbar(
+                              context: context,
+                              message: 'Заготовка сохранена',
+                            );
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.cut),
                     ),
                   ]
                 : null,
@@ -59,6 +80,9 @@ class ForumSectionsScreen extends StatelessWidget {
           body: controller.sections.isNotEmpty
               ? ListView(
                   controller: scrollController,
+                  padding: controller.choosenRules.isNotEmpty
+                      ? const EdgeInsets.only(bottom: 96.0)
+                      : null,
                   children: [
                     for (final category in controller.section!.categories)
                       Column(
@@ -102,6 +126,12 @@ class ForumSectionsScreen extends StatelessWidget {
                   child: Text(Constants.appName),
                 ),
                 ListTile(
+                  leading: const Icon(Icons.account_circle_outlined),
+                  title: Text(FirebaseAuth.instance.currentUser!.displayName!),
+                  subtitle: Text(FirebaseAuth.instance.currentUser!.email!),
+                ),
+                const Divider(),
+                ListTile(
                   leading: const Icon(Icons.cut),
                   title: const Text('Заготовки'),
                   onTap: () {
@@ -137,19 +167,13 @@ class ForumSectionsScreen extends StatelessWidget {
                       .toList(),
                 )
               : null,
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: controller.choosenRules.isNotEmpty
-                ? controller.navigateToCheckout
-                : null,
-            icon: Icon(
-              controller.choosenRules.isNotEmpty
-                  ? Icons.visibility
-                  : Icons.bookmark_outline,
-            ),
-            label: Text(
-              controller.choosenRules.isNotEmpty ? 'Предпросмотр' : 'Избранное',
-            ),
-          ),
+          floatingActionButton: controller.choosenRules.isNotEmpty
+              ? FloatingActionButton.extended(
+                  onPressed: controller.navigateToCheckout,
+                  icon: const Icon(Icons.visibility),
+                  label: const Text('Предпросмотр'),
+                )
+              : null,
         ),
       ),
     );

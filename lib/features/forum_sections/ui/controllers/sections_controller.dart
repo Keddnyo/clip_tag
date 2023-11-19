@@ -9,20 +9,23 @@ class ForumSectionsController with ChangeNotifier {
   final BuildContext context;
 
   ForumSectionsController({required this.context}) {
-    FirebaseFirestore.instance.collection('rules').snapshots().listen(
-          (query) => _setSections(query.docs
-              .map(
-                (query) => ForumSection.fromModel(
-                  ForumSectionModel.fromMap(query.data()),
-                ),
-              )
-              .toList()
-            ..sort((a, b) => a.order.compareTo(b.order))),
+    FirebaseFirestore.instance
+        .collection('rules')
+        .orderBy('order')
+        .snapshots()
+        .listen(
+          (query) => _setSections(
+            query.docs.map(
+              (query) => ForumSection.fromModel(
+                ForumSectionModel.fromMap(query.data()),
+              ),
+            ),
+          ),
         );
   }
 
   final List<ForumSection> _sections = [];
-  void _setSections(List<ForumSection> sections) {
+  void _setSections(Iterable<ForumSection> sections) {
     if (_sections.isNotEmpty) {
       _sections.clear();
     }
@@ -58,11 +61,12 @@ class ForumSectionsController with ChangeNotifier {
     notifyListeners();
   }
 
+  String get choosenRulesCombined =>
+      section!.combineChoosenRulesToString(_choosenRules);
+
   void navigateToCheckout([String? rule]) => Navigator.pushNamed(
         context,
         CheckoutScreen.route,
-        arguments: section?.combineChoosenRulesToString(
-          rule != null ? [rule] : _choosenRules,
-        ),
+        arguments: rule ?? choosenRulesCombined,
       );
 }
