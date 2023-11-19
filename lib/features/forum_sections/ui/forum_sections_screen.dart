@@ -1,7 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:clip_tag/features/templates/ui/templates_screen.dart';
+import 'package:clip_tag/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
+import '../../../shared/ui/loading_circle.dart';
 import 'controllers/sections_controller.dart';
 import '../utils/get_forum_section_icon.dart';
 
@@ -28,15 +30,15 @@ class ForumSectionsScreen extends StatelessWidget {
         listenable: controller,
         builder: (context, child) => Scaffold(
           appBar: AppBar(
-            leading: controller.choosenRules.isNotEmpty
-                ? IconButton(
-                    onPressed: controller.clearChoosenRules,
-                    icon: const Icon(Icons.close),
-                  )
-                : IconButton(
-                    onPressed: FirebaseAuth.instance.signOut,
-                    icon: const Icon(Icons.logout),
-                  ),
+            // leading: controller.choosenRules.isNotEmpty
+            //     ? IconButton(
+            //         onPressed: controller.clearChoosenRules,
+            //         icon: const Icon(Icons.close),
+            //       )
+            //     : IconButton(
+            //         onPressed: FirebaseAuth.instance.signOut,
+            //         icon: const Icon(Icons.logout),
+            //       ),
             title: Text(
               controller.sections.isNotEmpty
                   ? controller.choosenRules.isNotEmpty
@@ -66,7 +68,7 @@ class ForumSectionsScreen extends StatelessWidget {
                           Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(category.categoryName),
+                              child: Text(category.title),
                             ),
                           ),
                           const Divider(height: 1.0),
@@ -91,9 +93,25 @@ class ForumSectionsScreen extends StatelessWidget {
                       ),
                   ],
                 )
-              : const Center(
-                  child: CircularProgressIndicator(),
+              : const LoadingCircle(),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                const DrawerHeader(
+                  child: Text(Constants.appName),
                 ),
+                ListTile(
+                  leading: const Icon(Icons.cut),
+                  title: const Text('Заготовки'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, TemplatesScreen.route);
+                  },
+                ),
+              ],
+            ),
+          ),
           endDrawer: controller.sections.isNotEmpty
               ? NavigationDrawer(
                   onDestinationSelected: (index) {

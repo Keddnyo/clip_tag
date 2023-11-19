@@ -2,33 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../features/auth/model/clip_tag_user.dart';
-
 class FirebaseFirestoreController with ChangeNotifier {
-  final _firestore = FirebaseFirestore.instance;
-
   FirebaseFirestoreController() {
-    _firestore.collection('users').get().then(
-      (query) {
-        for (final doc in query.docs) {
-          final user = ClipTagUser.fromJson(doc.data());
-
-          if (user.email == FirebaseAuth.instance.currentUser?.email) {
-            setClipTagUser(user);
-            return;
-          }
-        }
-      },
-    );
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get()
+        .then((snapshot) => snapshot.data()?['isModerator'] == true);
   }
 
-  ClipTagUser? _currentClipTagUser;
-  setClipTagUser(ClipTagUser? user) {
-    _currentClipTagUser = user;
+  bool _isModerator = false;
+  bool get isModerator => _isModerator;
+  setModerator(bool isModerator) {
+    _isModerator = isModerator;
     notifyListeners();
   }
-
-  bool get isClipTagUserModerator => _currentClipTagUser?.isModerator == true;
 }
 
 class FirebaseFirestoreProvider extends InheritedNotifier {

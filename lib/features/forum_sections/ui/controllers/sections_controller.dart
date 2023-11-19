@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../../checkout/ui/checkout_screen.dart';
-import '../../model/forum_section.dart';
+import '../../data/model/forum_section_model.dart';
+import '../../domain/entity/forum_section.dart';
 
 class ForumSectionsController with ChangeNotifier {
   final BuildContext context;
@@ -10,7 +11,11 @@ class ForumSectionsController with ChangeNotifier {
   ForumSectionsController({required this.context}) {
     FirebaseFirestore.instance.collection('rules').snapshots().listen(
           (query) => _setSections(query.docs
-              .map((query) => ForumSection.fromJson(query.data()))
+              .map(
+                (query) => ForumSection.fromModel(
+                  ForumSectionModel.fromMap(query.data()),
+                ),
+              )
               .toList()
             ..sort((a, b) => a.order.compareTo(b.order))),
         );
@@ -35,8 +40,8 @@ class ForumSectionsController with ChangeNotifier {
     notifyListeners();
   }
 
-  final _choosenRules = [];
-  List get choosenRules => _choosenRules;
+  final List<String> _choosenRules = [];
+  List<String> get choosenRules => _choosenRules;
 
   void addRule(rule) {
     _choosenRules.add(rule);
@@ -53,7 +58,7 @@ class ForumSectionsController with ChangeNotifier {
     notifyListeners();
   }
 
-  void navigateToCheckout([dynamic rule]) => Navigator.pushNamed(
+  void navigateToCheckout([String? rule]) => Navigator.pushNamed(
         context,
         CheckoutScreen.route,
         arguments: section?.combineChoosenRulesToString(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../shared/constants.dart';
 import '../../../utils/show_snackbar.dart';
 import 'controllers/auth_screen_controller.dart';
 
@@ -82,8 +83,8 @@ class AuthScreen extends StatelessWidget {
             auth.isResetPassword
                 ? 'Сброс пароля'
                 : auth.isSignUp
-                    ? 'Новый ClipTag ID'
-                    : 'ClipTag ID',
+                    ? 'Новый ${Constants.appName} ID'
+                    : '${Constants.appName} ID',
           ),
         ),
         body: Form(
@@ -174,7 +175,7 @@ class AuthScreen extends StatelessWidget {
                   ),
                 if (auth.isSignUp)
                   const Text(
-                    'Нажимая кнопку "Создать аккаунт", вы принимаете условия использования приложения ClipTag',
+                    'Нажимая кнопку "Создать аккаунт", вы принимаете условия использования приложения ${Constants.appName}',
                     style: TextStyle(fontSize: 12.0),
                     textAlign: TextAlign.center,
                   ),

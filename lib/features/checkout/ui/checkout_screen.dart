@@ -10,8 +10,7 @@ class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key, required this.choosenRules});
 
   static const String route = '/checkout';
-
-  final dynamic choosenRules;
+  final String choosenRules;
 
   @override
   Widget build(BuildContext context) {
@@ -54,19 +53,19 @@ class CheckoutScreen extends StatelessWidget {
                 : BBCodeRenderer(choosenRules),
           ),
         ),
-        bottomNavigationBar: firestoreController.isClipTagUserModerator &&
-                checkoutController.isTagShown
-            ? NavigationBar(
-                selectedIndex: checkoutController.currentTagIndex,
-                destinations: [
-                  for (final tag in ForumTags.values)
-                    NavigationDestination(
-                        icon: Icon(tag.icon), label: tag.title),
-                ],
-                onDestinationSelected: (index) =>
-                    checkoutController.setCurrentTagIndex(index),
-              )
-            : null,
+        bottomNavigationBar:
+            firestoreController.isModerator && checkoutController.isTagShown
+                ? NavigationBar(
+                    selectedIndex: checkoutController.currentTagIndex,
+                    destinations: [
+                      for (final tag in ForumTags.values)
+                        NavigationDestination(
+                            icon: Icon(tag.icon), label: tag.title),
+                    ],
+                    onDestinationSelected: (index) =>
+                        checkoutController.setCurrentTagIndex(index),
+                  )
+                : null,
       ),
     );
   }
