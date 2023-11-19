@@ -16,6 +16,9 @@ class MainApp extends StatelessWidget {
           brightness: Brightness.dark,
           scaffoldBackgroundColor: Colors.black,
           appBarTheme: const AppBarTheme(color: Colors.black),
+          drawerTheme: const DrawerThemeData(
+            backgroundColor: Colors.black,
+          ),
           navigationBarTheme: const NavigationBarThemeData(
             backgroundColor: Colors.black,
           ),

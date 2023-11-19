@@ -21,10 +21,27 @@ class ForumSectionsScreen extends StatelessWidget {
     final controller = ForumSectionsController(context: context);
     final scrollController = ScrollController();
 
+    final scaffoldKey = GlobalKey<ScaffoldState>();
+
     return WillPopScope(
       onWillPop: () async {
+        if (scaffoldKey.currentState?.isDrawerOpen == true) {
+          scaffoldKey.currentState?.closeDrawer();
+          return false;
+        }
+
+        if (scaffoldKey.currentState?.isEndDrawerOpen == true) {
+          scaffoldKey.currentState?.closeEndDrawer();
+          return false;
+        }
+
         if (controller.choosenRules.isNotEmpty) {
           controller.clearChoosenRules();
+          return false;
+        }
+
+        if (controller.sectionIndex != 0) {
+          controller.setSectionIndex(0);
           return false;
         }
 
@@ -33,6 +50,7 @@ class ForumSectionsScreen extends StatelessWidget {
       child: ListenableBuilder(
         listenable: controller,
         builder: (context, child) => Scaffold(
+          key: scaffoldKey,
           appBar: AppBar(
             leading: controller.choosenRules.isNotEmpty
                 ? IconButton(
