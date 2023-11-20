@@ -70,7 +70,7 @@ class ForumSectionsScreen extends StatelessWidget {
             ),
             actions: controller.choosenRules.isNotEmpty
                 ? [
-                    TextButton.icon(
+                    IconButton(
                       onPressed: () => FirebaseProvider.of(context)
                           .addUserTemplate(controller.choosenRulesCombined)
                           .then(
@@ -83,7 +83,6 @@ class ForumSectionsScreen extends StatelessWidget {
                         },
                       ),
                       icon: const Icon(Icons.cut),
-                      label: const Text('В заготовки'),
                     ),
                   ]
                 : null,
