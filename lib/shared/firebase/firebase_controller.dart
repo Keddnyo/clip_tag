@@ -11,29 +11,30 @@ class FirebaseController with ChangeNotifier {
   final _firestore = FirebaseFirestore.instance;
 
   FirebaseController() {
-    if (isUserSignedIn) {
-      _setUserData(_firestore.collection('users').doc(_userID));
-      _userData!.get().then(
-            (map) => _setUserModerator(map['isModerator']),
-          );
-
-      _setTemplatesReference(
-        _userData!.collection('templates')..orderBy('createdAt'),
-      );
-      _userTemplatesReference!.orderBy('createdAt').snapshots().listen(
-            (query) => _setUserTemplates(query.docs),
-          );
-    } else {
-      _setUserModerator(false);
-      _setUserTemplates([]);
-      _setTemplatesReference(null);
-    }
-
     _auth
       ..setLanguageCode('ru')
       ..userChanges().listen(
         (user) {
-          if (isUserSignedIn && !isEmailVerified) {
+          if (!isUserSignedIn) {
+            _setUserModerator(false);
+            _setUserTemplates([]);
+            _setTemplatesReference(null);
+          }
+
+          if (isEmailVerified) {
+            _setUserData(_firestore.collection('users').doc(_userID));
+            _userData!.get().then(
+                  (map) => _setUserModerator(map['isModerator']),
+                );
+
+            _setTemplatesReference(
+              _userData!.collection('templates')
+                ..orderBy('createdAt', descending: true),
+            );
+            _userTemplatesReference!.orderBy('createdAt').snapshots().listen(
+                  (query) => _setUserTemplates(query.docs),
+                );
+          } else {
             Timer.periodic(
               const Duration(seconds: 5),
               (timer) => user?.reload(),
