@@ -161,6 +161,52 @@ class ForumSectionsScreen extends StatelessWidget {
                   leading: const Icon(Icons.account_circle_outlined),
                   title: Text(FirebaseAuth.instance.currentUser!.displayName!),
                   subtitle: Text(FirebaseAuth.instance.currentUser!.email!),
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text(
+                        FirebaseAuth.instance.currentUser!.displayName!,
+                      ),
+                      content: Text(FirebaseAuth.instance.currentUser!.email!),
+                      actions: [
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+
+                            final firestoreUser = FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(FirebaseAuth.instance.currentUser?.uid);
+
+                            firestoreUser
+                                .collection('templates')
+                                .get()
+                                .then(
+                                  (query) {
+                                    for (var doc in query.docs) {
+                                      doc.reference.delete();
+                                    }
+                                  },
+                                )
+                                .then(
+                                  (_) => firestoreUser.delete(),
+                                )
+                                .then(
+                                  (_) => FirebaseAuth.instance.currentUser
+                                      ?.delete(),
+                                );
+                          },
+                          child: const Text('Удалить аккаунт'),
+                        ),
+                        FilledButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            FirebaseAuth.instance.signOut();
+                          },
+                          child: const Text('Выход'),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.cut),

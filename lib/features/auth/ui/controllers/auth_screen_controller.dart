@@ -5,6 +5,17 @@ import 'package:flutter/material.dart';
 import '../../model/auth_state.dart';
 
 class AuthScreenController with ChangeNotifier {
+  final formKey = GlobalKey<FormState>();
+
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  String get username => usernameController.text.trim();
+  String get email => emailController.text.trim();
+  String get password => passwordController.text;
+
   AuthState _authState = AuthState.signIn;
 
   bool get isSignIn => _authState == AuthState.signIn;

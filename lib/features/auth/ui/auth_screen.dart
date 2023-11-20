@@ -11,24 +11,13 @@ class AuthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = AuthScreenProvider.of(context);
 
-    final formKey = GlobalKey<FormState>();
-
-    final usernameController = TextEditingController();
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
-    final confirmPasswordController = TextEditingController();
-
-    String getUsername() => usernameController.text.trim();
-    String getEmail() => emailController.text.trim();
-    String getPassword() => passwordController.text;
-
     void submitAuth() {
       if (auth.isSignUp) {
         auth
             .signUp(
-              username: getUsername(),
-              email: getEmail(),
-              password: getPassword(),
+              username: auth.username,
+              email: auth.email,
+              password: auth.password,
             )
             .catchError(
               (error) => showSnackbar(
@@ -39,7 +28,7 @@ class AuthScreen extends StatelessWidget {
       } else if (auth.isResetPassword) {
         auth
             .resetPassword(
-              email: getEmail(),
+              email: auth.email,
             )
             .catchError(
               (error) => showSnackbar(
@@ -50,8 +39,8 @@ class AuthScreen extends StatelessWidget {
       } else {
         auth
             .signIn(
-              email: getEmail(),
-              password: getPassword(),
+              email: auth.email,
+              password: auth.password,
             )
             .catchError(
               (error) => showSnackbar(
@@ -89,14 +78,14 @@ class AuthScreen extends StatelessWidget {
           shadowColor: Colors.black,
         ),
         body: Form(
-          key: formKey,
+          key: auth.formKey,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (auth.isSignUp)
                   TextFormField(
-                    controller: usernameController,
+                    controller: auth.usernameController,
                     decoration: const InputDecoration(
                       labelText: 'Ник на 4PDA',
                       hintText: 'Ваш ник на 4PDA',
@@ -109,7 +98,7 @@ class AuthScreen extends StatelessWidget {
                         : null,
                   ),
                 TextFormField(
-                  controller: emailController,
+                  controller: auth.emailController,
                   decoration: const InputDecoration(
                     labelText: 'Почта',
                     hintText: 'example@domain.com',
@@ -122,7 +111,7 @@ class AuthScreen extends StatelessWidget {
                 ),
                 if (!auth.isResetPassword)
                   TextFormField(
-                    controller: passwordController,
+                    controller: auth.passwordController,
                     decoration: InputDecoration(
                       labelText: 'Пароль',
                       hintText: auth.isSignUp ? 'Не менее 6 символов' : null,
@@ -137,7 +126,7 @@ class AuthScreen extends StatelessWidget {
                   ),
                 if (auth.isSignUp)
                   TextFormField(
-                    controller: confirmPasswordController,
+                    controller: auth.confirmPasswordController,
                     decoration: const InputDecoration(
                       labelText: 'Подтвердите пароль',
                       hintText: 'Пароли должны совпадать',
@@ -147,7 +136,7 @@ class AuthScreen extends StatelessWidget {
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     validator: (confirmPassword) =>
-                        confirmPassword != getPassword()
+                        confirmPassword != auth.password
                             ? 'Пароли должны совпадать'
                             : null,
                   ),
