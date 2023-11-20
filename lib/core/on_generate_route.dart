@@ -6,7 +6,7 @@ import '../features/auth/ui/email_verification_screen.dart';
 import '../features/checkout/ui/checkout_screen.dart';
 import '../features/forum_sections/ui/forum_sections_screen.dart';
 import '../features/templates/ui/templates_screen.dart';
-import '../shared/firebase/firebase_auth_provider.dart';
+import '../shared/firebase/firebase_controller.dart';
 
 Route<dynamic>? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
       builder: (context) {

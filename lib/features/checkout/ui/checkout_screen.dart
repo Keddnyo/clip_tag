@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
-import '../../../shared/firebase/firebase_auth_provider.dart';
+import '../../../shared/firebase/firebase_controller.dart';
 import '../model/forum_tags.dart';
 import 'controllers/checkout_controller.dart';
 import 'widgets/forum_tag.dart';

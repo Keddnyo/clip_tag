@@ -1,4 +1,3 @@
-import 'package:clip_tag/shared/firebase/firebase_auth_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -10,48 +9,7 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firebase = FirebaseProvider.of(context);
     final auth = AuthScreenProvider.of(context);
-
-    void submitAuth() {
-      if (auth.isSignUp) {
-        firebase
-            .signUp(
-              username: auth.username,
-              email: auth.email,
-              password: auth.password,
-            )
-            .catchError(
-              (error) => showSnackbar(
-                context: context,
-                message: error.toString(),
-              ),
-            );
-      } else if (auth.isResetPassword) {
-        firebase
-            .resetPassword(
-              email: auth.email,
-            )
-            .catchError(
-              (error) => showSnackbar(
-                context: context,
-                message: error.toString(),
-              ),
-            );
-      } else {
-        firebase
-            .signIn(
-              email: auth.email,
-              password: auth.password,
-            )
-            .catchError(
-              (error) => showSnackbar(
-                context: context,
-                message: error.toString(),
-              ),
-            );
-      }
-    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -143,7 +101,12 @@ class AuthScreen extends StatelessWidget {
                             : null,
                   ),
                 FilledButton.icon(
-                  onPressed: submitAuth,
+                  onPressed: () => auth.submitAuth().catchError(
+                        (error) => showSnackbar(
+                          context: context,
+                          message: error.toString(),
+                        ),
+                      ),
                   icon: Icon(
                     auth.isSignUp
                         ? Icons.person_add

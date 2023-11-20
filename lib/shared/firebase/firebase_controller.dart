@@ -78,7 +78,9 @@ class FirebaseController with ChangeNotifier {
                     ),
           );
 
-  get signOut => _auth.signOut;
+  void sendEmailVerification() => _user?.sendEmailVerification();
+
+  void signOut() => _auth.signOut();
 
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
 import '../../../shared/constants.dart';
-import '../../../shared/firebase/firebase_auth_provider.dart';
+import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../utils/show_snackbar.dart';
 import '../../templates/ui/templates_screen.dart';
@@ -20,7 +20,7 @@ class ForumSectionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ForumSectionsController(context: context);
+    final controller = ForumSectionsController();
     final scrollController = ScrollController();
 
     final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -113,7 +113,8 @@ class ForumSectionsScreen extends StatelessWidget {
                             ListTile(
                               title: BBCodeRenderer(rule),
                               onTap: () => controller.choosenRules.isEmpty
-                                  ? controller.navigateToCheckout(rule)
+                                  ? controller.navigateToCheckout(context,
+                                      rule: rule)
                                   : controller.choosenRules.contains(rule)
                                       ? controller.removeRule(rule)
                                       : controller.addRule(rule),
@@ -146,7 +147,7 @@ class ForumSectionsScreen extends StatelessWidget {
               : null,
           floatingActionButton: controller.choosenRules.isNotEmpty
               ? FloatingActionButton.extended(
-                  onPressed: controller.navigateToCheckout,
+                  onPressed: () => controller.navigateToCheckout(context),
                   icon: const Icon(Icons.visibility),
                   label: const Text('Предпросмотр'),
                 )

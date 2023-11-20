@@ -1,27 +1,15 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../../../shared/firebase/firebase_controller.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
   const EmailVerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth.instance.currentUser?.sendEmailVerification();
+    final firebase = FirebaseProvider.of(context);
 
-    Timer.periodic(
-      const Duration(seconds: 3),
-      (timer) {
-        FirebaseAuth.instance.currentUser?.reload().then(
-          (_) {
-            if (FirebaseAuth.instance.currentUser?.emailVerified == true) {
-              timer.cancel();
-            }
-          },
-        );
-      },
-    );
+    firebase.sendEmailVerification();
 
     return Scaffold(
       appBar: AppBar(
@@ -37,12 +25,12 @@ class EmailVerificationScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Ссылка для потверждения отправлена по адресу "${FirebaseAuth.instance.currentUser?.email}".\n\nПосле перехода по ссылке, данная страница закроется автоматически.',
+                    'Ссылка для потверждения отправлена по адресу "${firebase.userEmail}".\n\nПосле перехода по ссылке, данная страница закроется автоматически.',
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16.0),
                   FilledButton(
-                    onPressed: FirebaseAuth.instance.currentUser?.delete,
+                    onPressed: firebase.deleteAccount,
                     child: const Text('Отмена'),
                   ),
                 ],

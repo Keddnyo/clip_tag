@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../../shared/firebase/firebase_controller.dart';
 import '../../model/auth_state.dart';
 
 class AuthScreenController with ChangeNotifier {
+  final firebase = FirebaseController();
+
   final formKey = GlobalKey<FormState>();
 
   final usernameController = TextEditingController();
@@ -33,6 +36,21 @@ class AuthScreenController with ChangeNotifier {
     _authState = AuthState.resetPassword;
     notifyListeners();
   }
+
+  Future<void> submitAuth() async => isSignUp
+      ? await firebase.signUp(
+          username: username,
+          email: email,
+          password: password,
+        )
+      : isResetPassword
+          ? await firebase.resetPassword(
+              email: email,
+            )
+          : await firebase.signIn(
+              email: email,
+              password: password,
+            );
 }
 
 class AuthScreenProvider extends InheritedNotifier {

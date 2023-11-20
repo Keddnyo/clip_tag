@@ -1,19 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../shared/firebase/firebase_controller.dart';
 import '../../../checkout/ui/checkout_screen.dart';
 import '../../data/model/forum_section_model.dart';
 import '../../domain/entity/forum_section.dart';
 
 class ForumSectionsController with ChangeNotifier {
-  final BuildContext context;
-
-  ForumSectionsController({required this.context}) {
-    FirebaseFirestore.instance
-        .collection('rules')
-        .orderBy('order')
-        .snapshots()
-        .listen(
+  ForumSectionsController() {
+    FirebaseController().forumRules.listen(
           (query) => _setSections(
             query.docs.map(
               (query) => ForumSection.fromModel(
@@ -64,7 +58,8 @@ class ForumSectionsController with ChangeNotifier {
   String get choosenRulesCombined =>
       section!.combineChoosenRulesToString(_choosenRules);
 
-  void navigateToCheckout([String? rule]) => Navigator.pushNamed(
+  void navigateToCheckout(BuildContext context, {String? rule}) =>
+      Navigator.pushNamed(
         context,
         CheckoutScreen.route,
         arguments: rule ?? choosenRulesCombined,
