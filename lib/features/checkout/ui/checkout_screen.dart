@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../shared/bbcode_renderer.dart';
 import '../../../shared/constants.dart';
 import '../../../shared/firebase_firestore_controller.dart';
 import '../model/forum_tags.dart';
@@ -24,17 +23,19 @@ class CheckoutScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Подготовка тега'),
           actions: [
-            IconButton(
-              onPressed: checkoutController.copyChoosenRules,
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  onTap: () =>
+                      checkoutController.copyChoosenRules(withTag: true),
+                  child: const Text('С тегом'),
+                ),
+                PopupMenuItem(
+                  onTap: checkoutController.copyChoosenRules,
+                  child: const Text('Без тега'),
+                ),
+              ],
               icon: const Icon(Icons.copy),
-            ),
-            IconButton(
-              onPressed: checkoutController.switchTagVisibility,
-              icon: Icon(
-                checkoutController.isTagShown
-                    ? Icons.visibility
-                    : Icons.visibility_off,
-              ),
             ),
             IconButton(
               onPressed: checkoutController.sendChoosenRules,
@@ -46,27 +47,24 @@ class CheckoutScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(Constants.previewPadding),
-            child: checkoutController.isTagShown
-                ? ForumTag(
-                    content: choosenRules,
-                    tag: checkoutController.currentForumTag,
-                  )
-                : BBCodeRenderer(choosenRules),
+            child: ForumTag(
+              content: choosenRules,
+              tag: checkoutController.currentForumTag,
+            ),
           ),
         ),
-        bottomNavigationBar:
-            firestoreController.isModerator && checkoutController.isTagShown
-                ? NavigationBar(
-                    selectedIndex: checkoutController.currentTagIndex,
-                    destinations: [
-                      for (final tag in ForumTags.values)
-                        NavigationDestination(
-                            icon: Icon(tag.icon), label: tag.title),
-                    ],
-                    onDestinationSelected: (index) =>
-                        checkoutController.setCurrentTagIndex(index),
-                  )
-                : null,
+        bottomNavigationBar: firestoreController.isModerator
+            ? NavigationBar(
+                selectedIndex: checkoutController.currentTagIndex,
+                destinations: [
+                  for (final tag in ForumTags.values)
+                    NavigationDestination(
+                        icon: Icon(tag.icon), label: tag.title),
+                ],
+                onDestinationSelected: (index) =>
+                    checkoutController.setCurrentTagIndex(index),
+              )
+            : null,
       ),
     );
   }
