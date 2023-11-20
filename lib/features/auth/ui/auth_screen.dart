@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
+import '../../../utils/open_url.dart';
 import '../../../utils/show_snackbar.dart';
 import 'controllers/auth_screen_controller.dart';
 
@@ -129,10 +130,11 @@ class AuthScreen extends StatelessWidget {
                     label: const Text('Забыли пароль?'),
                   ),
                 if (auth.isSignUp)
-                  const Text(
-                    'Нажимая кнопку "Создать аккаунт", вы принимаете условия использования приложения ${Constants.appName}',
-                    style: TextStyle(fontSize: 12.0),
-                    textAlign: TextAlign.center,
+                  TextButton(
+                    onPressed: () => openUrl(Constants.appTermsOfUseUrl),
+                    child: const Text(
+                      'Прочитать условия использования',
+                    ),
                   ),
               ]
                   .map(
