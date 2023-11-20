@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../features/templates/data/model/template_model.dart';
+import '../../features/favorites/data/model/favorite_model.dart';
 
 class FirebaseController with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
@@ -17,8 +17,8 @@ class FirebaseController with ChangeNotifier {
         (user) {
           if (!isUserSignedIn) {
             _setUserModerator(false);
-            _setUserTemplates([]);
-            _setTemplatesReference(null);
+            _setUserFavorites([]);
+            _setFavoritesReference(null);
           }
 
           if (isEmailVerified) {
@@ -27,14 +27,14 @@ class FirebaseController with ChangeNotifier {
                   (map) => _setUserModerator(map['isModerator']),
                 );
 
-            _setTemplatesReference(
-              _userData!.collection('templates'),
+            _setFavoritesReference(
+              _userData!.collection('favorites'),
             );
-            _userTemplatesReference!
+            _userFavoritesReference!
                 .orderBy('createdAt', descending: true)
                 .snapshots()
                 .listen(
-                  (query) => _setUserTemplates(query.docs),
+                  (query) => _setUserFavorites(query.docs),
                 );
           } else {
             Timer.periodic(
@@ -88,7 +88,7 @@ class FirebaseController with ChangeNotifier {
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
 
-  void deleteAccount() => _userTemplatesReference!
+  void deleteAccount() => _userFavoritesReference!
       .get()
       .then(
         (query) {
@@ -118,31 +118,31 @@ class FirebaseController with ChangeNotifier {
     notifyListeners();
   }
 
-  CollectionReference<Map<String, dynamic>>? _userTemplatesReference;
-  void _setTemplatesReference(
+  CollectionReference<Map<String, dynamic>>? _userFavoritesReference;
+  void _setFavoritesReference(
     CollectionReference<Map<String, dynamic>>? reference,
   ) {
-    _userTemplatesReference = reference;
+    _userFavoritesReference = reference;
     notifyListeners();
   }
 
-  final _userTemplates = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
-  List<QueryDocumentSnapshot<Map<String, dynamic>>> get userTemplates =>
-      _userTemplates;
+  final _userFavorites = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
+  List<QueryDocumentSnapshot<Map<String, dynamic>>> get userFavorites =>
+      _userFavorites;
 
-  void _setUserTemplates(
+  void _setUserFavorites(
     List<QueryDocumentSnapshot<Map<String, dynamic>>> templates,
   ) {
-    if (_userTemplates.isNotEmpty) {
-      _userTemplates.clear();
+    if (_userFavorites.isNotEmpty) {
+      _userFavorites.clear();
     }
-    _userTemplates.addAll(templates);
+    _userFavorites.addAll(templates);
     notifyListeners();
   }
 
-  Future<void> addUserTemplate(String template) async =>
-      await _userTemplatesReference?.add(TemplateModel.toMap(
-        content: template,
+  Future<void> addToFavorites(String favorite) async =>
+      await _userFavoritesReference?.add(FavoriteModel.toMap(
+        content: favorite,
         createdAt: DateTime.now(),
       ));
 

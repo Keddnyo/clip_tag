@@ -1,15 +1,15 @@
-import '../../data/model/template_model.dart';
+import '../../data/model/favorite_model.dart';
 
-class Template {
+class Favorite {
   final String content;
   final DateTime createdAt;
 
-  Template({
+  Favorite({
     required this.content,
     required this.createdAt,
   });
 
-  factory Template.fromModel(TemplateModel model) => Template(
+  factory Favorite.fromModel(FavoriteModel model) => Favorite(
         content: model.content,
         createdAt: model.createdAt.toDate(),
       );

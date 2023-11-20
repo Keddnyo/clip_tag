@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../domain/entity/template.dart';
+import '../../domain/entity/favorite.dart';
 
-class TemplateModel {
+class FavoriteModel {
   final String content;
   final Timestamp createdAt;
 
-  TemplateModel({
+  FavoriteModel({
     required this.content,
     required this.createdAt,
   });
 
-  factory TemplateModel.fromMap(Map<String, dynamic> map) => TemplateModel(
+  factory FavoriteModel.fromMap(Map<String, dynamic> map) => FavoriteModel(
         content: map['content'],
         createdAt: map['createdAt'],
       );
@@ -25,6 +25,6 @@ class TemplateModel {
         'createdAt': createdAt,
       };
 
-  Template toTemplate() =>
-      Template(content: content, createdAt: createdAt.toDate());
+  Favorite toTemplate() =>
+      Favorite(content: content, createdAt: createdAt.toDate());
 }

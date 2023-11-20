@@ -6,13 +6,13 @@ import '../../../shared/firebase/firebase_controller.dart';
 import '../../../utils/get_color_scheme.dart';
 import '../../../utils/show_snackbar.dart';
 import '../../checkout/ui/checkout_screen.dart';
-import '../data/model/template_model.dart';
-import '../domain/entity/template.dart';
+import '../data/model/favorite_model.dart';
+import '../domain/entity/favorite.dart';
 
-class TemplatesScreen extends StatelessWidget {
-  const TemplatesScreen({super.key});
+class FavoritesScreen extends StatelessWidget {
+  const FavoritesScreen({super.key});
 
-  static const String route = '/templates';
+  static const String route = '/favorites';
 
   @override
   Widget build(BuildContext context) {
@@ -21,18 +21,18 @@ class TemplatesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Заготовки'),
+        title: const Text('Избранное'),
         shadowColor: Colors.black,
       ),
-      body: firebase.userTemplates.isEmpty
+      body: firebase.userFavorites.isEmpty
           ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.cut, size: 64.0),
+                  Icon(Icons.bookmark_outline, size: 64.0),
                   SizedBox(height: 8.0),
                   Text(
-                    'Здесь будут ваши заготовки',
+                    'Добавьте правила в избранное',
                     style: TextStyle(fontSize: 20.0),
                     textAlign: TextAlign.center,
                   ),
@@ -40,10 +40,10 @@ class TemplatesScreen extends StatelessWidget {
               ),
             )
           : ListView(
-              children: firebase.userTemplates.map(
+              children: firebase.userFavorites.map(
                 (doc) {
-                  final template = Template.fromModel(
-                    TemplateModel.fromMap(doc.data()),
+                  final template = Favorite.fromModel(
+                    FavoriteModel.fromMap(doc.data()),
                   );
 
                   const padding = Constants.previewPadding;
@@ -68,7 +68,7 @@ class TemplatesScreen extends StatelessWidget {
                       doc.reference.delete();
                       showSnackbar(
                         context: context,
-                        message: 'Заготовка удалена',
+                        message: 'Удалено из избранных',
                       );
                     },
                     direction: DismissDirection.endToStart,

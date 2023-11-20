@@ -6,7 +6,7 @@ import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../utils/show_snackbar.dart';
 import '../../checkout/ui/checkout_screen.dart';
-import '../../templates/ui/templates_screen.dart';
+import '../../favorites/ui/favorites_screen.dart';
 import '../data/model/forum_section_model.dart';
 import '../domain/entity/forum_section.dart';
 import '../utils/get_forum_section_icon.dart';
@@ -74,17 +74,17 @@ class ForumSectionsScreen extends StatelessWidget {
                 ? [
                     IconButton(
                       onPressed: () => FirebaseProvider.of(context)
-                          .addUserTemplate(controller.mergeChoosenRules())
+                          .addToFavorites(controller.mergeChoosenRules())
                           .then(
                         (_) {
                           controller.clearChoosenRules();
                           showSnackbar(
                             context: context,
-                            message: 'Заготовка сохранена',
+                            message: 'Добавлено в избранное',
                           );
                         },
                       ),
-                      icon: const Icon(Icons.cut),
+                      icon: const Icon(Icons.bookmark_add_outlined),
                     ),
                   ]
                 : null,

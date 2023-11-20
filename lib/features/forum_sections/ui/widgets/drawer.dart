@@ -58,11 +58,11 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.cut),
-            title: const Text('Заготовки'),
+            leading: const Icon(Icons.bookmark_outline),
+            title: const Text('Избранное'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, TemplatesScreen.route);
+              Navigator.pushNamed(context, FavoritesScreen.route);
             },
           ),
           const Divider(),
