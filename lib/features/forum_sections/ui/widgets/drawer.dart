@@ -75,6 +75,7 @@ class MainDrawer extends StatelessWidget {
               height: 72.0,
             ),
             applicationLegalese: Constants.applicationLegalese,
+            child: const Text('О приложении'),
           ),
         ],
       ),
