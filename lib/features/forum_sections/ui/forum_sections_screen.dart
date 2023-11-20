@@ -68,7 +68,7 @@ class ForumSectionsScreen extends StatelessWidget {
             ),
             actions: controller.choosenRules.isNotEmpty
                 ? [
-                    IconButton(
+                    TextButton.icon(
                       onPressed: () {
                         FirebaseFirestore.instance
                             .collection('users')
@@ -91,6 +91,7 @@ class ForumSectionsScreen extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.cut),
+                      label: const Text('В заготовки'),
                     ),
                   ]
                 : null,

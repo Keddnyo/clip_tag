@@ -24,7 +24,7 @@ class ForumSectionsController with ChangeNotifier {
         );
   }
 
-  final List<ForumSection> _sections = [];
+  final _sections = <ForumSection>[];
   void _setSections(Iterable<ForumSection> sections) {
     if (_sections.isNotEmpty) {
       _sections.clear();
@@ -43,7 +43,7 @@ class ForumSectionsController with ChangeNotifier {
     notifyListeners();
   }
 
-  final List<String> _choosenRules = [];
+  final _choosenRules = <String>[];
   List<String> get choosenRules => _choosenRules;
 
   void addRule(rule) {
