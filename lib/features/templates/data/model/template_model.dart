@@ -3,30 +3,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entity/template.dart';
 
 class TemplateModel {
-  final String template;
+  final String content;
   final Timestamp createdAt;
 
   TemplateModel({
-    required this.template,
+    required this.content,
     required this.createdAt,
   });
 
-  factory TemplateModel.fromJson(Map<String, dynamic> json) => TemplateModel(
-        template: json['template'],
-        createdAt: json['createdAt'],
+  factory TemplateModel.fromMap(Map<String, dynamic> map) => TemplateModel(
+        content: map['content'],
+        createdAt: map['createdAt'],
       );
 
-  Template toTemplate() => Template(
-        content: template,
-        createdAt: createdAt.toDate(),
-      );
-
-  static Map<String, dynamic> toJson({
+  static Map<String, dynamic> toMap({
     required String content,
     required DateTime createdAt,
   }) =>
-      {
-        'template': content,
-        'createdAt': createdAt,
-      };
+      {'content': content, 'createdAt': createdAt};
+
+  Template toTemplate() => Template(
+        content: content,
+        createdAt: createdAt.toDate(),
+      );
 }

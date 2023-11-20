@@ -10,7 +10,7 @@ class Template {
   });
 
   factory Template.fromModel(TemplateModel model) => Template(
-        content: model.template,
+        content: model.content,
         createdAt: model.createdAt.toDate(),
       );
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
 import '../../../shared/ui/loading_circle.dart';
+import '../../../utils/get_color_scheme.dart';
 import '../../../utils/show_snackbar.dart';
 import '../../checkout/ui/checkout_screen.dart';
 import '../data/model/template_model.dart';
@@ -16,9 +17,12 @@ class TemplatesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = getColorScheme(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Заготовки'),
+        shadowColor: Colors.black,
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
@@ -49,11 +53,22 @@ class TemplatesScreen extends StatelessWidget {
             children: snapshot.data!.docs.map(
               (doc) {
                 final template = Template.fromModel(
-                  TemplateModel.fromJson(doc.data()),
+                  TemplateModel.fromMap(doc.data()),
                 );
 
                 return Dismissible(
                   key: ValueKey(template),
+                  background: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      color: colorScheme.error,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: Icon(Icons.delete, color: colorScheme.onError),
+                      ),
+                    ),
+                  ),
                   onDismissed: (_) {
                     doc.reference.delete();
                     showSnackbar(
@@ -63,10 +78,10 @@ class TemplatesScreen extends StatelessWidget {
                   },
                   direction: DismissDirection.endToStart,
                   child: Container(
-                    margin: const EdgeInsets.all(8.0),
+                    margin: const EdgeInsets.all(12.0),
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.onSurface,
+                        color: colorScheme.onBackground,
                         width: 0.5,
                       ),
                     ),

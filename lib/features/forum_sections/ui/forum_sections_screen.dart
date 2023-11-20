@@ -42,6 +42,7 @@ class ForumSectionsScreen extends StatelessWidget {
 
         if (controller.sectionIndex != 0) {
           controller.setSectionIndex(0);
+          scrollController.jumpTo(0);
           return false;
         }
 
@@ -74,7 +75,7 @@ class ForumSectionsScreen extends StatelessWidget {
                             .doc(FirebaseAuth.instance.currentUser?.uid)
                             .collection('templates')
                             .add(
-                              TemplateModel.toJson(
+                              TemplateModel.toMap(
                                 content: controller.choosenRulesCombined,
                                 createdAt: DateTime.now(),
                               ),
@@ -93,6 +94,7 @@ class ForumSectionsScreen extends StatelessWidget {
                     ),
                   ]
                 : null,
+            shadowColor: Colors.black,
             centerTitle: controller.choosenRules.isEmpty,
           ),
           body: controller.sections.isNotEmpty
