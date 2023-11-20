@@ -25,12 +25,12 @@ class EmailVerificationScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Ссылка для потверждения отправлена по адресу "${firebase.userEmail}".\n\nПосле перехода по ссылке, данная страница закроется автоматически.',
+                    'Перейдите по ссылке, отправленной по адресу "${firebase.userEmail}".\nДанная страница закроется автоматически.',
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16.0),
                   FilledButton(
-                    onPressed: firebase.deleteAccount,
+                    onPressed: firebase.signOut,
                     child: const Text('Отмена'),
                   ),
                 ],

@@ -88,23 +88,21 @@ class FirebaseController with ChangeNotifier {
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
 
-  void deleteAccount() => _userFavoritesReference!
-      .get()
-      .then(
+  Future<void> _deleteUserData() async =>
+      await _userFavoritesReference!.get().then(
         (query) {
           for (var doc in query.docs) {
             doc.reference.delete();
           }
         },
-      )
-      .then(
+      ).then(
         (_) => _userData?.delete(),
-      )
-      .then(
-        (_) => _user?.delete(),
       );
 
-  DocumentReference<Map<String, dynamic>>? _userData; // Firestore user data
+  Future<void> deleteAccount() =>
+      _deleteUserData().then((_) => _user?.delete());
+
+  DocumentReference<Map<String, dynamic>>? _userData;
   DocumentReference<Map<String, dynamic>> get userData => _userData!;
   void _setUserData(DocumentReference<Map<String, dynamic>> userData) {
     _userData = userData;
@@ -129,6 +127,7 @@ class FirebaseController with ChangeNotifier {
   final _userFavorites = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
   List<QueryDocumentSnapshot<Map<String, dynamic>>> get userFavorites =>
       _userFavorites;
+  int get userFavoritesCount => _userFavorites.length;
 
   void _setUserFavorites(
     List<QueryDocumentSnapshot<Map<String, dynamic>>> templates,

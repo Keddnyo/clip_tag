@@ -150,11 +150,10 @@ class AuthScreen extends StatelessWidget {
                     label: const Text('Забыли пароль?'),
                   ),
                 if (auth.isSignUp)
-                  TextButton(
+                  TextButton.icon(
                     onPressed: () => openUrl(Constants.appTermsOfUseUrl),
-                    child: const Text(
-                      'Прочитать условия использования',
-                    ),
+                    icon: const Icon(Icons.gavel),
+                    label: const Text('Условия использования'),
                   ),
               ]
                   .map(

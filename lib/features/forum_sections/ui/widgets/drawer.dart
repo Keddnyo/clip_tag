@@ -42,7 +42,20 @@ class MainDrawer extends StatelessWidget {
                   OutlinedButton(
                     onPressed: () {
                       Navigator.pop(context);
-                      firebase.deleteAccount();
+                      firebase
+                          .deleteAccount()
+                          .then(
+                            (_) => showSnackbar(
+                                context: context, message: 'Аккаунт удалён'),
+                          )
+                          .catchError(
+                            (error) => showSnackbar(
+                              context: context,
+                              message: error is FirebaseAuthException
+                                  ? decodeFirebaseAuthErrorCode(error.code)
+                                  : error.toString(),
+                            ),
+                          );
                     },
                     child: const Text('Удалить аккаунт'),
                   ),
@@ -60,6 +73,7 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.bookmark_outline),
             title: const Text('Избранное'),
+            subtitle: Text('${firebase.userFavoritesCount} элементов'),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, FavoritesScreen.route);

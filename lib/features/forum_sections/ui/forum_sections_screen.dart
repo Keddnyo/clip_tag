@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
 import '../../../shared/constants.dart';
+import '../../../shared/firebase/firebase_auth_error_codes.dart';
 import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../utils/show_snackbar.dart';
@@ -84,7 +86,7 @@ class ForumSectionsScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      icon: const Icon(Icons.bookmark_add_outlined),
+                      icon: const Icon(Icons.bookmark_add),
                     ),
                   ]
                 : null,

@@ -29,7 +29,7 @@ class FavoritesScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.bookmark_outline, size: 64.0),
+                  Icon(Icons.bookmark_add, size: 64.0),
                   SizedBox(height: 8.0),
                   Text(
                     'Добавьте правила в избранное',
