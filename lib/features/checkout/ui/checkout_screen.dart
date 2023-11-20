@@ -36,6 +36,7 @@ class CheckoutScreen extends StatelessWidget {
                 ),
               ],
               icon: const Icon(Icons.copy),
+              position: PopupMenuPosition.under,
             ),
             IconButton(
               onPressed: checkoutController.sendChoosenRules,

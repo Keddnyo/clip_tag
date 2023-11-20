@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -32,8 +33,21 @@ class AuthScreenController with ChangeNotifier {
   }) async =>
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password)
-          .then((userCredential) =>
-              userCredential.user?.updateDisplayName(username));
+          .then(
+            (userCredential) =>
+                userCredential.user?.updateDisplayName(username).then(
+                      (_) => FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(userCredential.user?.uid)
+                          .set(
+                        {
+                          'username': username,
+                          'email': email,
+                          'isModerator': false,
+                        },
+                      ),
+                    ),
+          );
 
   bool get isResetPassword => _authState == AuthState.resetPassword;
   void setResetPassword() {

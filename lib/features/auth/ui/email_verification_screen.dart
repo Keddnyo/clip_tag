@@ -42,7 +42,7 @@ class EmailVerificationScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16.0),
                   FilledButton(
-                    onPressed: FirebaseAuth.instance.signOut,
+                    onPressed: FirebaseAuth.instance.currentUser?.delete,
                     child: const Text('Отмена'),
                   ),
                 ],

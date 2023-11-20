@@ -144,14 +144,24 @@ class ForumSectionsScreen extends StatelessWidget {
               padding: EdgeInsets.zero,
               children: [
                 const DrawerHeader(
-                  child: Text(Constants.appName),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          Constants.appName,
+                          style: TextStyle(fontSize: 48.0),
+                        ),
+                        Text('Агрегатор правил 4PDA'),
+                      ],
+                    ),
+                  ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.account_circle_outlined),
                   title: Text(FirebaseAuth.instance.currentUser!.displayName!),
                   subtitle: Text(FirebaseAuth.instance.currentUser!.email!),
                 ),
-                const Divider(),
                 ListTile(
                   leading: const Icon(Icons.cut),
                   title: const Text('Заготовки'),
@@ -159,6 +169,11 @@ class ForumSectionsScreen extends StatelessWidget {
                     Navigator.pop(context);
                     Navigator.pushNamed(context, TemplatesScreen.route);
                   },
+                ),
+                const Divider(),
+                const AboutListTile(
+                  icon: Icon(Icons.info_outline),
+                  applicationLegalese: Constants.applicationLegalese,
                 ),
               ],
             ),
