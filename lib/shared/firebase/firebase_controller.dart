@@ -28,10 +28,12 @@ class FirebaseController with ChangeNotifier {
                 );
 
             _setTemplatesReference(
-              _userData!.collection('templates')
-                ..orderBy('createdAt', descending: true),
+              _userData!.collection('templates'),
             );
-            _userTemplatesReference!.orderBy('createdAt').snapshots().listen(
+            _userTemplatesReference!
+                .orderBy('createdAt', descending: true)
+                .snapshots()
+                .listen(
                   (query) => _setUserTemplates(query.docs),
                 );
           } else {
