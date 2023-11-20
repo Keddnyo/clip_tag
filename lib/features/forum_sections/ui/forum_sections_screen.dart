@@ -74,7 +74,7 @@ class ForumSectionsScreen extends StatelessWidget {
                 ? [
                     IconButton(
                       onPressed: () => FirebaseProvider.of(context)
-                          .addUserTemplate(controller.choosenRulesCombined)
+                          .addUserTemplate(controller.mergeChoosenRules())
                           .then(
                         (_) {
                           controller.clearChoosenRules();
