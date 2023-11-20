@@ -6,8 +6,12 @@ import '../../../shared/firebase/firebase_auth_provider.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../utils/show_snackbar.dart';
 import '../../templates/ui/templates_screen.dart';
+import '../domain/entity/forum_section.dart';
 import '../utils/get_forum_section_icon.dart';
 import 'controllers/sections_controller.dart';
+
+part 'widgets/drawer.dart';
+part 'widgets/end_drawer.dart';
 
 class ForumSectionsScreen extends StatelessWidget {
   const ForumSectionsScreen({super.key});
@@ -16,7 +20,6 @@ class ForumSectionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firebase = FirebaseProvider.of(context);
     final controller = ForumSectionsController(context: context);
     final scrollController = ScrollController();
 
@@ -68,7 +71,7 @@ class ForumSectionsScreen extends StatelessWidget {
             actions: controller.choosenRules.isNotEmpty
                 ? [
                     TextButton.icon(
-                      onPressed: () => firebase
+                      onPressed: () => FirebaseController()
                           .addUserTemplate(controller.choosenRulesCombined)
                           .then(
                         (_) {
@@ -128,101 +131,17 @@ class ForumSectionsScreen extends StatelessWidget {
                   ],
                 )
               : const LoadingCircle(),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                const DrawerHeader(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          Constants.appName,
-                          style: TextStyle(fontSize: 42.0),
-                        ),
-                        Text(
-                          'Created by Keddnyo',
-                          style: TextStyle(fontSize: 10.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.account_circle_outlined),
-                  title: Text(firebase.username!),
-                  subtitle: Text(firebase.userEmail!),
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text(firebase.username!),
-                      content: Text(firebase.userEmail!),
-                      actions: [
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            firebase.deleteAccount();
-                          },
-                          child: const Text('Удалить аккаунт'),
-                        ),
-                        FilledButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            firebase.signOut();
-                          },
-                          child: const Text('Выход'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.cut),
-                  title: const Text('Заготовки'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, TemplatesScreen.route);
-                  },
-                ),
-                const Divider(),
-                AboutListTile(
-                  icon: const Icon(Icons.info_outline),
-                  applicationVersion: 'Агрегатор правил 4PDA',
-                  applicationIcon: Image.asset(
-                    'lib/core/assets/app_icon.png',
-                    width: 72.0,
-                    height: 72.0,
-                  ),
-                  applicationLegalese: Constants.applicationLegalese,
-                ),
-              ],
-            ),
-          ),
+          drawer: const MainDrawer(),
           endDrawer: controller.sections.isNotEmpty
-              ? NavigationDrawer(
+              ? MainEndDrawer(
+                  sections: controller.sections,
+                  sectionIndex: controller.sectionIndex,
                   onDestinationSelected: (index) {
                     controller.setSectionIndex(index);
                     controller.clearChoosenRules();
                     Navigator.pop(context);
                     scrollController.jumpTo(0);
                   },
-                  selectedIndex: controller.sectionIndex,
-                  children: controller.sections
-                      .map(
-                        (section) => NavigationDrawerDestination(
-                          icon: Icon(
-                            section.order == 0
-                                ? Icons.home
-                                : getForumSectionIcon(section.title),
-                          ),
-                          label: Flexible(
-                            child: Text(section.title),
-                          ),
-                        ),
-                      )
-                      .toList(),
                 )
               : null,
           floatingActionButton: controller.choosenRules.isNotEmpty
