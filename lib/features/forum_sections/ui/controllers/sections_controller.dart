@@ -50,8 +50,8 @@ class ForumSectionsController with ChangeNotifier {
     notifyListeners();
   }
 
-  String mergeChoosenRules({String? rule}) =>
-      section!.combineChoosenRulesToString(_choosenRules);
+  String mergeChoosenRules({String? rule}) => section!
+      .combineChoosenRulesToString(rule != null ? [rule] : _choosenRules);
 
   void navigateToCheckout(BuildContext context, {String? rule}) =>
       Navigator.pushNamed(
