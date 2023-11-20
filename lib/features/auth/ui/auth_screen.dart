@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
+import '../../../shared/firebase/firebase_auth_error_codes.dart';
 import '../../../utils/open_url.dart';
 import '../../../utils/show_snackbar.dart';
 import 'controllers/auth_screen_controller.dart';
@@ -68,7 +70,7 @@ class AuthScreen extends StatelessWidget {
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (email) =>
-                      email?.isEmpty == true ? 'Введите свою почту' : null,
+                      email?.isEmpty == true ? 'Введите почту' : null,
                 ),
                 if (!auth.isResetPassword)
                   TextFormField(
@@ -102,12 +104,30 @@ class AuthScreen extends StatelessWidget {
                             : null,
                   ),
                 FilledButton.icon(
-                  onPressed: () => auth.submitAuth().catchError(
-                        (error) => showSnackbar(
+                  onPressed: () {
+                    if (auth.formKey.currentState?.validate() == false) return;
+
+                    auth.submitAuth().then(
+                      (value) {
+                        if (auth.isResetPassword) {
+                          auth.setSignIn();
+                          showSnackbar(
+                            context: context,
+                            message: 'Ссылка отправлена на почту',
+                          );
+                        }
+                      },
+                    ).catchError(
+                      (error) {
+                        showSnackbar(
                           context: context,
-                          message: error.toString(),
-                        ),
-                      ),
+                          message: error is FirebaseAuthException
+                              ? decodeFirebaseAuthErrorCode(error.code)
+                              : error.toString(),
+                        );
+                      },
+                    );
+                  },
                   icon: Icon(
                     auth.isSignUp
                         ? Icons.person_add
