@@ -17,7 +17,9 @@ class FirebaseController with ChangeNotifier {
             (map) => _setUserModerator(map['isModerator']),
           );
 
-      _setTemplatesReference(_userData!.collection('templates'));
+      _setTemplatesReference(
+        _userData!.collection('templates')..orderBy('createdAt'),
+      );
       _userTemplatesReference!.orderBy('createdAt').snapshots().listen(
             (query) => _setUserTemplates(query.docs),
           );
@@ -98,7 +100,7 @@ class FirebaseController with ChangeNotifier {
       );
 
   DocumentReference<Map<String, dynamic>>? _userData; // Firestore user data
-  DocumentReference<Map<String, dynamic>> get userData => userData;
+  DocumentReference<Map<String, dynamic>> get userData => _userData!;
   void _setUserData(DocumentReference<Map<String, dynamic>> userData) {
     _userData = userData;
     notifyListeners();
@@ -113,7 +115,8 @@ class FirebaseController with ChangeNotifier {
 
   CollectionReference<Map<String, dynamic>>? _userTemplatesReference;
   void _setTemplatesReference(
-      CollectionReference<Map<String, dynamic>>? reference) {
+    CollectionReference<Map<String, dynamic>>? reference,
+  ) {
     _userTemplatesReference = reference;
     notifyListeners();
   }
@@ -137,6 +140,9 @@ class FirebaseController with ChangeNotifier {
         content: template,
         createdAt: DateTime.now(),
       ));
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> get forumRules =>
+      _firestore.collection('rules').orderBy('order').snapshots();
 }
 
 class FirebaseProvider extends InheritedNotifier {

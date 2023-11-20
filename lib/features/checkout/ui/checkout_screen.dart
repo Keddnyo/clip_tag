@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
-import '../../../shared/firebase_firestore_controller.dart';
+import '../../../shared/firebase/firebase_auth_provider.dart';
 import '../model/forum_tags.dart';
 import 'controllers/checkout_controller.dart';
 import 'widgets/forum_tag.dart';
@@ -14,7 +14,7 @@ class CheckoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firestoreController = FirebaseFirestoreProvider.of(context);
+    final firebase = FirebaseProvider.of(context);
     final checkoutController = CheckoutController(choosenRules);
 
     return ListenableBuilder(
@@ -54,7 +54,7 @@ class CheckoutScreen extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: firestoreController.isModerator
+        bottomNavigationBar: firebase.isUserModerator
             ? NavigationBar(
                 selectedIndex: checkoutController.currentTagIndex,
                 destinations: [
