@@ -11,39 +11,7 @@ class FirebaseController with ChangeNotifier {
   final _firestore = FirebaseFirestore.instance;
 
   FirebaseController() {
-    _auth
-      ..setLanguageCode('ru')
-      ..userChanges().listen(
-        (user) {
-          if (!isUserSignedIn) {
-            _setUserModerator(false);
-            _setUserFavorites([]);
-            _setFavoritesReference(null);
-          }
-
-          if (isEmailVerified) {
-            _setUserData(_firestore.collection('users').doc(_userID));
-            _userData!.snapshots().listen(
-                  (map) => _setUserModerator(map['isModerator']),
-                );
-
-            _setFavoritesReference(
-              _userData!.collection('favorites'),
-            );
-            _userFavoritesReference!
-                .orderBy('createdAt', descending: true)
-                .snapshots()
-                .listen(
-                  (query) => _setUserFavorites(query.docs),
-                );
-          } else {
-            Timer.periodic(
-              const Duration(seconds: 5),
-              (timer) => user?.reload(),
-            );
-          }
-        },
-      );
+    _auth.setLanguageCode('ru');
   }
 
   User? get _user => _auth.currentUser;
@@ -52,6 +20,7 @@ class FirebaseController with ChangeNotifier {
   String? get _userID => _user?.uid;
   String? get username => _user?.displayName;
   String? get userEmail => _user?.email;
+  Future<void> userReload() async => await _user?.reload();
 
   bool get isEmailVerified => _user?.emailVerified == true;
 
@@ -59,7 +28,9 @@ class FirebaseController with ChangeNotifier {
     required String email,
     required String password,
   }) async =>
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _auth
+          .signInWithEmailAndPassword(email: email, password: password)
+          .then((_) => setupUserData());
 
   Future<void> signUp({
     required String username,
@@ -69,21 +40,28 @@ class FirebaseController with ChangeNotifier {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then(
-            (userCredential) =>
-                userCredential.user?.updateDisplayName(username).then(
-                      (_) => _firestore.collection('users').doc(_userID).set(
-                        {
-                          'username': username,
-                          'email': email,
-                          'isModerator': false,
-                        },
-                      ),
-                    ),
+            (userCredential) => userCredential.user
+                ?.updateDisplayName(username)
+                .then((_) => setupUserData())
+                .then(
+                  (_) => _userData?.set(
+                    {
+                      'username': username,
+                      'email': email,
+                      'isModerator': false,
+                    },
+                  ),
+                ),
           );
 
   void sendEmailVerification() => _user?.sendEmailVerification();
 
-  void signOut() => _auth.signOut();
+  void signOut() {
+    _setUserModerator(false);
+    _setUserFavorites([]);
+    _setFavoritesReference(null);
+    _auth.signOut();
+  }
 
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
@@ -101,6 +79,23 @@ class FirebaseController with ChangeNotifier {
 
   Future<void> deleteAccount() =>
       _deleteUserData().then((_) => _user?.delete());
+
+  void setupUserData() {
+    _setUserData(_firestore.collection('users').doc(_userID));
+    _userData!.snapshots().listen(
+          (map) => _setUserModerator(map['isModerator']),
+        );
+
+    _setFavoritesReference(
+      _userData!.collection('favorites'),
+    );
+    _userFavoritesReference!
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .listen(
+          (query) => _setUserFavorites(query.docs),
+        );
+  }
 
   DocumentReference<Map<String, dynamic>>? _userData;
   DocumentReference<Map<String, dynamic>> get userData => _userData!;

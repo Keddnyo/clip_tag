@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../shared/firebase/firebase_controller.dart';
@@ -10,6 +12,17 @@ class EmailVerificationScreen extends StatelessWidget {
     final firebase = FirebaseProvider.of(context);
 
     firebase.sendEmailVerification();
+
+    Timer.periodic(
+      const Duration(seconds: 2),
+      (timer) => firebase.userReload().then(
+        (_) {
+          if (firebase.isEmailVerified) {
+            timer.cancel();
+          }
+        },
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(
