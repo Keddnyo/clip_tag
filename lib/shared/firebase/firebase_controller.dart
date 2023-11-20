@@ -23,7 +23,7 @@ class FirebaseController with ChangeNotifier {
 
           if (isEmailVerified) {
             _setUserData(_firestore.collection('users').doc(_userID));
-            _userData!.get().then(
+            _userData!.snapshots().listen(
                   (map) => _setUserModerator(map['isModerator']),
                 );
 

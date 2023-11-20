@@ -1,10 +1,14 @@
+import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
+import '../../../utils/open_url.dart';
 import '../model/forum_tags.dart';
-import 'controllers/checkout_controller.dart';
 import 'widgets/forum_tag.dart';
+
+part 'controllers/checkout_controller.dart';
 
 class CheckoutScreen extends StatelessWidget {
   const CheckoutScreen({super.key, required this.choosenRules});

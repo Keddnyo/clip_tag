@@ -1,13 +1,7 @@
-import 'package:device_apps/device_apps.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-import '../../../../shared/constants.dart';
-import '../../../../utils/open_url.dart';
-import '../../model/forum_tags.dart';
+part of '../checkout_screen.dart';
 
 class CheckoutController with ChangeNotifier {
-  final dynamic choosenRules;
+  final String choosenRules;
 
   CheckoutController(this.choosenRules);
 

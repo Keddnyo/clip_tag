@@ -5,11 +5,13 @@ import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../utils/show_snackbar.dart';
+import '../../checkout/ui/checkout_screen.dart';
 import '../../templates/ui/templates_screen.dart';
+import '../data/model/forum_section_model.dart';
 import '../domain/entity/forum_section.dart';
 import '../utils/get_forum_section_icon.dart';
-import 'controllers/sections_controller.dart';
 
+part 'controllers/sections_controller.dart';
 part 'widgets/drawer.dart';
 part 'widgets/end_drawer.dart';
 

@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../../../shared/firebase/firebase_controller.dart';
-import '../../../checkout/ui/checkout_screen.dart';
-import '../../data/model/forum_section_model.dart';
-import '../../domain/entity/forum_section.dart';
+part of '../forum_sections_screen.dart';
 
 class ForumSectionsController with ChangeNotifier {
   ForumSectionsController() {
