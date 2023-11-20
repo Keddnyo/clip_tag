@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
+import '../../../shared/constants.dart';
 import '../../../shared/firebase_firestore_controller.dart';
 import '../model/forum_tags.dart';
 import 'controllers/checkout_controller.dart';
@@ -44,7 +45,7 @@ class CheckoutScreen extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(Constants.previewPadding),
             child: checkoutController.isTagShown
                 ? ForumTag(
                     content: choosenRules,

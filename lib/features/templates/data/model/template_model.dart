@@ -20,10 +20,11 @@ class TemplateModel {
     required String content,
     required DateTime createdAt,
   }) =>
-      {'content': content, 'createdAt': createdAt};
+      {
+        'content': content,
+        'createdAt': createdAt,
+      };
 
-  Template toTemplate() => Template(
-        content: content,
-        createdAt: createdAt.toDate(),
-      );
+  Template toTemplate() =>
+      Template(content: content, createdAt: createdAt.toDate());
 }

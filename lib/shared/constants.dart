@@ -2,6 +2,8 @@ class Constants {
   static const String appName = 'ClipTag';
   static const bool useMaterial3 = true;
 
+  static const double previewPadding = 12.0;
+
   static const double tagLeadingSymbolContainerMinHeight = 48.0;
   static const double tagLeadingSymbolContainerWidth = 48.0;
 

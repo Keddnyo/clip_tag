@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
+import '../../../shared/constants.dart';
 import '../../../utils/get_color_scheme.dart';
 import '../../../utils/show_snackbar.dart';
 import '../../checkout/ui/checkout_screen.dart';
@@ -47,7 +48,7 @@ class TemplatesScreen extends StatelessWidget {
                       TemplateModel.fromMap(doc.data()),
                     );
 
-                    const padding = 12.0;
+                    const padding = Constants.previewPadding;
 
                     return Dismissible(
                       key: ValueKey(template),
@@ -58,8 +59,10 @@ class TemplatesScreen extends StatelessWidget {
                           color: colorScheme.error,
                           child: Padding(
                             padding: const EdgeInsets.only(right: 16.0),
-                            child:
-                                Icon(Icons.delete, color: colorScheme.onError),
+                            child: Icon(
+                              Icons.delete,
+                              color: colorScheme.onError,
+                            ),
                           ),
                         ),
                       ),

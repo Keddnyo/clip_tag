@@ -3,14 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class TemplatesController with ChangeNotifier {
+  final _firestore = FirebaseFirestore.instance;
+  late final CollectionReference<Map<String, dynamic>> _templatesCollection;
+
   TemplatesController() {
-    FirebaseFirestore.instance
+    _templatesCollection = _firestore
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('templates')
-        .orderBy('createdAt')
-        .snapshots()
-        .listen(
+        .collection('templates');
+
+    _templatesCollection.orderBy('createdAt').snapshots().listen(
       (query) {
         _setTemplates(query.docs);
       },
