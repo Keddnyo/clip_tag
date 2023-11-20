@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/bbcode_renderer.dart';
 import '../../../shared/constants.dart';
+import '../../../shared/firebase/firebase_auth_provider.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../utils/show_snackbar.dart';
-import '../../templates/data/model/template_model.dart';
 import '../../templates/ui/templates_screen.dart';
 import '../utils/get_forum_section_icon.dart';
 import 'controllers/sections_controller.dart';
@@ -18,6 +16,7 @@ class ForumSectionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final firebase = FirebaseProvider.of(context);
     final controller = ForumSectionsController(context: context);
     final scrollController = ScrollController();
 
@@ -69,27 +68,17 @@ class ForumSectionsScreen extends StatelessWidget {
             actions: controller.choosenRules.isNotEmpty
                 ? [
                     TextButton.icon(
-                      onPressed: () {
-                        FirebaseFirestore.instance
-                            .collection('users')
-                            .doc(FirebaseAuth.instance.currentUser?.uid)
-                            .collection('templates')
-                            .add(
-                              TemplateModel.toMap(
-                                content: controller.choosenRulesCombined,
-                                createdAt: DateTime.now(),
-                              ),
-                            )
-                            .then(
-                          (_) {
-                            controller.clearChoosenRules();
-                            showSnackbar(
-                              context: context,
-                              message: 'Заготовка сохранена',
-                            );
-                          },
-                        );
-                      },
+                      onPressed: () => firebase
+                          .addUserTemplate(controller.choosenRulesCombined)
+                          .then(
+                        (_) {
+                          controller.clearChoosenRules();
+                          showSnackbar(
+                            context: context,
+                            message: 'Заготовка сохранена',
+                          );
+                        },
+                      ),
                       icon: const Icon(Icons.cut),
                       label: const Text('В заготовки'),
                     ),
@@ -147,60 +136,41 @@ class ForumSectionsScreen extends StatelessWidget {
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
                           Constants.appName,
-                          style: TextStyle(fontSize: 48.0),
+                          style: TextStyle(fontSize: 42.0),
                         ),
-                        Text('Агрегатор правил 4PDA'),
+                        Text(
+                          'Created by Keddnyo',
+                          style: TextStyle(fontSize: 10.0),
+                        ),
                       ],
                     ),
                   ),
                 ),
                 ListTile(
                   leading: const Icon(Icons.account_circle_outlined),
-                  title: Text(FirebaseAuth.instance.currentUser!.displayName!),
-                  subtitle: Text(FirebaseAuth.instance.currentUser!.email!),
+                  title: Text(firebase.username!),
+                  subtitle: Text(firebase.userEmail!),
                   onTap: () => showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: Text(
-                        FirebaseAuth.instance.currentUser!.displayName!,
-                      ),
-                      content: Text(FirebaseAuth.instance.currentUser!.email!),
+                      title: Text(firebase.username!),
+                      content: Text(firebase.userEmail!),
                       actions: [
                         OutlinedButton(
                           onPressed: () {
                             Navigator.pop(context);
-
-                            final firestoreUser = FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(FirebaseAuth.instance.currentUser?.uid);
-
-                            firestoreUser
-                                .collection('templates')
-                                .get()
-                                .then(
-                                  (query) {
-                                    for (var doc in query.docs) {
-                                      doc.reference.delete();
-                                    }
-                                  },
-                                )
-                                .then(
-                                  (_) => firestoreUser.delete(),
-                                )
-                                .then(
-                                  (_) => FirebaseAuth.instance.currentUser
-                                      ?.delete(),
-                                );
+                            firebase.deleteAccount();
                           },
                           child: const Text('Удалить аккаунт'),
                         ),
                         FilledButton(
                           onPressed: () {
                             Navigator.pop(context);
-                            FirebaseAuth.instance.signOut();
+                            firebase.signOut();
                           },
                           child: const Text('Выход'),
                         ),
@@ -217,8 +187,14 @@ class ForumSectionsScreen extends StatelessWidget {
                   },
                 ),
                 const Divider(),
-                const AboutListTile(
-                  icon: Icon(Icons.info_outline),
+                AboutListTile(
+                  icon: const Icon(Icons.info_outline),
+                  applicationVersion: 'Агрегатор правил 4PDA',
+                  applicationIcon: Image.asset(
+                    'lib/core/assets/app_icon.png',
+                    width: 72.0,
+                    height: 72.0,
+                  ),
                   applicationLegalese: Constants.applicationLegalese,
                 ),
               ],

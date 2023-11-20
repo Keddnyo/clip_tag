@@ -1,3 +1,4 @@
+import 'package:clip_tag/shared/firebase/firebase_auth_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -9,11 +10,12 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final firebase = FirebaseProvider.of(context);
     final auth = AuthScreenProvider.of(context);
 
     void submitAuth() {
       if (auth.isSignUp) {
-        auth
+        firebase
             .signUp(
               username: auth.username,
               email: auth.email,
@@ -26,7 +28,7 @@ class AuthScreen extends StatelessWidget {
               ),
             );
       } else if (auth.isResetPassword) {
-        auth
+        firebase
             .resetPassword(
               email: auth.email,
             )
@@ -37,7 +39,7 @@ class AuthScreen extends StatelessWidget {
               ),
             );
       } else {
-        auth
+        firebase
             .signIn(
               email: auth.email,
               password: auth.password,
