@@ -1,11 +1,11 @@
 {
-    "name": "clip_tag",
-    "short_name": "clip_tag",
+    "name": "ClipTag",
+    "short_name": "ClipTag",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "4PDA website rules aggregator",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
