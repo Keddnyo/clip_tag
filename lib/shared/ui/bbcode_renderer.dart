@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode/flutter_bbcode.dart';
 
-import '../utils/get_color_scheme.dart';
-import '../utils/open_url.dart';
+import '../../utils/open_url.dart';
+import 'get_color_scheme.dart';
 
 class BBCodeRenderer extends StatelessWidget {
   const BBCodeRenderer(this.content, {super.key});

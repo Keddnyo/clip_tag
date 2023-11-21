@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_auth_error_codes.dart';
+import '../../../shared/ui/show_snackbar.dart';
 import '../../../utils/open_url.dart';
-import '../../../utils/show_snackbar.dart';
 import 'controllers/auth_screen_controller.dart';
 
 class AuthScreen extends StatelessWidget {

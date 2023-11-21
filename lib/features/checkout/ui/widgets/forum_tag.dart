@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../shared/bbcode_renderer.dart';
 import '../../../../shared/constants.dart';
+import '../../../../shared/ui/bbcode_renderer.dart';
 import '../../model/forum_tags.dart';
 
 class ForumTag extends StatelessWidget {
