@@ -12,6 +12,10 @@ class FirebaseController with ChangeNotifier {
 
   FirebaseController() {
     _auth.setLanguageCode('ru');
+
+    userData.snapshots().listen(
+          (user) => setUserModerator(user.data()?['isModerator'] ?? false),
+        );
   }
 
   User? get _user => _auth.currentUser;
@@ -37,18 +41,13 @@ class FirebaseController with ChangeNotifier {
   }) async =>
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
-          .then(
-            (userCredential) =>
-                userCredential.user?.updateDisplayName(username).then(
-                      (_) => userData.set(
-                        {
-                          'username': username,
-                          'email': email,
-                          'isModerator': false,
-                        },
-                      ),
-                    ),
-          );
+          .then((userCredential) => userCredential.user
+              ?.updateDisplayName(username)
+              .then((_) => userData.set({
+                    'username': username,
+                    'email': email,
+                    'isModerator': false,
+                  })));
 
   void sendEmailVerification() => _user?.sendEmailVerification();
 
@@ -59,6 +58,9 @@ class FirebaseController with ChangeNotifier {
 
   Future<void> deleteAccount() => deleteFavorites()
       .then((_) => userData.delete().then((_) => _user?.delete()));
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> get rulesSnaphots =>
+      _firestore.collection('rules').orderBy('order').snapshots();
 
   DocumentReference<Map<String, dynamic>> get userData =>
       _firestore.collection('users').doc(_userID);
@@ -80,11 +82,12 @@ class FirebaseController with ChangeNotifier {
         }
       });
 
-  Future<bool> get isUserModerator =>
-      userData.get().then((user) => user.data()?['isModerator'] ?? false);
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> get rulesSnaphots =>
-      _firestore.collection('rules').orderBy('order').snapshots();
+  bool _isUserModerator = false;
+  bool get isUserModerator => _isUserModerator;
+  void setUserModerator(bool isModerator) {
+    _isUserModerator = isModerator;
+    notifyListeners();
+  }
 }
 
 class FirebaseProvider extends InheritedNotifier {

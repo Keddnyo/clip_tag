@@ -58,7 +58,7 @@ class CheckoutScreen extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: true
+        bottomNavigationBar: firebase.isUserModerator
             ? NavigationBar(
                 selectedIndex: checkoutController.currentTagIndex,
                 destinations: [
