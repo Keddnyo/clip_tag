@@ -14,8 +14,7 @@ class FirebaseController with ChangeNotifier {
     _auth.setLanguageCode('ru');
 
     userData?.snapshots().listen(
-          (user) => setUserModerator(user.data()?['isModerator'] ?? false),
-        );
+        (user) => setUserModerator(user.data()?['isModerator'] ?? false));
   }
 
   User? get _user => _auth.currentUser;
@@ -56,9 +55,6 @@ class FirebaseController with ChangeNotifier {
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
 
-  Future<void> deleteAccount() => deleteFavorites()
-      .then((_) => userData?.delete().then((_) => _user?.delete()));
-
   Stream<QuerySnapshot<Map<String, dynamic>>> get rulesSnaphots =>
       _firestore.collection('rules').orderBy('order').snapshots();
 
@@ -74,13 +70,6 @@ class FirebaseController with ChangeNotifier {
   Future<void> addToFavorites(String favorite) async => await favorites?.add(
         FavoriteModel.toMap(content: favorite, createdAt: DateTime.now()),
       );
-
-  Future<void> deleteFavorites() async =>
-      await favorites?.get().then((favoritesQuery) {
-        for (final favorite in favoritesQuery.docs) {
-          favorite.reference.delete();
-        }
-      });
 
   bool _isUserModerator = false;
   bool get isUserModerator => _isUserModerator;

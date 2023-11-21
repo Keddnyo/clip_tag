@@ -30,48 +30,19 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.account_circle_outlined),
             title: Text(firebase.username!),
             subtitle: Text(firebase.userEmail!),
-            onTap: () => showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text(firebase.username!),
-                content: Text(firebase.userEmail!),
-                actions: [
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      firebase
-                          .deleteAccount()
-                          .then(
-                            (_) => showSnackbar(
-                                context: context, message: 'Аккаунт удалён'),
-                          )
-                          .catchError(
-                            (error) => showSnackbar(
-                              context: context,
-                              message: error is FirebaseAuthException
-                                  ? decodeFirebaseAuthErrorCode(error.code)
-                                  : error.toString(),
-                            ),
-                          );
-                    },
-                    child: const Text('Удалить аккаунт'),
-                  ),
-                  FilledButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      firebase.signOut();
-                    },
-                    child: const Text('Выход'),
-                  ),
-                ],
-              ),
+            trailing: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+                firebase.signOut();
+              },
+              icon: const Icon(Icons.logout),
             ),
           ),
+          const Divider(),
           ListTile(
-            leading: const Icon(Icons.bookmark_outline),
+            leading: const Icon(Icons.bookmark),
             title: const Text('Избранное'),
             onTap: () {
               Navigator.pop(context);
