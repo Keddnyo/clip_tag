@@ -89,10 +89,7 @@ class ForumSectionsScreen extends StatelessWidget {
                       icon: const Icon(Icons.bookmark_add),
                     ),
                     IconButton(
-                      onPressed: () {
-                        controller.copyChoosenRules();
-                        Navigator.pop(context);
-                      },
+                      onPressed: controller.copyChoosenRules,
                       icon: const Icon(Icons.copy),
                     ),
                   ]
