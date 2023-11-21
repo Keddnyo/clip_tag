@@ -15,8 +15,8 @@ class FirebaseController with ChangeNotifier {
   }
 
   User? get _user => _auth.currentUser;
+
   Stream<User?> get userChanges => _auth.userChanges();
-  bool get isUserSignedIn => _user != null;
   String? get _userID => _user?.uid;
   String? get username => _user?.displayName;
   String? get userEmail => _user?.email;
@@ -28,9 +28,7 @@ class FirebaseController with ChangeNotifier {
     required String email,
     required String password,
   }) async =>
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((_) => setupUserData());
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
 
   Future<void> signUp({
     required String username,
@@ -40,107 +38,52 @@ class FirebaseController with ChangeNotifier {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then(
-            (userCredential) => userCredential.user
-                ?.updateDisplayName(username)
-                .then((_) => setupUserData())
-                .then(
-                  (_) => _userData?.set(
-                    {
-                      'username': username,
-                      'email': email,
-                      'isModerator': false,
-                    },
-                  ),
-                ),
+            (userCredential) =>
+                userCredential.user?.updateDisplayName(username).then(
+                      (_) => userData.set(
+                        {
+                          'username': username,
+                          'email': email,
+                          'isModerator': false,
+                        },
+                      ),
+                    ),
           );
 
   void sendEmailVerification() => _user?.sendEmailVerification();
 
-  void signOut() {
-    _setUserModerator(false);
-    _setUserFavorites([]);
-    _setFavoritesReference(null);
-    _auth.signOut();
-  }
+  void signOut() => _auth.signOut();
 
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
 
-  Future<void> _deleteUserData() async =>
-      await _userFavoritesReference!.get().then(
-        (query) {
-          for (var doc in query.docs) {
-            doc.reference.delete();
-          }
-        },
-      ).then(
-        (_) => _userData?.delete(),
+  Future<void> deleteAccount() => deleteFavorites()
+      .then((_) => userData.delete().then((_) => _user?.delete()));
+
+  DocumentReference<Map<String, dynamic>> get userData =>
+      _firestore.collection('users').doc(_userID);
+
+  CollectionReference<Map<String, dynamic>> get favorites =>
+      userData.collection('favorites');
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> get favoritesSnaphots =>
+      favorites.orderBy('createdAt').snapshots();
+
+  Future<void> addToFavorites(String favorite) async => await favorites.add(
+        FavoriteModel.toMap(content: favorite, createdAt: DateTime.now()),
       );
 
-  Future<void> deleteAccount() =>
-      _deleteUserData().then((_) => _user?.delete());
+  Future<void> deleteFavorites() async =>
+      await favorites.get().then((favoritesQuery) {
+        for (final favorite in favoritesQuery.docs) {
+          favorite.reference.delete();
+        }
+      });
 
-  void setupUserData() {
-    _setUserData(_firestore.collection('users').doc(_userID));
-    _userData!.snapshots().listen(
-          (map) => _setUserModerator(map['isModerator']),
-        );
+  Future<bool> get isUserModerator =>
+      userData.get().then((user) => user.data()?['isModerator'] ?? false);
 
-    _setFavoritesReference(
-      _userData!.collection('favorites'),
-    );
-    _userFavoritesReference!
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .listen(
-          (query) => _setUserFavorites(query.docs),
-        );
-  }
-
-  DocumentReference<Map<String, dynamic>>? _userData;
-  DocumentReference<Map<String, dynamic>> get userData => _userData!;
-  void _setUserData(DocumentReference<Map<String, dynamic>> userData) {
-    _userData = userData;
-    notifyListeners();
-  }
-
-  bool _isUserModerator = false;
-  bool get isUserModerator => _isUserModerator;
-  void _setUserModerator(bool isModerator) {
-    _isUserModerator = isModerator;
-    notifyListeners();
-  }
-
-  CollectionReference<Map<String, dynamic>>? _userFavoritesReference;
-  void _setFavoritesReference(
-    CollectionReference<Map<String, dynamic>>? reference,
-  ) {
-    _userFavoritesReference = reference;
-    notifyListeners();
-  }
-
-  final _userFavorites = <QueryDocumentSnapshot<Map<String, dynamic>>>[];
-  List<QueryDocumentSnapshot<Map<String, dynamic>>> get userFavorites =>
-      _userFavorites;
-  int get userFavoritesCount => _userFavorites.length;
-
-  void _setUserFavorites(
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> templates,
-  ) {
-    if (_userFavorites.isNotEmpty) {
-      _userFavorites.clear();
-    }
-    _userFavorites.addAll(templates);
-    notifyListeners();
-  }
-
-  Future<void> addToFavorites(String favorite) async =>
-      await _userFavoritesReference?.add(FavoriteModel.toMap(
-        content: favorite,
-        createdAt: DateTime.now(),
-      ));
-
-  Stream<QuerySnapshot<Map<String, dynamic>>> get forumRules =>
+  Stream<QuerySnapshot<Map<String, dynamic>>> get rulesSnaphots =>
       _firestore.collection('rules').orderBy('order').snapshots();
 }
 

@@ -16,12 +16,12 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
           controller: controller,
           child: StreamBuilder(
             stream: controller.userChanges,
-            builder: (context, snapshot) => !controller.isUserSignedIn
+            builder: (context, snapshot) => !snapshot.hasData
                 ? AuthScreenProvider(
                     controller: AuthScreenController(),
                     child: const AuthScreen(),
                   )
-                : !controller.isEmailVerified
+                : snapshot.data?.emailVerified == false
                     ? const EmailVerificationScreen()
                     : settings.name == FavoritesScreen.route
                         ? const FavoritesScreen()

@@ -8,5 +8,6 @@ String decodeFirebaseAuthErrorCode(String code) =>
       'requires-recent-login':
           'Требуется повторная авторизация', // TODO: Maybe remove
       'user-disabled': 'Аккаунт заблокирован',
+      'network-request-failed': 'Ошибка подключения к сети',
     }[code] ??
     code;

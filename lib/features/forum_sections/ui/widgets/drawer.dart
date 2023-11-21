@@ -73,7 +73,6 @@ class MainDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.bookmark_outline),
             title: const Text('Избранное'),
-            subtitle: Text('${firebase.userFavoritesCount} элементов'),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, FavoritesScreen.route);

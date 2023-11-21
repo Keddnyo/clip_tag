@@ -2,7 +2,7 @@ part of '../forum_sections_screen.dart';
 
 class ForumSectionsController with ChangeNotifier {
   ForumSectionsController() {
-    FirebaseController().forumRules.listen(
+    FirebaseController().rulesSnaphots.listen(
           (query) => _setSections(
             query.docs.map(
               (query) => ForumSection.fromModel(
