@@ -5,8 +5,6 @@ String decodeFirebaseAuthErrorCode(String code) =>
       'email-already-in-use': 'Аккаунт уже зарегистрирован',
       'weak-password': 'Используйте надёжный пароль',
       'too-many-requests': 'Повторите попытку позже',
-      'requires-recent-login':
-          'Требуется повторная авторизация', // TODO: Maybe remove
       'user-disabled': 'Аккаунт заблокирован',
       'network-request-failed': 'Ошибка подключения к сети',
     }[code] ??
