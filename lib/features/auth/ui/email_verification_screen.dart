@@ -38,7 +38,7 @@ class EmailVerificationScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Ссылка отправлена по адресу "${firebase.userEmail}".',
+                    'Ссылка отправлена по адресу "${firebase.userEmail}"',
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16.0),
