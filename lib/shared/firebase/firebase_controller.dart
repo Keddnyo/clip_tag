@@ -18,14 +18,15 @@ class FirebaseController with ChangeNotifier {
   }
 
   User? get _user => _auth.currentUser;
-
-  Stream<User?> get userChanges => _auth.userChanges();
+  bool get isUserAnonymous => _user?.isAnonymous == true;
   String? get _userID => _user?.uid;
   String? get username => _user?.displayName;
   String? get userEmail => _user?.email;
-  Future<void> userReload() async => await _user?.reload();
-
   bool get isEmailVerified => _user?.emailVerified == true;
+  Future<void> userReload() async => await _user?.reload();
+  Stream<User?> get userChanges => _auth.userChanges();
+
+  void signInAnonymously() => _auth.signInAnonymously();
 
   Future<void> signIn({
     required String email,

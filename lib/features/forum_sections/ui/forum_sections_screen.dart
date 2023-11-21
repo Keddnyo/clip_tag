@@ -22,6 +22,7 @@ class ForumSectionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final firebase = FirebaseProvider.of(context);
     final controller = ForumSectionsController();
     final scrollController = ScrollController();
 
@@ -73,7 +74,7 @@ class ForumSectionsScreen extends StatelessWidget {
             actions: controller.choosenRules.isNotEmpty
                 ? [
                     IconButton(
-                      onPressed: () => FirebaseProvider.of(context)
+                      onPressed: () => firebase
                           .addToFavorites(controller.mergeChoosenRules())
                           .then(
                         (_) {
@@ -112,13 +113,16 @@ class ForumSectionsScreen extends StatelessWidget {
                           for (final rule in category.rules)
                             ListTile(
                               title: BBCodeRenderer(rule),
-                              onTap: () => controller.choosenRules.isEmpty
-                                  ? controller.navigateToCheckout(context,
-                                      rule: rule)
-                                  : controller.choosenRules.contains(rule)
-                                      ? controller.removeRule(rule)
-                                      : controller.addRule(rule),
-                              onLongPress: controller.choosenRules.isEmpty
+                              onTap: !firebase.isUserAnonymous
+                                  ? () => controller.choosenRules.isEmpty
+                                      ? controller.navigateToCheckout(context,
+                                          rule: rule)
+                                      : controller.choosenRules.contains(rule)
+                                          ? controller.removeRule(rule)
+                                          : controller.addRule(rule)
+                                  : null,
+                              onLongPress: !firebase.isUserAnonymous &&
+                                      controller.choosenRules.isEmpty
                                   ? () => controller.addRule(rule)
                                   : null,
                               tileColor: controller.choosenRules.contains(rule)
@@ -132,6 +136,13 @@ class ForumSectionsScreen extends StatelessWidget {
                   ],
                 )
               : const LoadingCircle(),
+          floatingActionButton: controller.choosenRules.isNotEmpty
+              ? FloatingActionButton.extended(
+                  onPressed: () => controller.navigateToCheckout(context),
+                  icon: const Icon(Icons.visibility),
+                  label: const Text('Предпросмотр'),
+                )
+              : null,
           drawer: const MainDrawer(),
           endDrawer: controller.sections.isNotEmpty
               ? MainEndDrawer(
@@ -143,13 +154,6 @@ class ForumSectionsScreen extends StatelessWidget {
                     Navigator.pop(context);
                     scrollController.jumpTo(0);
                   },
-                )
-              : null,
-          floatingActionButton: controller.choosenRules.isNotEmpty
-              ? FloatingActionButton.extended(
-                  onPressed: () => controller.navigateToCheckout(context),
-                  icon: const Icon(Icons.visibility),
-                  label: const Text('Предпросмотр'),
                 )
               : null,
         ),

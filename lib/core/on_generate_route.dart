@@ -21,7 +21,8 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
                     controller: AuthScreenController(),
                     child: const AuthScreen(),
                   )
-                : snapshot.data?.emailVerified == false
+                : snapshot.data?.isAnonymous == false &&
+                        snapshot.data?.emailVerified == false
                     ? const EmailVerificationScreen()
                     : settings.name == FavoritesScreen.route
                         ? const FavoritesScreen()

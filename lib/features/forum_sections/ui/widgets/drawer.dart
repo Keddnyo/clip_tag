@@ -30,8 +30,9 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: Text(firebase.username!),
-            subtitle: Text(firebase.userEmail!),
+            title: Text(firebase.username ?? 'Режим гостя'),
+            subtitle:
+                firebase.userEmail != null ? Text(firebase.userEmail!) : null,
             trailing: IconButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -40,15 +41,20 @@ class MainDrawer extends StatelessWidget {
               icon: const Icon(Icons.logout),
             ),
           ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.bookmark),
-            title: const Text('Избранное'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, FavoritesScreen.route);
-            },
-          ),
+          if (!firebase.isUserAnonymous)
+            Column(
+              children: [
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.bookmark),
+                  title: const Text('Избранное'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, FavoritesScreen.route);
+                  },
+                ),
+              ],
+            ),
           const Divider(),
           AboutListTile(
             icon: const Icon(Icons.info_outline),
