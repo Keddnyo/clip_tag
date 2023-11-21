@@ -1,4 +1,4 @@
 import 'package:flutter/services.dart';
 
-void copyToClipboard(String text) =>
-    Clipboard.setData(ClipboardData(text: text));
+Future<void> copyToClipboard(String text) async =>
+    await Clipboard.setData(ClipboardData(text: text));

@@ -17,21 +17,21 @@ class MainEndDrawer extends StatelessWidget {
     return NavigationDrawer(
       onDestinationSelected: (index) => onDestinationSelected(index),
       selectedIndex: sectionIndex,
-      tilePadding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
-      children: sections
-          .map(
-            (section) => NavigationDrawerDestination(
-              icon: Icon(
-                section.order == 0
-                    ? Icons.home
-                    : getForumSectionIcon(section.title),
-              ),
-              label: Flexible(
-                child: Text(section.title),
-              ),
+      children: [
+        const SizedBox(height: 12.0),
+        for (final section in sections)
+          NavigationDrawerDestination(
+            icon: Icon(
+              section.order == 0
+                  ? Icons.home
+                  : getForumSectionIcon(section.title),
             ),
-          )
-          .toList(),
+            label: Flexible(
+              child: Text(section.title),
+            ),
+          ),
+        const SizedBox(height: 12.0),
+      ],
     );
   }
 }
