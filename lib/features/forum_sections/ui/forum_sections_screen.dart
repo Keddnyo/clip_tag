@@ -1,4 +1,3 @@
-import 'package:clip_tag/utils/copy_to_clipboard.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -6,6 +5,7 @@ import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../shared/ui/show_snackbar.dart';
+import '../../../utils/copy_to_clipboard.dart';
 import '../../checkout/ui/checkout_screen.dart';
 import '../../favorites/ui/favorites_screen.dart';
 import '../data/model/forum_section_model.dart';

@@ -1,9 +1,9 @@
-import 'package:clip_tag/utils/copy_to_clipboard.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
+import '../../../utils/copy_to_clipboard.dart';
 import '../../../utils/open_url.dart';
 import '../model/forum_tags.dart';
 import 'widgets/forum_tag.dart';
@@ -25,7 +25,7 @@ class CheckoutScreen extends StatelessWidget {
       listenable: checkoutController,
       builder: (context, child) => Scaffold(
         appBar: AppBar(
-          title: const Text('Подготовка тега'),
+          title: const Text('Предпросмотр'),
           actions: [
             IconButton(
               onPressed: checkoutController.sendChoosenRules,
