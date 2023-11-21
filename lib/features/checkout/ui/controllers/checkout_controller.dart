@@ -26,12 +26,8 @@ class CheckoutController with ChangeNotifier {
     return buffer.toString();
   }
 
-  void copyChoosenRules({bool withTag = false}) => Clipboard.setData(
-        ClipboardData(text: withTag ? rulesWithTag : choosenRules),
-      );
-
   void sendChoosenRules() async {
-    copyChoosenRules(withTag: true);
+    copyToClipboard(rulesWithTag);
 
     if (await DeviceApps.isAppInstalled(Constants.fourpdaClientPackageName)) {
       DeviceApps.openApp(Constants.fourpdaClientPackageName);

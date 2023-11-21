@@ -1,3 +1,4 @@
+import 'package:clip_tag/utils/copy_to_clipboard.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -86,6 +87,13 @@ class ForumSectionsScreen extends StatelessWidget {
                         },
                       ),
                       icon: const Icon(Icons.bookmark_add),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        controller.copyChoosenRules();
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.copy),
                     ),
                   ]
                 : null,

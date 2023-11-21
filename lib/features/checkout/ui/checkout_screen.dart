@@ -1,6 +1,6 @@
+import 'package:clip_tag/utils/copy_to_clipboard.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
@@ -27,21 +27,6 @@ class CheckoutScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Подготовка тега'),
           actions: [
-            PopupMenuButton(
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  onTap: () =>
-                      checkoutController.copyChoosenRules(withTag: true),
-                  child: const Text('С тегом'),
-                ),
-                PopupMenuItem(
-                  onTap: checkoutController.copyChoosenRules,
-                  child: const Text('Без тега'),
-                ),
-              ],
-              icon: const Icon(Icons.copy),
-              position: PopupMenuPosition.under,
-            ),
             IconButton(
               onPressed: checkoutController.sendChoosenRules,
               icon: const Icon(Icons.send),

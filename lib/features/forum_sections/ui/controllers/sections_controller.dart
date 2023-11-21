@@ -53,6 +53,8 @@ class ForumSectionsController with ChangeNotifier {
   String mergeChoosenRules({String? rule}) => section!
       .combineChoosenRulesToString(rule != null ? [rule] : _choosenRules);
 
+  void copyChoosenRules() => copyToClipboard(mergeChoosenRules());
+
   void navigateToCheckout(BuildContext context, {String? rule}) =>
       Navigator.pushNamed(
         context,
