@@ -26,18 +26,12 @@ class CheckoutController with ChangeNotifier {
     return buffer.toString();
   }
 
-  void sendChoosenRules() async {
+  void sendChoosenRules() {
     copyToClipboard(rulesWithTag).then(
-      (_) async {
-        if (kIsWeb ||
-            (Platform.isAndroid &&
-                await DeviceApps.isAppInstalled(
-                    Constants.fourpdaClientPackageName))) {
-          DeviceApps.openApp(Constants.fourpdaClientPackageName);
-        } else {
-          openUrl(Constants.fourpdaDefaultUrl);
-        }
-      },
+      (_) => DeviceApps.isAppInstalled(Constants.fourpdaClientPackageName).then(
+          (isAppInstalled) => isAppInstalled
+              ? DeviceApps.openApp(Constants.fourpdaClientPackageName)
+              : openUrl(Constants.fourpdaDefaultUrl)),
     );
   }
 }
