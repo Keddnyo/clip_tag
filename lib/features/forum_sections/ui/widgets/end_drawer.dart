@@ -17,6 +17,7 @@ class MainEndDrawer extends StatelessWidget {
     return NavigationDrawer(
       onDestinationSelected: (index) => onDestinationSelected(index),
       selectedIndex: sectionIndex,
+      tilePadding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
       children: sections
           .map(
             (section) => NavigationDrawerDestination(
