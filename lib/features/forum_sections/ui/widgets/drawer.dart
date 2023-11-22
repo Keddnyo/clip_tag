@@ -56,6 +56,11 @@ class MainDrawer extends StatelessWidget {
               ],
             ),
           const Divider(),
+          ListTile(
+            leading: const Icon(Icons.gavel),
+            title: const Text('Условия использования'),
+            onTap: () => openUrl(Constants.appTermsOfUseUrl),
+          ),
           AboutListTile(
             icon: const Icon(Icons.info_outline),
             applicationVersion: 'Агрегатор правил 4PDA',
