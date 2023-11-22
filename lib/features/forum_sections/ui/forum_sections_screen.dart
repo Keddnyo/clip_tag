@@ -93,6 +93,7 @@ class ForumSectionsScreen extends StatelessWidget {
                   ]
                 : null,
             shadowColor: Colors.black,
+            centerTitle: true,
           ),
           body: controller.sections.isNotEmpty
               ? ListView(

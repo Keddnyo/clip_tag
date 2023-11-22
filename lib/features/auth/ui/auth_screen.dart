@@ -57,6 +57,7 @@ class AuthScreen extends StatelessWidget {
                   : '${Constants.appName} ID',
         ),
         shadowColor: Colors.black,
+        centerTitle: true,
       ),
       body: Form(
         key: auth.formKey,
