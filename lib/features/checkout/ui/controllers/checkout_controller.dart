@@ -1,4 +1,10 @@
-part of '../checkout_screen.dart';
+import 'package:device_apps/device_apps.dart';
+import 'package:flutter/material.dart';
+
+import '../../../../shared/constants.dart';
+import '../../../../utils/copy_to_clipboard.dart';
+import '../../../../utils/open_url.dart';
+import '../../model/forum_tags.dart';
 
 class CheckoutController with ChangeNotifier {
   final String choosenRules;

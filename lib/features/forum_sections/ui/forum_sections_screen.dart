@@ -5,15 +5,12 @@ import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../shared/ui/show_snackbar.dart';
-import '../../../utils/copy_to_clipboard.dart';
 import '../../../utils/open_url.dart';
-import '../../checkout/ui/checkout_screen.dart';
 import '../../favorites/ui/favorites_screen.dart';
-import '../data/model/forum_section_model.dart';
 import '../domain/entity/forum_section.dart';
 import '../utils/get_forum_section_icon.dart';
+import 'controllers/sections_controller.dart';
 
-part 'controllers/sections_controller.dart';
 part 'widgets/drawer.dart';
 part 'widgets/end_drawer.dart';
 

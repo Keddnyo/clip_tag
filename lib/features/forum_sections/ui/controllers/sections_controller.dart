@@ -1,4 +1,10 @@
-part of '../forum_sections_screen.dart';
+import 'package:flutter/material.dart';
+
+import '../../../../shared/firebase/firebase_controller.dart';
+import '../../../../utils/copy_to_clipboard.dart';
+import '../../../checkout/ui/checkout_screen.dart';
+import '../../data/model/forum_section_model.dart';
+import '../../domain/entity/forum_section.dart';
 
 class ForumSectionsController with ChangeNotifier {
   ForumSectionsController() {
