@@ -91,6 +91,10 @@ class ForumSectionsScreen extends StatelessWidget {
                     IconButton(
                       onPressed: () {
                         controller.copyChoosenRules();
+                        showSnackbar(
+                          context: context,
+                          message: 'Скопировано в буфер обмена',
+                        );
                         controller.clearChoosenRules();
                       },
                       icon: const Icon(Icons.copy),

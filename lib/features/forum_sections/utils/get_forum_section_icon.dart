@@ -4,9 +4,9 @@ IconData getForumSectionIcon(String title) {
   final currentSection = {
     'Мультимедийные устройства': Icons.radio,
     'Носимые устройства': Icons.watch,
-    'Автомобильные устройства': Icons.minor_crash,
+    'Автомобильные устройства': Icons.directions_car,
     'Игровые консоли': Icons.gamepad,
-    'Квадрокоптеры': Icons.connecting_airports,
+    'Квадрокоптеры': Icons.flight_takeoff,
     'Кнопочные телефоны': Icons.dialpad,
     'Устройства для дома и развлечений': Icons.celebration,
     'Фото и Видео': Icons.image,
@@ -14,10 +14,10 @@ IconData getForumSectionIcon(String title) {
     'Электротранспорт': Icons.airport_shuttle,
     'Компьютеры и периферия': Icons.devices,
     'Навигация': Icons.near_me,
-    'Новинки': Icons.newspaper,
+    'Новинки': Icons.new_releases,
     'Книжная лавка': Icons.auto_stories,
     'Эмуляторы': Icons.computer,
-    'Трепалка': Icons.psychology_alt,
+    'Трепалка': Icons.voice_chat,
     'Технотрепалка': Icons.psychology,
   }[title];
 
@@ -30,7 +30,7 @@ IconData getForumSectionIcon(String title) {
   }
 
   if (title.contains('Apple') || title.contains('iOS')) {
-    return Icons.apple;
+    return Icons.apple_sharp;
   }
 
   return Icons.double_arrow;
