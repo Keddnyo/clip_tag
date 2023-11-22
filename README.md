@@ -7,11 +7,7 @@
 ![Всего загрузок](https://img.shields.io/github/downloads/Keddnyo/clip_tag/total?label=Всего%20загрузок)
 
 ### Скриншоты:
-<img src='screenshots/ClipTag_1.png' height='512'> <img src='screenshots/ClipTag_4.png' height='512'>
-
-<img src='screenshots/ClipTag_2.png' height='512'> <img src='screenshots/ClipTag_5.png' height='512'>
-
-<img src='screenshots/ClipTag_3.png' height='512'> <img src='screenshots/ClipTag_6.png' height='512'>
+<img src='screenshots/ClipTag_1.png' height='512'> <img src='screenshots/ClipTag_2.png' height='512'> <img src='screenshots/ClipTag_3.png' height='512'> <img src='screenshots/ClipTag_4.png' height='512'> <img src='screenshots/ClipTag_5.png' height='512'> <img src='screenshots/ClipTag_6.png' height='512'> <img src='screenshots/ClipTag_7.png' height='512'> <img src='screenshots/ClipTag_8.png' height='512'> <img src='screenshots/ClipTag_9.png' height='512'> <img src='screenshots/ClipTag_10.png' height='512'> <img src='screenshots/ClipTag_11.png' height='512'>
 
 ### Описание:
 * Приложение ClipTag позволяет сформировать тег с правилами форума 4PDA
