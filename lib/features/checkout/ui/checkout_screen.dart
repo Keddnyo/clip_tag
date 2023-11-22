@@ -33,7 +33,6 @@ class CheckoutScreen extends StatelessWidget {
             ),
           ],
           shadowColor: Colors.black,
-          centerTitle: true,
         ),
         body: SingleChildScrollView(
           child: Padding(

@@ -24,7 +24,6 @@ class FavoritesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Избранное'),
         shadowColor: Colors.black,
-        centerTitle: true,
       ),
       body: StreamBuilder(
         stream: firebase.favoritesSnaphots,

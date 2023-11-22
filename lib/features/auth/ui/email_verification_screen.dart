@@ -27,7 +27,6 @@ class EmailVerificationScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Подтвердите почту'),
-        centerTitle: true,
       ),
       body: Stack(
         children: [
