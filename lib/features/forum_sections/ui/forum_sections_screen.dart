@@ -97,48 +97,54 @@ class ForumSectionsScreen extends StatelessWidget {
             centerTitle: true,
           ),
           body: controller.sections.isNotEmpty
-              ? ListView(
-                  controller: scrollController,
-                  padding: controller.choosenRules.isNotEmpty
-                      ? const EdgeInsets.only(bottom: 96.0)
-                      : null,
-                  children: [
-                    for (final category in controller.section!.categories)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Divider(height: 1.0),
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(category.title),
+              ? ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    scrollbars: false,
+                  ),
+                  child: ListView(
+                    controller: scrollController,
+                    padding: controller.choosenRules.isNotEmpty
+                        ? const EdgeInsets.only(bottom: 96.0)
+                        : null,
+                    children: [
+                      for (final category in controller.section!.categories)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Divider(height: 1.0),
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(category.title),
+                              ),
                             ),
-                          ),
-                          const Divider(height: 1.0),
-                          for (final rule in category.rules)
-                            ListTile(
-                              title: BBCodeRenderer(rule),
-                              onTap: !firebase.isUserAnonymous
-                                  ? () => controller.choosenRules.isEmpty
-                                      ? controller.navigateToCheckout(context,
-                                          rule: rule)
-                                      : controller.choosenRules.contains(rule)
-                                          ? controller.removeRule(rule)
-                                          : controller.addRule(rule)
-                                  : null,
-                              onLongPress: !firebase.isUserAnonymous &&
-                                      controller.choosenRules.isEmpty
-                                  ? () => controller.addRule(rule)
-                                  : null,
-                              tileColor: controller.choosenRules.contains(rule)
-                                  ? Theme.of(context)
-                                      .colorScheme
-                                      .secondaryContainer
-                                  : null,
-                            ),
-                        ],
-                      ),
-                  ],
+                            const Divider(height: 1.0),
+                            for (final rule in category.rules)
+                              ListTile(
+                                title: BBCodeRenderer(rule),
+                                onTap: !firebase.isUserAnonymous
+                                    ? () => controller.choosenRules.isEmpty
+                                        ? controller.navigateToCheckout(context,
+                                            rule: rule)
+                                        : controller.choosenRules.contains(rule)
+                                            ? controller.removeRule(rule)
+                                            : controller.addRule(rule)
+                                    : null,
+                                onLongPress: !firebase.isUserAnonymous &&
+                                        controller.choosenRules.isEmpty
+                                    ? () => controller.addRule(rule)
+                                    : null,
+                                tileColor:
+                                    controller.choosenRules.contains(rule)
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .secondaryContainer
+                                        : null,
+                              ),
+                          ],
+                        ),
+                    ],
+                  ),
                 )
               : const LoadingCircle(),
           floatingActionButton: controller.choosenRules.isNotEmpty
