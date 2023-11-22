@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode/flutter_bbcode.dart';
 
-import '../../utils/open_url.dart';
 import 'get_color_scheme.dart';
 
 class BBCodeRenderer extends StatelessWidget {
@@ -19,7 +18,7 @@ class BBCodeRenderer extends StatelessWidget {
             UnderlineTag(),
             StrikeThroughTag(),
             ColorTag(),
-            UrlTag(onTap: (url) => openUrl(url)),
+            UrlTag(),
             ImgTag(),
           ],
           defaultText: TextStyle(
