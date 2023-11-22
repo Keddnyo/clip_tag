@@ -20,8 +20,7 @@ class CheckoutController with ChangeNotifier {
     buffer
       ..write('[${currentForumTag.closure}]\n')
       ..write('$choosenRules\n')
-      ..write('[/${currentForumTag.closure}]')
-      ..toString();
+      ..write('[/${currentForumTag.closure}]');
 
     return buffer.toString();
   }
