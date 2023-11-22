@@ -1,7 +1,7 @@
 String decodeFirebaseAuthErrorCode(String code) =>
     {
       'invalid-email': 'Неверный логин',
-      'invalid_login_credentials': 'Неверный логин или пароль',
+      'invalid-login-credentials': 'Неверный логин или пароль',
       'email-already-in-use': 'Аккаунт уже зарегистрирован',
       'weak-password': 'Используйте надёжный пароль',
       'too-many-requests': 'Повторите попытку позже',
