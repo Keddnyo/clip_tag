@@ -68,36 +68,27 @@ class ForumSectionsScreen extends StatelessWidget {
             title: Text(
               controller.sections.isNotEmpty
                   ? controller.choosenRules.isNotEmpty
-                      ? controller.choosenRules.length.toString()
+                      ? 'Подготовка тега'
                       : controller.section!.title
                   : 'ClipTag',
             ),
             actions: controller.choosenRules.isNotEmpty
                 ? [
                     IconButton(
-                      onPressed: () => firebase
-                          .addToFavorites(controller.mergeChoosenRules())
-                          .then(
+                      onPressed: () => controller.copyChoosenRules().then(
                         (_) {
-                          controller.clearChoosenRules();
                           showSnackbar(
                             context: context,
-                            message: 'Добавлено в избранное',
+                            message: 'Скопировано в буфер обмена',
                           );
+                          controller.clearChoosenRules();
                         },
                       ),
-                      icon: const Icon(Icons.bookmark_add),
+                      icon: const Icon(Icons.copy),
                     ),
                     IconButton(
-                      onPressed: () {
-                        controller.copyChoosenRules();
-                        showSnackbar(
-                          context: context,
-                          message: 'Скопировано в буфер обмена',
-                        );
-                        controller.clearChoosenRules();
-                      },
-                      icon: const Icon(Icons.copy),
+                      onPressed: () => controller.navigateToCheckout(context),
+                      icon: const Icon(Icons.send),
                     ),
                   ]
                 : null,
@@ -150,9 +141,21 @@ class ForumSectionsScreen extends StatelessWidget {
               : const LoadingCircle(),
           floatingActionButton: controller.choosenRules.isNotEmpty
               ? FloatingActionButton.extended(
-                  onPressed: () => controller.navigateToCheckout(context),
-                  icon: const Icon(Icons.visibility),
-                  label: const Text('Предпросмотр'),
+                  onPressed: () => firebase
+                      .addToFavorites(controller.mergeChoosenRules())
+                      .then(
+                    (_) {
+                      controller.clearChoosenRules();
+                      showSnackbar(
+                        context: context,
+                        message: 'Добавлено в избранное',
+                      );
+                    },
+                  ),
+                  icon: const Icon(Icons.bookmark_add),
+                  label: Text(
+                    'В избранное (${controller.choosenRules.length})',
+                  ),
                 )
               : null,
           drawer: const MainDrawer(),
