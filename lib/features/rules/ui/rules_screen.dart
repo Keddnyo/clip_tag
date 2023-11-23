@@ -32,20 +32,38 @@ class _RulesScreenState extends State<RulesScreen> {
 
     final sectionsScroller = ScrollController();
 
+    void addRulesToFavorites(List<String> rules) => firebase
+            .addFavorite(controller.section!.combineChoosenRulesToString(rules))
+            .then(
+          (_) {
+            _switchForumSections();
+            if (controller.choosenRules.isNotEmpty) {
+              controller.deselectAllRules();
+            }
+          },
+        );
+
     return Scaffold(
       appBar: AppBar(
+        leading: _showForumSections && controller.choosenRules.isNotEmpty
+            ? IconButton(
+                onPressed: controller.deselectAllRules,
+                icon: const Icon(Icons.arrow_back),
+              )
+            : null,
         title: Text(
           _showForumSections && controller.section != null
               ? controller.section!.title
               : Constants.appName,
         ),
         actions: [
-          IconButton(
-            onPressed: _switchForumSections,
-            icon: Icon(
-              _showForumSections ? Icons.close : Icons.add,
+          if (controller.choosenRules.isEmpty)
+            IconButton(
+              onPressed: _switchForumSections,
+              icon: Icon(
+                _showForumSections ? Icons.close : Icons.add,
+              ),
             ),
-          ),
         ],
       ),
       body: _showForumSections
@@ -71,14 +89,17 @@ class _RulesScreenState extends State<RulesScreen> {
                           for (final rule in category.rules)
                             ListTile(
                               title: BBCodeRenderer(rule),
-                              onTap: () => firebase
-                                  .addFavorite(
-                                    controller.section!
-                                        .combineChoosenRulesToString([rule]),
-                                  )
-                                  .then(
-                                    (_) => _switchForumSections(),
-                                  ),
+                              onTap: () => controller.choosenRules.isNotEmpty
+                                  ? controller.choosenRules.contains(rule)
+                                      ? controller.deselectRule(rule)
+                                      : controller.selectRule(rule)
+                                  : addRulesToFavorites([rule]),
+                              onLongPress: () => controller.choosenRules.isEmpty
+                                  ? controller.selectRule(rule)
+                                  : null,
+                              tileColor: controller.choosenRules.contains(rule)
+                                  ? getColorScheme(context).secondaryContainer
+                                  : null,
                             ),
                         ],
                       );
@@ -108,7 +129,7 @@ class _RulesScreenState extends State<RulesScreen> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.menu_book, size: 64.0),
+                          Icon(Icons.bookmark, size: 64.0),
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Text(
@@ -151,6 +172,14 @@ class _RulesScreenState extends State<RulesScreen> {
                   },
                   itemCount: controller.favorites.length,
                 ),
+      floatingActionButton:
+          _showForumSections && controller.choosenRules.isNotEmpty
+              ? FloatingActionButton.extended(
+                  onPressed: () => addRulesToFavorites(controller.choosenRules),
+                  icon: const Icon(Icons.bookmark),
+                  label: Text('Добавить (${controller.choosenRules.length})'),
+                )
+              : null,
       bottomNavigationBar: !_showForumSections && firebase.isUserModerator
           ? NavigationBar(
               selectedIndex: controller.favoritesTagIndex,
@@ -194,11 +223,17 @@ class _RulesScreenState extends State<RulesScreen> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
-                  DrawerHeader(
-                    child: Center(
-                      child: Text(Constants.appName),
-                    ),
+                  const DrawerHeader(
+                    child: Center(child: Text(Constants.appName)),
                   ),
+                  ListTile(
+                    title: Text(firebase.username!),
+                    subtitle: Text(firebase.userEmail!),
+                    trailing: IconButton(
+                      onPressed: firebase.signOut,
+                      icon: const Icon(Icons.logout),
+                    ),
+                  )
                 ],
               ),
             ),
