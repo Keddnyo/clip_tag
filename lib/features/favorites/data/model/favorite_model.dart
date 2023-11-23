@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../domain/entity/favorite.dart';
-
 class FavoriteModel {
   final String content;
   final Timestamp createdAt;
@@ -24,7 +22,4 @@ class FavoriteModel {
         'content': content,
         'createdAt': createdAt,
       };
-
-  Favorite toTemplate() =>
-      Favorite(content: content, createdAt: createdAt.toDate());
 }

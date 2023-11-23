@@ -1,3 +1,4 @@
+import 'package:clip_tag/shared/ui/get_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -29,6 +30,8 @@ class _RulesScreenState extends State<RulesScreen> {
     final firebase = FirebaseProvider.of(context);
     final controller = RulesScreenProvider.of(context);
 
+    final sectionsScroller = ScrollController();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -53,6 +56,7 @@ class _RulesScreenState extends State<RulesScreen> {
                     scrollbars: false,
                   ),
                   child: ListView.builder(
+                    controller: sectionsScroller,
                     itemBuilder: (context, index) {
                       final category = controller.section!.categories[index];
 
@@ -67,6 +71,14 @@ class _RulesScreenState extends State<RulesScreen> {
                           for (final rule in category.rules)
                             ListTile(
                               title: BBCodeRenderer(rule),
+                              onTap: () => firebase
+                                  .addFavorite(
+                                    controller.section!
+                                        .combineChoosenRulesToString([rule]),
+                                  )
+                                  .then(
+                                    (_) => _switchForumSections(),
+                                  ),
                             ),
                         ],
                       );
@@ -75,23 +87,80 @@ class _RulesScreenState extends State<RulesScreen> {
                   ),
                 )
           : controller.favorites.isEmpty
-              ? const Text('No Data')
-              : ListView.builder(
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ForumTag(
-                      content: controller.favorites[index].content,
-                      tag: controller.tag,
+              ? const Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Правила добавляются здесь'),
+                            SizedBox(width: 12.0),
+                            Icon(Icons.arrow_upward),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.menu_book, size: 64.0),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Добавьте правила в список',
+                              style: TextStyle(fontSize: 18.0),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              : ListView.builder(
+                  itemBuilder: (context, index) {
+                    final favorite = controller.favorites[index];
+
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Dismissible(
+                        key: ValueKey(favorite.reference),
+                        background: Container(
+                          alignment: Alignment.centerRight,
+                          color: getColorScheme(context).error,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.delete,
+                              color: getColorScheme(context).onError,
+                            ),
+                          ),
+                        ),
+                        onDismissed: (_) => favorite.reference.delete(),
+                        direction: DismissDirection.endToStart,
+                        child: ForumTag(
+                          content: favorite.content,
+                          tag: controller.tag,
+                        ),
+                      ),
+                    );
+                  },
                   itemCount: controller.favorites.length,
                 ),
       bottomNavigationBar: !_showForumSections && firebase.isUserModerator
           ? NavigationBar(
               selectedIndex: controller.favoritesTagIndex,
               destinations: ForumTags.values
-                  .map((tag) => NavigationDestination(
-                      icon: Icon(tag.icon), label: tag.title))
+                  .map(
+                    (tag) => NavigationDestination(
+                      icon: Icon(tag.icon),
+                      label: tag.title,
+                    ),
+                  )
                   .toList(),
               onDestinationSelected: (index) =>
                   controller.setFavoritesTagIndex(index),
@@ -99,16 +168,18 @@ class _RulesScreenState extends State<RulesScreen> {
           : null,
       drawer: _showForumSections && controller.sections.isNotEmpty
           ? NavigationDrawer(
-              onDestinationSelected: (index) => controller.setSectionIndex(
-                index,
-              ),
+              onDestinationSelected: (index) {
+                Navigator.pop(context);
+                controller.setSectionIndex(index);
+                sectionsScroller.jumpTo(0);
+              },
               selectedIndex: controller.sectionIndex,
               children: [
                 const SizedBox(height: 12.0),
                 for (final section in controller.sections)
                   NavigationDrawerDestination(
                     icon: Icon(
-                      controller.section!.order == 0
+                      section.order == 0
                           ? Icons.home
                           : getForumSectionIcon(section.title),
                     ),
@@ -151,11 +222,12 @@ class RulesScreenController with ChangeNotifier {
 
     FirebaseController().favorites?.listen(
           (favoritesSnapshot) => _setFavorites(
-            favoritesSnapshot.docs.map(
+            favoritesSnapshot.docs.reversed.map(
               (favoriteSnapshot) => Favorite.fromModel(
                 FavoriteModel.fromMap(
                   favoriteSnapshot.data(),
                 ),
+                reference: favoriteSnapshot.reference,
               ),
             ),
           ),
