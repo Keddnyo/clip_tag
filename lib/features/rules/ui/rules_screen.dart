@@ -1,9 +1,9 @@
-import 'package:clip_tag/shared/ui/get_color_scheme.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
+import '../../../shared/ui/get_color_scheme.dart';
 import '../../checkout/model/forum_tags.dart';
 import '../../checkout/ui/widgets/forum_tag.dart';
 import '../../favorites/data/model/favorite_model.dart';
