@@ -19,6 +19,7 @@ IconData getForumSectionIcon(String title) {
     'Эмуляторы': Icons.computer,
     'Трепалка': Icons.voice_chat,
     'Технотрепалка': Icons.psychology,
+    'Барахолка': Icons.shopping_cart_outlined,
   }[title];
 
   if (currentSection != null) {
