@@ -31,8 +31,11 @@ class MainDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text(firebase.username ?? 'Режим гостя'),
-            subtitle:
-                firebase.userEmail != null ? Text(firebase.userEmail!) : null,
+            subtitle: firebase.userEmail != null
+                ? Text(
+                    firebase.userEmail!,
+                  )
+                : null,
             trailing: IconButton(
               onPressed: () {
                 Navigator.pop(context);
