@@ -1,4 +1,4 @@
-import 'package:clip_tag/features/favorites/data/model/favorite_model.dart';
+import '../../favorites/data/model/favorite_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -119,7 +119,18 @@ class _RulesScreenState extends State<RulesScreen> {
                 const SizedBox(height: 12.0),
               ],
             )
-          : const Drawer(),
+          : Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  DrawerHeader(
+                    child: Center(
+                      child: Text(Constants.appName),
+                    ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }
