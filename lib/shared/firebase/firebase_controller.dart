@@ -45,9 +45,10 @@ class FirebaseController with ChangeNotifier {
           .then((userCredential) => userCredential.user
               ?.updateDisplayName(username)
               .then((_) => _userData?.set({
-                    'username': username,
+                    'createdAt': DateTime.now(),
                     'email': email,
                     'isModerator': false,
+                    'username': username,
                   })));
 
   void sendEmailVerification() => _user?.sendEmailVerification();
