@@ -22,7 +22,11 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
                   )
                 : snapshot.data?.isAnonymous == true ||
                         settings.name == ForumSectionsScreen.route
-                    ? const ForumSectionsScreen()
+                    ? ForumSectionsScreen(
+                        onRuleSelected: (rule) => controller
+                            .addFavorite(rule)
+                            .then((value) => Navigator.pop(context)),
+                      )
                     : snapshot.data?.emailVerified == false
                         ? const EmailVerificationScreen()
                         : const FavoritesScreen(),

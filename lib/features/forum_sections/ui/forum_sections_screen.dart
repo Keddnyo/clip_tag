@@ -4,7 +4,6 @@ import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/loading_circle.dart';
-import '../../../shared/ui/show_snackbar.dart';
 import '../../../utils/open_url.dart';
 import '../domain/entity/forum_section.dart';
 import '../utils/get_forum_section_icon.dart';
@@ -14,9 +13,11 @@ part 'widgets/drawer.dart';
 part 'widgets/end_drawer.dart';
 
 class ForumSectionsScreen extends StatelessWidget {
-  const ForumSectionsScreen({super.key});
+  const ForumSectionsScreen({super.key, required this.onRuleSelected});
 
   static const String route = '/forum_sections';
+
+  final Function(String choosenRules) onRuleSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -123,10 +124,7 @@ class ForumSectionsScreen extends StatelessWidget {
                                       onTap: !firebase.isUserAnonymous
                                           ? () => controller
                                                   .choosenRules.isEmpty
-                                              ? firebase.addFavorite(rule).then(
-                                                    (_) =>
-                                                        Navigator.pop(context),
-                                                  )
+                                              ? onRuleSelected(rule)
                                               : controller.choosenRules
                                                       .contains(rule)
                                                   ? controller.removeRule(rule)
@@ -151,16 +149,9 @@ class ForumSectionsScreen extends StatelessWidget {
                     : const LoadingCircle(),
                 floatingActionButton: controller.choosenRules.isNotEmpty
                     ? FloatingActionButton.extended(
-                        onPressed: () => firebase
-                            .addFavorite(controller.mergeChoosenRules())
-                            .then((_) {
-                          controller.clearChoosenRules();
-                          Navigator.pop(context);
-                          // showSnackbar(
-                          //   context: context,
-                          //   message: 'Добавлено в избранное',
-                          // );
-                        }),
+                        onPressed: () => onRuleSelected(
+                          controller.mergeChoosenRules(),
+                        ),
                         icon: const Icon(Icons.bookmark_add),
                         label: Text(
                           'Добавить (${controller.choosenRules.length})',
