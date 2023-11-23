@@ -13,8 +13,10 @@ class FirebaseController with ChangeNotifier {
   FirebaseController() {
     _auth.setLanguageCode('ru');
 
-    _userData?.snapshots().listen(
-        (user) => setUserModerator(user.data()?['isModerator'] ?? false));
+    _userData?.snapshots().listen((user) {
+      final userData = user.data();
+      _setUserModerator(userData?['isModerator'] ?? false);
+    });
   }
 
   User? get _user => _auth.currentUser;
@@ -58,8 +60,10 @@ class FirebaseController with ChangeNotifier {
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> get rules =>
-      _db.collection('rules').orderBy('order').snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> get ruleSections => _db
+      .collection('rules')
+      .orderBy('order')
+      .snapshots(); // TODO: Can be a static
 
   DocumentReference<Map<String, dynamic>>? get _userData =>
       _db.collection('users').doc(_userID);
@@ -76,7 +80,7 @@ class FirebaseController with ChangeNotifier {
 
   bool _isUserModerator = false;
   bool get isUserModerator => _isUserModerator;
-  void setUserModerator(bool isModerator) {
+  void _setUserModerator(bool isModerator) {
     _isUserModerator = isModerator;
     notifyListeners();
   }

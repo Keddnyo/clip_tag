@@ -1,37 +1,37 @@
-part of '../forum_sections_screen.dart';
+// part of '../forum_sections_screen.dart';
 
-class MainEndDrawer extends StatelessWidget {
-  const MainEndDrawer({
-    super.key,
-    required this.sections,
-    required this.sectionIndex,
-    required this.onDestinationSelected,
-  });
+// class MainEndDrawer extends StatelessWidget {
+//   const MainEndDrawer({
+//     super.key,
+//     required this.sections,
+//     required this.sectionIndex,
+//     required this.onDestinationSelected,
+//   });
 
-  final List<ForumSection> sections;
-  final int sectionIndex;
-  final Function(int index) onDestinationSelected;
+//   final List<ForumSection> sections;
+//   final int sectionIndex;
+//   final Function(int index) onDestinationSelected;
 
-  @override
-  Widget build(BuildContext context) {
-    return NavigationDrawer(
-      onDestinationSelected: (index) => onDestinationSelected(index),
-      selectedIndex: sectionIndex,
-      children: [
-        const SizedBox(height: 12.0),
-        for (final section in sections)
-          NavigationDrawerDestination(
-            icon: Icon(
-              section.order == 0
-                  ? Icons.home
-                  : getForumSectionIcon(section.title),
-            ),
-            label: Flexible(
-              child: Text(section.title),
-            ),
-          ),
-        const SizedBox(height: 12.0),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return NavigationDrawer(
+//       onDestinationSelected: (index) => onDestinationSelected(index),
+//       selectedIndex: sectionIndex,
+//       children: [
+//         const SizedBox(height: 12.0),
+//         for (final section in sections)
+//           NavigationDrawerDestination(
+//             icon: Icon(
+//               section.order == 0
+//                   ? Icons.home
+//                   : getForumSectionIcon(section.title),
+//             ),
+//             label: Flexible(
+//               child: Text(section.title),
+//             ),
+//           ),
+//         const SizedBox(height: 12.0),
+//       ],
+//     );
+//   }
+// }

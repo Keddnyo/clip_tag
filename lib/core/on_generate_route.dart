@@ -1,3 +1,4 @@
+import 'package:clip_tag/features/rules/ui/rules_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../features/auth/ui/auth_screen.dart';
@@ -20,16 +21,12 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
                     controller: AuthScreenController(),
                     child: const AuthScreen(),
                   )
-                : snapshot.data?.isAnonymous == true ||
-                        settings.name == ForumSectionsScreen.route
-                    ? ForumSectionsScreen(
-                        onRuleSelected: (rule) => controller
-                            .addFavorite(rule)
-                            .then((value) => Navigator.pop(context)),
-                      )
-                    : snapshot.data?.emailVerified == false
-                        ? const EmailVerificationScreen()
-                        : const FavoritesScreen(),
+                : snapshot.data?.emailVerified == false
+                    ? const EmailVerificationScreen()
+                    : RulesScreenProvider(
+                        controller: RulesScreenController(),
+                        child: const RulesScreen(),
+                      ),
           ),
         );
       },
