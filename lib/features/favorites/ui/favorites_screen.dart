@@ -26,7 +26,7 @@ class FavoritesScreen extends StatelessWidget {
         shadowColor: Colors.black,
       ),
       body: StreamBuilder(
-        stream: firebase.favoritesSnaphots,
+        stream: firebase.favorites,
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const LoadingCircle();

@@ -146,16 +146,14 @@ class ForumSectionsScreen extends StatelessWidget {
           floatingActionButton: controller.choosenRules.isNotEmpty
               ? FloatingActionButton.extended(
                   onPressed: () => firebase
-                      .addToFavorites(controller.mergeChoosenRules())
-                      .then(
-                    (_) {
-                      controller.clearChoosenRules();
-                      showSnackbar(
-                        context: context,
-                        message: 'Добавлено в избранное',
-                      );
-                    },
-                  ),
+                      .addFavorite(controller.mergeChoosenRules())
+                      .then((_) {
+                    controller.clearChoosenRules();
+                    showSnackbar(
+                      context: context,
+                      message: 'Добавлено в избранное',
+                    );
+                  }),
                   icon: const Icon(Icons.bookmark_add),
                   label: Text(
                     'В избранное (${controller.choosenRules.length})',

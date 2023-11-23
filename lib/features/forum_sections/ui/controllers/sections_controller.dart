@@ -8,7 +8,7 @@ import '../../domain/entity/forum_section.dart';
 
 class ForumSectionsController with ChangeNotifier {
   ForumSectionsController() {
-    FirebaseController().rulesSnaphots.listen(
+    FirebaseController().rules.listen(
           (query) => _setSections(
             query.docs.map(
               (query) => ForumSection.fromModel(

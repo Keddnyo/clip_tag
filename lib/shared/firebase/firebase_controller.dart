@@ -8,12 +8,12 @@ import '../../features/favorites/data/model/favorite_model.dart';
 
 class FirebaseController with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
+  final _db = FirebaseFirestore.instance;
 
   FirebaseController() {
     _auth.setLanguageCode('ru');
 
-    userData?.snapshots().listen(
+    _userData?.snapshots().listen(
         (user) => setUserModerator(user.data()?['isModerator'] ?? false));
   }
 
@@ -43,7 +43,7 @@ class FirebaseController with ChangeNotifier {
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((userCredential) => userCredential.user
               ?.updateDisplayName(username)
-              .then((_) => userData?.set({
+              .then((_) => _userData?.set({
                     'username': username,
                     'email': email,
                     'isModerator': false,
@@ -56,19 +56,19 @@ class FirebaseController with ChangeNotifier {
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> get rulesSnaphots =>
-      _firestore.collection('rules').orderBy('order').snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> get rules =>
+      _db.collection('rules').orderBy('order').snapshots();
 
-  DocumentReference<Map<String, dynamic>>? get userData =>
-      _firestore.collection('users').doc(_userID);
+  DocumentReference<Map<String, dynamic>>? get _userData =>
+      _db.collection('users').doc(_userID);
 
-  CollectionReference<Map<String, dynamic>>? get favorites =>
-      userData?.collection('favorites');
+  CollectionReference<Map<String, dynamic>>? get _favorites =>
+      _userData?.collection('favorites');
 
-  Stream<QuerySnapshot<Map<String, dynamic>>>? get favoritesSnaphots =>
-      favorites?.orderBy('createdAt').snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>>? get favorites =>
+      _favorites?.orderBy('createdAt').snapshots();
 
-  Future<void> addToFavorites(String favorite) async => await favorites?.add(
+  Future<void> addFavorite(String favorite) async => await _favorites?.add(
         FavoriteModel.toMap(content: favorite, createdAt: DateTime.now()),
       );
 
