@@ -2,18 +2,33 @@ import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
-import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/get_color_scheme.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../shared/ui/show_snackbar.dart';
-import '../../checkout/ui/checkout_screen.dart';
+import '../../checkout/model/forum_tags.dart';
+import '../../checkout/ui/widgets/forum_tag.dart';
+import '../../forum_sections/ui/forum_sections_screen.dart';
 import '../data/model/favorite_model.dart';
 import '../domain/entity/favorite.dart';
 
-class FavoritesScreen extends StatelessWidget {
+class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
 
-  static const String route = '/favorites';
+  static const String route = '/history';
+
+  @override
+  State<FavoritesScreen> createState() => _FavoritesScreenState();
+}
+
+class _FavoritesScreenState extends State<FavoritesScreen> {
+  int _currentTagIndex = 0;
+  void _setTagIndex(int index) {
+    setState(() {
+      _currentTagIndex = index;
+    });
+  }
+
+  ForumTags get currentTag => ForumTags.values[_currentTagIndex];
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +37,7 @@ class FavoritesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Избранное'),
+        title: const Text('ClipTag'),
         shadowColor: Colors.black,
       ),
       body: StreamBuilder(
@@ -52,7 +67,8 @@ class FavoritesScreen extends StatelessWidget {
           }
 
           return ListView(
-            children: favorites.map(
+            padding: const EdgeInsets.only(bottom: 96.0),
+            children: favorites.reversed.map(
               (favoritesQuery) {
                 final favorite = Favorite.fromModel(
                   FavoriteModel.fromMap(favoritesQuery.data()),
@@ -84,22 +100,16 @@ class FavoritesScreen extends StatelessWidget {
                     );
                   },
                   direction: DismissDirection.endToStart,
-                  child: Container(
-                    margin: const EdgeInsets.all(padding),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: colorScheme.onBackground,
-                        width: 0.5,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(Constants.previewPadding),
+                        child: ForumTag(
+                          content: favorite.content,
+                          tag: currentTag,
+                        ),
                       ),
-                    ),
-                    child: ListTile(
-                      title: BBCodeRenderer(favorite.content),
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        CheckoutScreen.route,
-                        arguments: favorite.content,
-                      ),
-                    ),
+                    ],
                   ),
                 );
               },
@@ -107,6 +117,25 @@ class FavoritesScreen extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => Navigator.pushNamed(
+          context,
+          ForumSectionsScreen.route,
+        ),
+        icon: const Icon(Icons.add),
+        label: const Text('Добавить правила'),
+      ),
+      drawer: const MainDrawer(),
+      bottomNavigationBar: firebase.isUserModerator
+          ? NavigationBar(
+              selectedIndex: _currentTagIndex,
+              destinations: [
+                for (final tag in ForumTags.values)
+                  NavigationDestination(icon: Icon(tag.icon), label: tag.title),
+              ],
+              onDestinationSelected: (index) => _setTagIndex(index),
+            )
+          : null,
     );
   }
 }

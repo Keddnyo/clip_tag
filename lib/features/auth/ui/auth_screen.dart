@@ -135,8 +135,8 @@ class AuthScreen extends StatelessWidget {
                       TextFormField(
                         controller: auth.usernameController,
                         decoration: const InputDecoration(
-                          labelText: 'Ник на 4PDA',
-                          hintText: 'Ваш ник на 4PDA',
+                          labelText: 'Имя пользователя',
+                          hintText: 'Ваше имя или никнейм',
                           prefixIcon: Icon(Icons.account_circle_outlined),
                           border: OutlineInputBorder(),
                         ),

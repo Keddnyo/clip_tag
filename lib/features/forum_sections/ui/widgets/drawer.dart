@@ -44,20 +44,6 @@ class MainDrawer extends StatelessWidget {
               icon: const Icon(Icons.logout),
             ),
           ),
-          if (!firebase.isUserAnonymous)
-            Column(
-              children: [
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.bookmark),
-                  title: const Text('Избранное'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, FavoritesScreen.route);
-                  },
-                ),
-              ],
-            ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.gavel),
