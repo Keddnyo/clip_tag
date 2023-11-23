@@ -49,7 +49,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return StreamBuilder(
       stream: firebase.favorites,
       builder: (context, snapshot) {
-        final favorites = snapshot.data!.docs;
+        final favorites = snapshot.data?.docs;
 
         return Scaffold(
           appBar: AppBar(
@@ -58,7 +58,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           ),
           body: !snapshot.hasData
               ? const LoadingCircle()
-              : favorites.isEmpty
+              : favorites?.isEmpty == true
                   ? const Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -75,7 +75,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     )
                   : ListView(
                       padding: const EdgeInsets.only(bottom: 96.0),
-                      children: favorites.map(
+                      children: favorites!.reversed.map(
                         (favoritesQuery) {
                           final favorite = Favorite.fromModel(
                             FavoriteModel.fromMap(favoritesQuery.data()),
@@ -133,17 +133,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             label: const Text('Добавить правила'),
           ),
           drawer: const MainDrawer(),
-          bottomNavigationBar: firebase.isUserModerator && favorites.isNotEmpty
-              ? NavigationBar(
-                  selectedIndex: _currentTagIndex,
-                  destinations: [
-                    for (final tag in ForumTags.values)
-                      NavigationDestination(
-                          icon: Icon(tag.icon), label: tag.title),
-                  ],
-                  onDestinationSelected: (index) => _setTagIndex(index),
-                )
-              : null,
+          bottomNavigationBar:
+              firebase.isUserModerator && favorites?.isNotEmpty == true
+                  ? NavigationBar(
+                      selectedIndex: _currentTagIndex,
+                      destinations: [
+                        for (final tag in ForumTags.values)
+                          NavigationDestination(
+                              icon: Icon(tag.icon), label: tag.title),
+                      ],
+                      onDestinationSelected: (index) => _setTagIndex(index),
+                    )
+                  : null,
         );
       },
     );

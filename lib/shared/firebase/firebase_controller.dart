@@ -18,7 +18,7 @@ class FirebaseController with ChangeNotifier {
   }
 
   User? get _user => _auth.currentUser;
-  bool get isUserAnonymous => _user?.isAnonymous == true;
+  // bool get isUserAnonymous => _user?.isAnonymous == true;
   String? get _userID => _user?.uid;
   String? get username => _user?.displayName;
   Stream<User?> get userChanges => _auth.userChanges();
@@ -27,7 +27,7 @@ class FirebaseController with ChangeNotifier {
   String? get userEmail => _user?.email;
   bool get isEmailVerified => _user?.emailVerified == true;
 
-  void signInAnonymously() => _auth.signInAnonymously();
+  // void signInAnonymously() => _auth.signInAnonymously();
 
   Future<void> signIn({
     required String email,
@@ -52,7 +52,8 @@ class FirebaseController with ChangeNotifier {
 
   void sendEmailVerification() => _user?.sendEmailVerification();
 
-  void signOut() => isUserAnonymous ? _user?.delete() : _auth.signOut();
+  // void signOut() => isUserAnonymous ? _user?.delete() : _auth.signOut();
+  void signOut() => _auth.signOut();
 
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);

@@ -121,19 +121,17 @@ class ForumSectionsScreen extends StatelessWidget {
                                   for (final rule in category.rules)
                                     ListTile(
                                       title: BBCodeRenderer(rule),
-                                      onTap: !firebase.isUserAnonymous
-                                          ? () => controller
-                                                  .choosenRules.isEmpty
+                                      onTap: () =>
+                                          controller.choosenRules.isEmpty
                                               ? onRuleSelected(rule)
                                               : controller.choosenRules
                                                       .contains(rule)
                                                   ? controller.removeRule(rule)
-                                                  : controller.addRule(rule)
-                                          : null,
-                                      onLongPress: !firebase.isUserAnonymous &&
-                                              controller.choosenRules.isEmpty
-                                          ? () => controller.addRule(rule)
-                                          : null,
+                                                  : controller.addRule(rule),
+                                      onLongPress:
+                                          controller.choosenRules.isEmpty
+                                              ? () => controller.addRule(rule)
+                                              : null,
                                       tileColor:
                                           controller.choosenRules.contains(rule)
                                               ? Theme.of(context)

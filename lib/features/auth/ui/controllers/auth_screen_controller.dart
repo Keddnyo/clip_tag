@@ -52,7 +52,7 @@ class AuthScreenController with ChangeNotifier {
               password: password,
             );
 
-  void signInAnonymously() => firebase.signInAnonymously();
+  // void signInAnonymously() => firebase.signInAnonymously();
 }
 
 class AuthScreenProvider extends InheritedNotifier {
