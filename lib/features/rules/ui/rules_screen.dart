@@ -1,4 +1,3 @@
-import '../../favorites/data/model/favorite_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -6,6 +5,7 @@ import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../checkout/model/forum_tags.dart';
 import '../../checkout/ui/widgets/forum_tag.dart';
+import '../../favorites/data/model/favorite_model.dart';
 import '../../favorites/domain/entity/favorite.dart';
 import '../../forum_sections/data/model/forum_section_model.dart';
 import '../../forum_sections/domain/entity/forum_section.dart';
