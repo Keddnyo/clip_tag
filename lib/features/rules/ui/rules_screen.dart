@@ -136,39 +136,21 @@ class _RulesScreenState extends State<RulesScreen> {
                   ),
                 )
           : controller.favorites.isEmpty
-              ? const Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
+              ? const Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.bookmark_add, size: 64.0),
+                      Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Правила добавляются здесь'),
-                            SizedBox(width: 12.0),
-                            Icon(Icons.arrow_upward),
-                          ],
+                        child: Text(
+                          'Добавьте теги в список',
+                          style: TextStyle(fontSize: 18.0),
                         ),
                       ),
-                    ),
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.bookmark_add, size: 64.0),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Добавьте правила в список',
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                    ],
+                  ),
                 )
               : ListView.builder(
                   itemBuilder: (context, index) {
@@ -216,7 +198,9 @@ class _RulesScreenState extends State<RulesScreen> {
                   label: Text('Добавить (${controller.choosenRules.length})'),
                 )
               : null,
-      bottomNavigationBar: !_showForumSections && firebase.isUserModerator
+      bottomNavigationBar: !_showForumSections &&
+              firebase.isUserModerator &&
+              controller.favorites.isNotEmpty
           ? NavigationBar(
               selectedIndex: controller.favoritesTagIndex,
               destinations: ForumTags.values
