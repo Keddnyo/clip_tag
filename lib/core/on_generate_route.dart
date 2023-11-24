@@ -1,11 +1,9 @@
-import 'package:clip_tag/features/rules/ui/rules_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../features/auth/ui/auth_screen.dart';
 import '../features/auth/ui/controllers/auth_screen_controller.dart';
 import '../features/auth/ui/email_verification_screen.dart';
-import '../features/favorites/ui/favorites_screen.dart';
-import '../features/forum_sections/ui/forum_sections_screen.dart';
+import '../features/rules/ui/rules_screen.dart';
 import '../shared/firebase/firebase_controller.dart';
 
 Route<dynamic>? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
@@ -21,7 +19,8 @@ Route<dynamic>? onGenerateRoute(RouteSettings settings) => MaterialPageRoute(
                     controller: AuthScreenController(),
                     child: const AuthScreen(),
                   )
-                : snapshot.data?.emailVerified == false
+                : snapshot.data?.isAnonymous == false &&
+                        snapshot.data?.emailVerified == false
                     ? const EmailVerificationScreen()
                     : RulesScreenProvider(
                         controller: RulesScreenController(),

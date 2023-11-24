@@ -171,12 +171,12 @@ class AuthScreen extends StatelessWidget {
                         icon: const Icon(Icons.password),
                         label: const Text('Забыли пароль?'),
                       ),
-                    // if (auth.isSignIn)
-                    //   TextButton.icon(
-                    //     onPressed: auth.signInAnonymously,
-                    //     icon: const Icon(Icons.person_search),
-                    //     label: const Text('Продолжить как гость'),
-                    //   ),
+                    if (auth.isSignIn)
+                      TextButton.icon(
+                        onPressed: auth.signInAnonymously,
+                        icon: const Icon(Icons.person_search),
+                        label: const Text('Продолжить как гость'),
+                      ),
                     if (auth.isSignUp)
                       TextButton.icon(
                         onPressed: () => openUrl(Constants.appTermsOfUseUrl),

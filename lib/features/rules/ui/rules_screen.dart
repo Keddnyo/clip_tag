@@ -71,18 +71,26 @@ class _RulesScreenState extends State<RulesScreen> {
                   : controller.section!.title
               : Constants.appName,
         ),
-        actions: [
-          if (controller.choosenRules.isEmpty)
-            IconButton(
-              onPressed: _switchForumSections,
-              icon: Icon(
-                _showForumSections ? Icons.close : Icons.add,
-              ),
-            ),
-        ],
+        actions: firebase.isUserAnonymous
+            ? [
+                IconButton(
+                  onPressed: firebase.signOut,
+                  icon: const Icon(Icons.logout),
+                ),
+              ]
+            : [
+                if (controller.choosenRules.isEmpty)
+                  IconButton(
+                    onPressed: _switchForumSections,
+                    icon: Icon(
+                      _showForumSections ? Icons.close : Icons.add,
+                    ),
+                  ),
+              ],
         shadowColor: Colors.black,
+        centerTitle: false,
       ),
-      body: _showForumSections
+      body: firebase.isUserAnonymous || _showForumSections
           ? controller.section == null
               ? const Center(
                   child: Column(
@@ -117,12 +125,20 @@ class _RulesScreenState extends State<RulesScreen> {
                           for (final rule in category.rules)
                             ListTile(
                               title: BBCodeRenderer(rule),
-                              onTap: () => controller.choosenRules.isNotEmpty
-                                  ? controller.choosenRules.contains(rule)
-                                      ? controller.deselectRule(rule)
-                                      : controller.selectRule(rule)
-                                  : addRulesToFavorites([rule]),
-                              onLongPress: () => controller.choosenRules.isEmpty
+                              onTap: () => firebase.isUserAnonymous
+                                  ? copyToClipboard(rule).then(
+                                      (_) => showSnackbar(
+                                        context: context,
+                                        message: 'Скопировано в буфер обмена',
+                                      ),
+                                    )
+                                  : controller.choosenRules.isNotEmpty
+                                      ? controller.choosenRules.contains(rule)
+                                          ? controller.deselectRule(rule)
+                                          : controller.selectRule(rule)
+                                      : addRulesToFavorites([rule]),
+                              onLongPress: () => !firebase.isUserAnonymous &&
+                                      controller.choosenRules.isEmpty
                                   ? controller.selectRule(rule)
                                   : null,
                               tileColor: controller.choosenRules.contains(rule)
@@ -257,56 +273,58 @@ class _RulesScreenState extends State<RulesScreen> {
                   ],
                 )
               : null
-          : Drawer(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  const DrawerHeader(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            Constants.appName,
-                            style: TextStyle(
-                              fontSize: 42.0,
-                              fontWeight: FontWeight.bold,
-                            ),
+          : !firebase.isUserAnonymous
+              ? Drawer(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      const DrawerHeader(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                Constants.appName,
+                                style: TextStyle(
+                                  fontSize: 42.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Created by Keddnyo',
+                                style: TextStyle(
+                                  fontSize: 10.0,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'Created by Keddnyo',
-                            style: TextStyle(
-                              fontSize: 10.0,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                      ListTile(
+                        title: Text(firebase.username!),
+                        subtitle: Text(firebase.userEmail!),
+                        trailing: IconButton(
+                          onPressed: firebase.signOut,
+                          icon: const Icon(Icons.logout),
+                        ),
+                      ),
+                      const Divider(),
+                      AboutListTile(
+                        icon: const Icon(Icons.info_outline),
+                        applicationVersion: 'Агрегатор правил 4PDA',
+                        applicationIcon: Image.asset(
+                          'lib/core/assets/app_icon.png',
+                          width: 72.0,
+                          height: 72.0,
+                        ),
+                        applicationLegalese: Constants.applicationLegalese,
+                        child: const Text('О приложении'),
+                      ),
+                    ],
                   ),
-                  ListTile(
-                    title: Text(firebase.username!),
-                    subtitle: Text(firebase.userEmail!),
-                    trailing: IconButton(
-                      onPressed: firebase.signOut,
-                      icon: const Icon(Icons.logout),
-                    ),
-                  ),
-                  const Divider(),
-                  AboutListTile(
-                    icon: const Icon(Icons.info_outline),
-                    applicationVersion: 'Агрегатор правил 4PDA',
-                    applicationIcon: Image.asset(
-                      'lib/core/assets/app_icon.png',
-                      width: 72.0,
-                      height: 72.0,
-                    ),
-                    applicationLegalese: Constants.applicationLegalese,
-                    child: const Text('О приложении'),
-                  ),
-                ],
-              ),
-            ),
+                )
+              : null,
     );
   }
 }
@@ -358,7 +376,8 @@ class RulesScreenController with ChangeNotifier {
     notifyListeners();
   }
 
-  ForumSection? get section => _sections[_sectionIndex];
+  ForumSection? get section =>
+      _sections.isNotEmpty ? _sections[_sectionIndex] : null;
 
   // // // // // //
 
