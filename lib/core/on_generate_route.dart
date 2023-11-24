@@ -20,7 +20,8 @@ Route<dynamic>? onGenerateRoute(_) => MaterialPageRoute(
                     controller: AuthScreenController(),
                     child: const AuthScreen(),
                   )
-                : snapshot.data!.isAnonymous && snapshot.data!.emailVerified
+                : snapshot.data?.isAnonymous == false &&
+                        snapshot.data?.emailVerified == false
                     ? const EmailVerificationScreen()
                     : RulesProvider(
                         controller: RulesController(firebase: firebase),
