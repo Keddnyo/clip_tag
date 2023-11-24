@@ -23,5 +23,6 @@ class MainApp extends StatelessWidget {
             backgroundColor: Colors.black,
           ),
         ),
+        debugShowCheckedModeBanner: false,
       );
 }

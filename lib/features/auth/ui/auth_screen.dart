@@ -102,7 +102,7 @@ class AuthScreen extends StatelessWidget {
                             : TextInputAction.done,
                         obscureText: true,
                         onFieldSubmitted: (_) =>
-                            auth.isSignUp ? null : submit(),
+                            !auth.isSignUp ? submit() : null,
                         validator: (password) => password?.isEmpty == true
                             ? 'Пароль не должен быть пустым'
                             : null,
@@ -135,8 +135,8 @@ class AuthScreen extends StatelessWidget {
                       TextFormField(
                         controller: auth.usernameController,
                         decoration: const InputDecoration(
-                          labelText: 'Ник на 4PDA',
-                          hintText: 'Ваш ник на 4PDA',
+                          labelText: 'Имя пользователя',
+                          hintText: 'Ваше имя или никнейм',
                           prefixIcon: Icon(Icons.account_circle_outlined),
                           border: OutlineInputBorder(),
                         ),
@@ -185,12 +185,12 @@ class AuthScreen extends StatelessWidget {
                       ),
                   ]
                       .map(
-                        (widget) => Padding(
+                        (child) => Padding(
                           padding: const EdgeInsets.symmetric(
                             vertical: 8.0,
                             horizontal: 12.0,
                           ),
-                          child: widget,
+                          child: child,
                         ),
                       )
                       .toList(),

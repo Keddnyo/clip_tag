@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../shared/firebase/firebase_controller.dart';
-import '../../model/auth_state.dart';
+import 'auth_state.dart';
 
 class AuthScreenController with ChangeNotifier {
   final firebase = FirebaseController();

@@ -7,7 +7,7 @@ enum ForumTags {
     closure: 'cur',
     lightColor: Color(0xFF00943B),
     darkColor: Color(0xFF004F1F),
-    icon: Icons.menu_book,
+    icon: Icons.policy_outlined,
   ),
   mod(
     title: 'Модератор',

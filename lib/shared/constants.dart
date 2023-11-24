@@ -5,11 +5,6 @@ class Constants {
   static const String appTermsOfUseUrl =
       'https://github.com/Keddnyo/clip_tag/wiki/Terms-of-Service';
 
-  static const double previewPadding = 12.0;
-
-  static const double tagLeadingSymbolContainerMinHeight = 48.0;
-  static const double tagLeadingSymbolContainerWidth = 48.0;
-
   static const String fourpdaClientPackageName = 'ru.fourpda.client';
 
   static const String fourpdaDefaultUrl =
