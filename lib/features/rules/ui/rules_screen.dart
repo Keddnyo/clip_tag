@@ -1,4 +1,3 @@
-import 'package:clip_tag/utils/copy_to_clipboard.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +5,8 @@ import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/get_color_scheme.dart';
+import '../../../shared/ui/show_snackbar.dart';
+import '../../../utils/copy_to_clipboard.dart';
 import '../../../utils/open_url.dart';
 import '../../checkout/model/forum_tags.dart';
 import '../../checkout/ui/widgets/forum_tag.dart';
@@ -43,8 +44,17 @@ class _RulesScreenState extends State<RulesScreen> {
             if (controller.choosenRules.isNotEmpty) {
               controller.deselectAllRules();
             }
+            showSnackbar(
+              context: context,
+              message: 'Тег добавлен',
+            );
           },
-        );
+        ).catchError((error) {
+          showSnackbar(
+            context: context,
+            message: 'Не удалось добавить тег',
+          );
+        });
 
     return Scaffold(
       appBar: AppBar(
@@ -167,7 +177,12 @@ class _RulesScreenState extends State<RulesScreen> {
                             ),
                           ),
                         ),
-                        onDismissed: (_) => favorite.reference.delete(),
+                        onDismissed: (_) => favorite.reference.delete().then(
+                              (value) => showSnackbar(
+                                context: context,
+                                message: 'Тег удалён',
+                              ),
+                            ),
                         direction: DismissDirection.endToStart,
                         child: InkWell(
                           onTap: () => controller.sendToFourpda(index),
@@ -284,17 +299,17 @@ class _RulesScreenState extends State<RulesScreen> {
 
 class RulesScreenController with ChangeNotifier {
   RulesScreenController() {
-    FirebaseController().ruleSections.listen(
-          (sectionQuery) => _setSections(
-            sectionQuery.docs.map(
-              (sectionSnapshot) => ForumSection.fromModel(
-                ForumSectionModel.fromMap(
-                  sectionSnapshot.data(),
-                ),
-              ),
+    FirebaseController.ruleSections.listen(
+      (sectionQuery) => _setSections(
+        sectionQuery.docs.map(
+          (sectionSnapshot) => ForumSection.fromModel(
+            ForumSectionModel.fromMap(
+              sectionSnapshot.data(),
             ),
           ),
-        );
+        ),
+      ),
+    );
 
     FirebaseController().favorites?.listen(
           (favoritesSnapshot) => _setFavorites(

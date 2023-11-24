@@ -8,7 +8,6 @@ import '../../features/favorites/data/model/favorite_model.dart';
 
 class FirebaseController with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
-  final _db = FirebaseFirestore.instance;
 
   FirebaseController() {
     _auth.setLanguageCode('ru');
@@ -60,13 +59,14 @@ class FirebaseController with ChangeNotifier {
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> get ruleSections => _db
-      .collection('rules')
-      .orderBy('order')
-      .snapshots(); // TODO: Can be a static
+  static Stream<QuerySnapshot<Map<String, dynamic>>> get ruleSections =>
+      FirebaseFirestore.instance
+          .collection('rules')
+          .orderBy('order')
+          .snapshots();
 
   DocumentReference<Map<String, dynamic>>? get _userData =>
-      _db.collection('users').doc(_userID);
+      FirebaseFirestore.instance.collection('users').doc(_userID);
 
   CollectionReference<Map<String, dynamic>>? get _favorites =>
       _userData?.collection('favorites');
