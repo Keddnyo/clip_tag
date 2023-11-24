@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../shared/constants.dart';
 import '../../../../../shared/ui/bbcode_renderer.dart';
 import '../domain/entity/forum_tags.dart';
 
@@ -24,10 +23,8 @@ class ForumTag extends StatelessWidget {
         children: [
           Container(
             color: background,
-            width: Constants.tagLeadingSymbolContainerWidth,
-            constraints: const BoxConstraints(
-              minHeight: Constants.tagLeadingSymbolContainerMinHeight,
-            ),
+            width: 48.0,
+            constraints: const BoxConstraints(minHeight: 48.0),
             child: Padding(
               padding: const EdgeInsets.only(top: 4.0),
               child: Align(
