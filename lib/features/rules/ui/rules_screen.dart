@@ -65,6 +65,7 @@ class _RulesScreenState extends State<RulesScreen> {
               ),
             ),
         ],
+        shadowColor: Colors.black,
       ),
       body: _showForumSections
           ? controller.sections.isEmpty
@@ -154,7 +155,7 @@ class _RulesScreenState extends State<RulesScreen> {
                           alignment: Alignment.centerRight,
                           color: getColorScheme(context).error,
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.only(right: 16.0),
                             child: Icon(
                               Icons.delete,
                               color: getColorScheme(context).onError,
