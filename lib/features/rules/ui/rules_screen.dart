@@ -1,10 +1,10 @@
-import 'package:clip_tag/shared/ui/loading_circle.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/get_color_scheme.dart';
+import '../../../shared/ui/loading_circle.dart';
 import '../../../shared/ui/show_snackbar.dart';
 import '../../../utils/copy_to_clipboard.dart';
 import '../features/favorites/domain/entity/forum_tags.dart';
