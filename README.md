@@ -3,8 +3,8 @@
 
 ![Лицензия](https://img.shields.io/github/license/Keddnyo/clip_tag?label=Лицензия)
 ![Релиз](https://img.shields.io/github/v/release/Keddnyo/clip_tag?label=Актуальная%20версия)
-![Последние загрузки](https://img.shields.io/github/downloads-pre/Keddnyo/clip_tag/latest/total?label=Последние%20загрузки)
 ![Всего загрузок](https://img.shields.io/github/downloads/Keddnyo/clip_tag/total?label=Всего%20загрузок)
+![Последние загрузки](https://img.shields.io/github/downloads-pre/Keddnyo/clip_tag/latest/total?label=Последние%20загрузки)
 
 ### Полезные ссылки:
 * [ClipTag Wiki](https://github.com/Keddnyo/clip_tag/wiki)
