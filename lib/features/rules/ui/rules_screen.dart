@@ -1,3 +1,4 @@
+import 'package:clip_tag/shared/ui/loading_circle.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -87,19 +88,7 @@ class _RulesScreenState extends State<RulesScreen> {
       ),
       body: firebase.isUserAnonymous || _showForumSections
           ? controller.section == null
-              ? const Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.menu_book, size: 64.0),
-                      Text(
-                        'Список правил недоступен',
-                        style: TextStyle(fontSize: 18.0),
-                      ),
-                    ],
-                  ),
-                )
+              ? const LoadingCircle()
               : ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(
                     scrollbars: false,

@@ -13,10 +13,16 @@ class FirebaseController with ChangeNotifier {
   FirebaseController() {
     _auth.setLanguageCode('ru');
 
-    _userData?.snapshots().listen((user) {
-      final userData = user.data();
-      _setUserModerator(userData?['isModerator'] ?? false);
-    });
+    userChanges.listen(
+      (user) {
+        if (user != null) {
+          _userData?.snapshots().listen((user) {
+            final userData = user.data();
+            _setUserModerator(userData?['isModerator'] ?? false);
+          });
+        }
+      },
+    );
   }
 
   User? get _user => _auth.currentUser;
@@ -54,7 +60,13 @@ class FirebaseController with ChangeNotifier {
 
   void sendEmailVerification() => _user?.sendEmailVerification();
 
-  void signOut() => isUserAnonymous ? _user?.delete() : _auth.signOut();
+  void signOut() => isUserAnonymous
+      ? _user?.delete()
+      : _auth.signOut().then((_) {
+          if (_isUserModerator == true) {
+            _setUserModerator(false);
+          }
+        });
 
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
