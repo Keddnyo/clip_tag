@@ -1,9 +1,12 @@
+import 'package:clip_tag/utils/copy_to_clipboard.dart';
+import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
 import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/get_color_scheme.dart';
+import '../../../utils/open_url.dart';
 import '../../checkout/model/forum_tags.dart';
 import '../../checkout/ui/widgets/forum_tag.dart';
 import '../../favorites/data/model/favorite_model.dart';
@@ -164,9 +167,12 @@ class _RulesScreenState extends State<RulesScreen> {
                         ),
                         onDismissed: (_) => favorite.reference.delete(),
                         direction: DismissDirection.endToStart,
-                        child: ForumTag(
-                          content: favorite.content,
-                          tag: controller.tag,
+                        child: InkWell(
+                          onTap: () => controller.sendToFourpda(index),
+                          child: ForumTag(
+                            content: favorite.content,
+                            tag: controller.tag,
+                          ),
                         ),
                       ),
                     );
@@ -331,6 +337,19 @@ class RulesScreenController with ChangeNotifier {
   }
 
   ForumTags get tag => ForumTags.values[_favoritesTagIndex];
+
+  void sendToFourpda(int favoriteIndex) {
+    const client = Constants.fourpdaClientPackageName;
+    final rulesWithTag = _favorites[favoriteIndex].wrapWithTag(tag);
+
+    copyToClipboard(rulesWithTag).then(
+      (_) => DeviceApps.isAppInstalled(client).then(
+        (isInstalled) => isInstalled
+            ? DeviceApps.openApp(client)
+            : openUrl(Constants.fourpdaDefaultUrl),
+      ),
+    );
+  }
 }
 
 class RulesScreenProvider extends InheritedNotifier {
