@@ -102,7 +102,7 @@ class AuthScreen extends StatelessWidget {
                             : TextInputAction.done,
                         obscureText: true,
                         onFieldSubmitted: (_) =>
-                            auth.isSignUp ? null : submit(),
+                            !auth.isSignUp ? submit() : null,
                         validator: (password) => password?.isEmpty == true
                             ? 'Пароль не должен быть пустым'
                             : null,
