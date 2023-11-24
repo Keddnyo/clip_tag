@@ -24,7 +24,7 @@ class RulesScreen extends StatefulWidget {
 }
 
 class _RulesScreenState extends State<RulesScreen> {
-  bool _showForumSections = false;
+  late bool _showForumSections = false;
   void _switchForumSections() {
     setState(() => _showForumSections = !_showForumSections);
   }
@@ -83,8 +83,20 @@ class _RulesScreenState extends State<RulesScreen> {
         shadowColor: Colors.black,
       ),
       body: _showForumSections
-          ? controller.sections.isEmpty
-              ? const Text('No Data')
+          ? controller.section == null
+              ? const Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.menu_book, size: 64.0),
+                      Text(
+                        'Список правил недоступен',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    ],
+                  ),
+                )
               : ScrollConfiguration(
                   behavior: ScrollConfiguration.of(context).copyWith(
                     scrollbars: false,
@@ -219,30 +231,32 @@ class _RulesScreenState extends State<RulesScreen> {
                   controller.setFavoritesTagIndex(index),
             )
           : null,
-      drawer: _showForumSections && controller.sections.isNotEmpty
-          ? NavigationDrawer(
-              onDestinationSelected: (index) {
-                Navigator.pop(context);
-                controller.setSectionIndex(index);
-                sectionsScroller.jumpTo(0);
-              },
-              selectedIndex: controller.sectionIndex,
-              children: [
-                const SizedBox(height: 12.0),
-                for (final section in controller.sections)
-                  NavigationDrawerDestination(
-                    icon: Icon(
-                      section.order == 0
-                          ? Icons.home
-                          : getForumSectionIcon(section.title),
-                    ),
-                    label: Flexible(
-                      child: Text(section.title),
-                    ),
-                  ),
-                const SizedBox(height: 12.0),
-              ],
-            )
+      drawer: _showForumSections
+          ? controller.sections.isNotEmpty
+              ? NavigationDrawer(
+                  onDestinationSelected: (index) {
+                    Navigator.pop(context);
+                    controller.setSectionIndex(index);
+                    sectionsScroller.jumpTo(0);
+                  },
+                  selectedIndex: controller.sectionIndex,
+                  children: [
+                    const SizedBox(height: 12.0),
+                    for (final section in controller.sections)
+                      NavigationDrawerDestination(
+                        icon: Icon(
+                          section.order == 0
+                              ? Icons.home
+                              : getForumSectionIcon(section.title),
+                        ),
+                        label: Flexible(
+                          child: Text(section.title),
+                        ),
+                      ),
+                    const SizedBox(height: 12.0),
+                  ],
+                )
+              : null
           : Drawer(
               child: ListView(
                 padding: EdgeInsets.zero,
