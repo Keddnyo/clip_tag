@@ -6,7 +6,6 @@ import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/get_color_scheme.dart';
 import '../../../shared/ui/loading_circle.dart';
 import '../../../shared/ui/show_snackbar.dart';
-import '../../../utils/copy_to_clipboard.dart';
 import '../features/favorites/domain/entity/forum_tags.dart';
 import '../features/favorites/ui/forum_tag.dart';
 import '../features/forum_sections/utils/get_forum_section_icon.dart';
@@ -98,21 +97,16 @@ class _RulesScreenState extends State<RulesScreen> {
                           for (final rule in category.rules)
                             ListTile(
                               title: BBCodeRenderer(rule),
-                              onTap: () => firebase.isUserAnonymous
-                                  ? copyToClipboard(rule).then(
-                                      (_) => showSnackbar(
-                                        context: context,
-                                        message: 'Скопировано в буфер обмена',
-                                      ),
-                                    )
-                                  : controller.choosenRules.isNotEmpty
+                              onTap: !firebase.isUserAnonymous
+                                  ? () => controller.choosenRules.isNotEmpty
                                       ? controller.choosenRules.contains(rule)
                                           ? controller.deselectRule(rule)
                                           : controller.selectRule(rule)
-                                      : addRulesToFavorites(rule),
-                              onLongPress: () => !firebase.isUserAnonymous &&
+                                      : addRulesToFavorites(rule)
+                                  : null,
+                              onLongPress: !firebase.isUserAnonymous &&
                                       controller.choosenRules.isEmpty
-                                  ? controller.selectRule(rule)
+                                  ? () => controller.selectRule(rule)
                                   : null,
                               tileColor: controller.choosenRules.contains(rule)
                                   ? getColorScheme(context).secondaryContainer
