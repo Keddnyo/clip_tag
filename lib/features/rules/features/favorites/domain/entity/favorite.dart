@@ -1,7 +1,7 @@
-import 'package:clip_tag/features/checkout/model/forum_tags.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../data/model/favorite_model.dart';
+import 'forum_tags.dart';
 
 class Favorite {
   final String content;

@@ -4,10 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../features/favorites/data/model/favorite_model.dart';
+import '../../features/rules/features/favorites/data/model/favorite_model.dart';
 
 class FirebaseController with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
+  final _firebase = FirebaseFirestore.instance;
 
   FirebaseController() {
     _auth.setLanguageCode('ru');
@@ -58,14 +59,11 @@ class FirebaseController with ChangeNotifier {
   Future<void> resetPassword({required String email}) async =>
       await _auth.sendPasswordResetEmail(email: email);
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> get ruleSections =>
-      FirebaseFirestore.instance
-          .collection('rules')
-          .orderBy('order')
-          .snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> get ruleSections =>
+      _firebase.collection('rules').orderBy('order').snapshots();
 
   DocumentReference<Map<String, dynamic>>? get _userData =>
-      FirebaseFirestore.instance.collection('users').doc(_userID);
+      _firebase.collection('users').doc(_userID);
 
   CollectionReference<Map<String, dynamic>>? get _favorites =>
       _userData?.collection('favorites');

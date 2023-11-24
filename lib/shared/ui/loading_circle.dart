@@ -4,7 +4,6 @@ class LoadingCircle extends StatelessWidget {
   const LoadingCircle({super.key});
 
   @override
-  Widget build(BuildContext context) => const Center(
-        child: CircularProgressIndicator(),
-      );
+  Widget build(BuildContext context) =>
+      const Center(child: CircularProgressIndicator());
 }

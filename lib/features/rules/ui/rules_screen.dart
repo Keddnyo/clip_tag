@@ -1,4 +1,3 @@
-import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -7,14 +6,10 @@ import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/get_color_scheme.dart';
 import '../../../shared/ui/show_snackbar.dart';
 import '../../../utils/copy_to_clipboard.dart';
-import '../../../utils/open_url.dart';
-import '../../checkout/model/forum_tags.dart';
-import '../../checkout/ui/widgets/forum_tag.dart';
-import '../../favorites/data/model/favorite_model.dart';
-import '../../favorites/domain/entity/favorite.dart';
-import '../../forum_sections/data/model/forum_section_model.dart';
-import '../../forum_sections/domain/entity/forum_section.dart';
-import '../../forum_sections/utils/get_forum_section_icon.dart';
+import '../features/favorites/domain/entity/forum_tags.dart';
+import '../features/favorites/ui/forum_tag.dart';
+import '../features/forum_sections/utils/get_forum_section_icon.dart';
+import 'controllers/rules_controller.dart';
 
 class RulesScreen extends StatefulWidget {
   const RulesScreen({super.key});
@@ -32,7 +27,7 @@ class _RulesScreenState extends State<RulesScreen> {
   @override
   Widget build(BuildContext context) {
     final firebase = FirebaseProvider.of(context);
-    final controller = RulesScreenProvider.of(context);
+    final controller = RulesProvider.of(context);
 
     final sectionsScroller = ScrollController();
 
@@ -327,125 +322,4 @@ class _RulesScreenState extends State<RulesScreen> {
               : null,
     );
   }
-}
-
-class RulesScreenController with ChangeNotifier {
-  RulesScreenController() {
-    FirebaseController.ruleSections.listen(
-      (sectionQuery) => _setSections(
-        sectionQuery.docs.map(
-          (sectionSnapshot) => ForumSection.fromModel(
-            ForumSectionModel.fromMap(
-              sectionSnapshot.data(),
-            ),
-          ),
-        ),
-      ),
-    );
-
-    FirebaseController().favorites?.listen(
-          (favoritesSnapshot) => _setFavorites(
-            favoritesSnapshot.docs.reversed.map(
-              (favoriteSnapshot) => Favorite.fromModel(
-                FavoriteModel.fromMap(
-                  favoriteSnapshot.data(),
-                ),
-                reference: favoriteSnapshot.reference,
-              ),
-            ),
-          ),
-        );
-  }
-
-  // // // // // //
-
-  final _sections = <ForumSection>[];
-  List<ForumSection> get sections => _sections;
-  void _setSections(Iterable<ForumSection> sections) {
-    if (_sections.isNotEmpty) {
-      _sections.clear();
-    }
-    _sections.addAll(sections);
-    notifyListeners();
-  }
-
-  int _sectionIndex = 0;
-  int get sectionIndex => _sectionIndex;
-  void setSectionIndex(int index) {
-    _sectionIndex = index;
-    notifyListeners();
-  }
-
-  ForumSection? get section =>
-      _sections.isNotEmpty ? _sections[_sectionIndex] : null;
-
-  // // // // // //
-
-  final _choosenRules = <String>[];
-  List<String> get choosenRules => _choosenRules;
-
-  void selectRule(String rule) {
-    _choosenRules.add(rule);
-    notifyListeners();
-  }
-
-  void deselectRule(String rule) {
-    _choosenRules.remove(rule);
-    notifyListeners();
-  }
-
-  void deselectAllRules() {
-    _choosenRules.clear();
-    notifyListeners();
-  }
-
-  // // // // // //
-
-  final _favorites = <Favorite>[];
-  List<Favorite> get favorites => _favorites;
-  void _setFavorites(Iterable<Favorite> favorites) {
-    if (_favorites.isNotEmpty) {
-      _favorites.clear();
-    }
-    _favorites.addAll(favorites);
-    notifyListeners();
-  }
-
-  int _favoritesTagIndex = 0;
-  int get favoritesTagIndex => _favoritesTagIndex;
-  void setFavoritesTagIndex(int index) {
-    _favoritesTagIndex = index;
-    notifyListeners();
-  }
-
-  ForumTags get tag => ForumTags.values[_favoritesTagIndex];
-
-  void sendToFourpda(int favoriteIndex) {
-    const client = Constants.fourpdaClientPackageName;
-    final rulesWithTag = _favorites[favoriteIndex].wrapWithTag(tag);
-
-    copyToClipboard(rulesWithTag).then(
-      (_) => DeviceApps.isAppInstalled(client).then(
-        (isInstalled) => isInstalled
-            ? DeviceApps.openApp(client)
-            : openUrl(Constants.fourpdaDefaultUrl),
-      ),
-    );
-  }
-}
-
-class RulesScreenProvider extends InheritedNotifier {
-  const RulesScreenProvider({
-    super.key,
-    required this.controller,
-    required super.child,
-  }) : super(
-          notifier: controller,
-        );
-
-  final RulesScreenController controller;
-
-  static RulesScreenController of(BuildContext context) => context
-      .dependOnInheritedWidgetOfExactType<RulesScreenProvider>()!
-      .controller;
 }

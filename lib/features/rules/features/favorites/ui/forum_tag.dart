@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../shared/constants.dart';
-import '../../../../shared/ui/bbcode_renderer.dart';
-import '../../model/forum_tags.dart';
+import '../../../../../shared/constants.dart';
+import '../../../../../shared/ui/bbcode_renderer.dart';
+import '../domain/entity/forum_tags.dart';
 
 class ForumTag extends StatelessWidget {
   const ForumTag({super.key, required this.content, required this.tag});

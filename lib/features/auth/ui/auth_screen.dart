@@ -185,12 +185,12 @@ class AuthScreen extends StatelessWidget {
                       ),
                   ]
                       .map(
-                        (widget) => Padding(
+                        (child) => Padding(
                           padding: const EdgeInsets.symmetric(
                             vertical: 8.0,
                             horizontal: 12.0,
                           ),
-                          child: widget,
+                          child: child,
                         ),
                       )
                       .toList(),
