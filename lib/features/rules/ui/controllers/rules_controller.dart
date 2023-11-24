@@ -104,6 +104,12 @@ class RulesController with ChangeNotifier {
 
   ForumTags get tag => ForumTags.values[_favoritesTagIndex];
 
+  // // // // // //
+
+  Future<void> addRulesToFavorites({String? singleRule}) async =>
+      await firebase.addFavorite(section!
+          .mergeChoosenRules(singleRule != null ? [singleRule] : choosenRules));
+
   void sendToFourpda(int favoriteIndex) {
     const client = Constants.fourpdaClientPackageName;
     final rulesWithTag = _favorites[favoriteIndex].wrapWithTag(tag);
@@ -116,12 +122,6 @@ class RulesController with ChangeNotifier {
       ),
     );
   }
-
-  Future<void> addRulesToFavorites({String? singleRule}) async =>
-      await firebase.addFavorite(
-        section!.combineChoosenRulesToString(
-            singleRule != null ? [singleRule] : choosenRules),
-      );
 }
 
 class RulesProvider extends InheritedNotifier {

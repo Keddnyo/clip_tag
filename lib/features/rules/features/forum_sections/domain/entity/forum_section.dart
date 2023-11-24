@@ -25,7 +25,7 @@ class ForumSection {
         ),
       );
 
-  String combineChoosenRulesToString(List<String> choosenRules) {
+  String mergeChoosenRules(List<String> choosenRules) {
     final buffer = StringBuffer();
 
     buffer.write('[b]Ознакомьтесь с [url="$rulesUrl"]');
