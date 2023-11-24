@@ -56,7 +56,9 @@ class _RulesScreenState extends State<RulesScreen> {
             : null,
         title: Text(
           _showForumSections && controller.section != null
-              ? controller.section!.title
+              ? controller.choosenRules.isNotEmpty
+                  ? 'Множественный выбор'
+                  : controller.section!.title
               : Constants.appName,
         ),
         actions: [
@@ -133,7 +135,7 @@ class _RulesScreenState extends State<RulesScreen> {
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.bookmark, size: 64.0),
+                          Icon(Icons.bookmark_add, size: 64.0),
                           Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Text(
@@ -183,7 +185,7 @@ class _RulesScreenState extends State<RulesScreen> {
           _showForumSections && controller.choosenRules.isNotEmpty
               ? FloatingActionButton.extended(
                   onPressed: () => addRulesToFavorites(controller.choosenRules),
-                  icon: const Icon(Icons.bookmark),
+                  icon: const Icon(Icons.bookmark_add),
                   label: Text('Добавить (${controller.choosenRules.length})'),
                 )
               : null,
@@ -231,7 +233,27 @@ class _RulesScreenState extends State<RulesScreen> {
                 padding: EdgeInsets.zero,
                 children: [
                   const DrawerHeader(
-                    child: Center(child: Text(Constants.appName)),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            Constants.appName,
+                            style: TextStyle(
+                              fontSize: 42.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Created by Keddnyo',
+                            style: TextStyle(
+                              fontSize: 10.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   ListTile(
                     title: Text(firebase.username!),
@@ -240,7 +262,19 @@ class _RulesScreenState extends State<RulesScreen> {
                       onPressed: firebase.signOut,
                       icon: const Icon(Icons.logout),
                     ),
-                  )
+                  ),
+                  const Divider(),
+                  AboutListTile(
+                    icon: const Icon(Icons.info_outline),
+                    applicationVersion: 'Агрегатор правил 4PDA',
+                    applicationIcon: Image.asset(
+                      'lib/core/assets/app_icon.png',
+                      width: 72.0,
+                      height: 72.0,
+                    ),
+                    applicationLegalese: Constants.applicationLegalese,
+                    child: const Text('О приложении'),
+                  ),
                 ],
               ),
             ),
