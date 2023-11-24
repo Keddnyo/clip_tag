@@ -116,6 +116,12 @@ class RulesController with ChangeNotifier {
       ),
     );
   }
+
+  Future<void> addRulesToFavorites({String? singleRule}) async =>
+      await firebase.addFavorite(
+        section!.combineChoosenRulesToString(
+            singleRule != null ? [singleRule] : choosenRules),
+      );
 }
 
 class RulesProvider extends InheritedNotifier {

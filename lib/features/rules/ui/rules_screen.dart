@@ -32,24 +32,15 @@ class _RulesScreenState extends State<RulesScreen> {
 
     final sectionsScroller = ScrollController();
 
-    void addRulesToFavorites(List<String> rules) => firebase
-            .addFavorite(controller.section!.combineChoosenRulesToString(rules))
-            .then(
-          (_) {
-            _switchForumSections();
-            if (controller.choosenRules.isNotEmpty) {
-              controller.deselectAllRules();
-            }
-            showSnackbar(
-              context: context,
-              message: 'Тег добавлен',
-            );
-          },
-        ).catchError((error) {
-          showSnackbar(
-            context: context,
-            message: 'Не удалось добавить тег',
-          );
+    void addRulesToFavorites([String? rule]) =>
+        controller.addRulesToFavorites(singleRule: rule).then((_) {
+          if (controller.choosenRules.isNotEmpty) {
+            controller.deselectAllRules();
+          }
+          _switchForumSections();
+          showSnackbar(context: context, message: 'Тег добавлен');
+        }).catchError((error) {
+          showSnackbar(context: context, message: 'Не удалось добавить тег');
         });
 
     return Scaffold(
@@ -78,9 +69,7 @@ class _RulesScreenState extends State<RulesScreen> {
                 if (controller.choosenRules.isEmpty)
                   IconButton(
                     onPressed: _switchForumSections,
-                    icon: Icon(
-                      _showForumSections ? Icons.close : Icons.add,
-                    ),
+                    icon: Icon(_showForumSections ? Icons.close : Icons.add),
                   ),
               ],
         shadowColor: Colors.black,
@@ -120,7 +109,7 @@ class _RulesScreenState extends State<RulesScreen> {
                                       ? controller.choosenRules.contains(rule)
                                           ? controller.deselectRule(rule)
                                           : controller.selectRule(rule)
-                                      : addRulesToFavorites([rule]),
+                                      : addRulesToFavorites(rule),
                               onLongPress: () => !firebase.isUserAnonymous &&
                                       controller.choosenRules.isEmpty
                                   ? controller.selectRule(rule)
@@ -193,7 +182,7 @@ class _RulesScreenState extends State<RulesScreen> {
       floatingActionButton:
           _showForumSections && controller.choosenRules.isNotEmpty
               ? FloatingActionButton.extended(
-                  onPressed: () => addRulesToFavorites(controller.choosenRules),
+                  onPressed: addRulesToFavorites,
                   icon: const Icon(Icons.bookmark_add),
                   label: Text('Добавить (${controller.choosenRules.length})'),
                 )
