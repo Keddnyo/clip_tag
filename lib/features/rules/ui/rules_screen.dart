@@ -20,8 +20,8 @@ class RulesScreen extends StatefulWidget {
 
 class _RulesScreenState extends State<RulesScreen> {
   late bool _showForumSections = false;
-  void _switchForumSections() {
-    setState(() => _showForumSections = !_showForumSections);
+  void _switchForumSections([bool? condition]) {
+    setState(() => _showForumSections = condition ?? !_showForumSections);
   }
 
   @override
@@ -30,6 +30,10 @@ class _RulesScreenState extends State<RulesScreen> {
     final controller = RulesProvider.of(context);
 
     final sectionsScroller = ScrollController();
+
+    if (firebase.isUserAnonymous) {
+      _switchForumSections(true);
+    }
 
     void addRulesToFavorites([String? rule]) =>
         controller.addRulesToFavorites(singleRule: rule).then((_) {
@@ -74,7 +78,7 @@ class _RulesScreenState extends State<RulesScreen> {
         shadowColor: Colors.black,
         centerTitle: false,
       ),
-      body: firebase.isUserAnonymous || _showForumSections
+      body: _showForumSections
           ? controller.section == null
               ? const LoadingCircle()
               : ScrollConfiguration(
@@ -224,58 +228,56 @@ class _RulesScreenState extends State<RulesScreen> {
                   ],
                 )
               : null
-          : !firebase.isUserAnonymous
-              ? Drawer(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      const DrawerHeader(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                Constants.appName,
-                                style: TextStyle(
-                                  fontSize: 42.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Created by Keddnyo',
-                                style: TextStyle(
-                                  fontSize: 10.0,
-                                ),
-                              ),
-                            ],
+          : Drawer(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  const DrawerHeader(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            Constants.appName,
+                            style: TextStyle(
+                              fontSize: 42.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                          Text(
+                            'Created by Keddnyo',
+                            style: TextStyle(
+                              fontSize: 10.0,
+                            ),
+                          ),
+                        ],
                       ),
-                      ListTile(
-                        title: Text(firebase.username!),
-                        subtitle: Text(firebase.userEmail!),
-                        trailing: IconButton(
-                          onPressed: firebase.signOut,
-                          icon: const Icon(Icons.logout),
-                        ),
-                      ),
-                      const Divider(),
-                      AboutListTile(
-                        icon: const Icon(Icons.info_outline),
-                        applicationVersion: 'Агрегатор правил 4PDA',
-                        applicationIcon: Image.asset(
-                          'lib/core/assets/app_icon.png',
-                          width: 72.0,
-                          height: 72.0,
-                        ),
-                        applicationLegalese: Constants.applicationLegalese,
-                        child: const Text('О приложении'),
-                      ),
-                    ],
+                    ),
                   ),
-                )
-              : null,
+                  ListTile(
+                    title: Text(firebase.username!),
+                    subtitle: Text(firebase.userEmail!),
+                    trailing: IconButton(
+                      onPressed: firebase.signOut,
+                      icon: const Icon(Icons.logout),
+                    ),
+                  ),
+                  const Divider(),
+                  AboutListTile(
+                    icon: const Icon(Icons.info_outline),
+                    applicationVersion: 'Агрегатор правил 4PDA',
+                    applicationIcon: Image.asset(
+                      'lib/core/assets/app_icon.png',
+                      width: 72.0,
+                      height: 72.0,
+                    ),
+                    applicationLegalese: Constants.applicationLegalese,
+                    child: const Text('О приложении'),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }
