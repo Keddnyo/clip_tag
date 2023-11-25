@@ -9,5 +9,6 @@ String decodeFirebaseAuthErrorCode(String code) =>
       'too-many-requests': 'Повторите попытку позже',
       'user-disabled': 'Аккаунт заблокирован',
       'network-request-failed': 'Ошибка подключения к сети',
+      'operation-not-allowed': 'Недопустимое действие',
     }[code] ??
     code;
