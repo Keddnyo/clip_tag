@@ -42,8 +42,6 @@ class _RulesScreenState extends State<RulesScreen> {
           }
           _switchForumSections();
           showSnackbar(context: context, message: 'Тег добавлен');
-        }).catchError((error) {
-          showSnackbar(context: context, message: 'Не удалось добавить тег');
         });
 
     return Scaffold(
