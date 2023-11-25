@@ -35,7 +35,7 @@ class FirebaseController with ChangeNotifier {
   String? get userEmail => _user?.email;
   bool get isEmailVerified => _user?.emailVerified == true;
 
-  void signInAnonymously() => _auth.signInAnonymously();
+  Future<void> signInAnonymously() async => await _auth.signInAnonymously();
 
   Future<void> signIn({
     required String email,

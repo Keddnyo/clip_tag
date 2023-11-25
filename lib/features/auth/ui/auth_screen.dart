@@ -41,6 +41,15 @@ class AuthScreen extends StatelessWidget {
       );
     }
 
+    void signInAsGuest() => auth.signInAsGuest().catchError(
+          (error) => showSnackbar(
+            context: context,
+            message: error is FirebaseAuthException
+                ? decodeFirebaseAuthErrorCode(error.code)
+                : error.toString(),
+          ),
+        );
+
     return Scaffold(
       appBar: AppBar(
         leading: !auth.isSignIn
@@ -173,7 +182,7 @@ class AuthScreen extends StatelessWidget {
                       ),
                     if (auth.isSignIn)
                       TextButton.icon(
-                        onPressed: auth.signInAnonymously,
+                        onPressed: signInAsGuest,
                         icon: const Icon(Icons.person_search),
                         label: const Text('Продолжить как гость'),
                       ),
