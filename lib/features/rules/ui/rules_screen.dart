@@ -195,7 +195,7 @@ class _RulesScreenState extends State<RulesScreen> {
                       final favorite = controller.favorites[index];
 
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(12.0),
                         child: Dismissible(
                           key: ValueKey(favorite.reference),
                           background: Container(
