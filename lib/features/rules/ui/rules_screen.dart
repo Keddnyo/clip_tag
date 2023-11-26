@@ -109,6 +109,15 @@ class _RulesScreenState extends State<RulesScreen> {
                   ),
                 ]
               : [
+                  if (!_showForumSections && controller.favorites.isNotEmpty)
+                    IconButton(
+                      onPressed: firebase.switchTagVisibility,
+                      icon: Icon(
+                        firebase.isTagVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                    ),
                   if (controller.choosenRules.isEmpty)
                     IconButton(
                       onPressed: _switchForumSections,
@@ -212,6 +221,7 @@ class _RulesScreenState extends State<RulesScreen> {
                             child: ForumTag(
                               content: favorite.content,
                               tag: controller.tag,
+                              isTagVisible: firebase.isTagVisible,
                             ),
                           ),
                         ),

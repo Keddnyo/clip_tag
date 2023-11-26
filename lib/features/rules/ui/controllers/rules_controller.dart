@@ -108,14 +108,16 @@ class RulesController with ChangeNotifier {
 
   void sendToFourpda(int favoriteIndex) {
     const client = Constants.fourpdaClientPackageName;
-    final rulesWithTag = _favorites[favoriteIndex].wrapWithTag(tag);
 
-    copyToClipboard(rulesWithTag).then(
-      (_) => DeviceApps.isAppInstalled(client).then(
-        (isInstalled) => isInstalled
-            ? DeviceApps.openApp(client)
-            : openUrl(Constants.fourpdaDefaultUrl),
-      ),
+    var content = _favorites[favoriteIndex].content;
+    if (firebase.isTagVisible) {
+      content = _favorites[favoriteIndex].wrapWithTag(tag);
+    }
+
+    copyToClipboard(content).then(
+      (_) => DeviceApps.isAppInstalled(client).then((isInstalled) => isInstalled
+          ? DeviceApps.openApp(client)
+          : openUrl(Constants.fourpdaDefaultUrl)),
     );
   }
 }

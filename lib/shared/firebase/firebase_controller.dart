@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/rules/features/favorites/data/model/favorite_model.dart';
+import '../constants.dart';
 
 class FirebaseController with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
@@ -18,7 +19,8 @@ class FirebaseController with ChangeNotifier {
         if (user != null) {
           _userData?.snapshots().listen((user) {
             final userData = user.data();
-            _setUserModerator(userData?['isModerator'] ?? false);
+            _setTagVisibility(userData?[Constants.isTagVisibleKey]);
+            _setUserModerator(userData?[Constants.isUserModeratorKey]);
           });
         }
       },
@@ -53,10 +55,10 @@ class FirebaseController with ChangeNotifier {
           .then((userCredential) => userCredential.user
               ?.updateDisplayName(username)
               .then((_) => _userData?.set({
-                    'createdAt': DateTime.now(),
+                    Constants.isUserModeratorKey: false,
                     'email': email,
-                    'isModerator': false,
                     'username': username,
+                    'createdAt': DateTime.now(),
                   })));
 
   void sendEmailVerification() => _user?.sendEmailVerification();
@@ -65,7 +67,8 @@ class FirebaseController with ChangeNotifier {
       ? _user?.delete()
       : _auth.signOut().then((_) {
           if (_isUserModerator == true) {
-            _setUserModerator(false);
+            _setTagVisibility(); // Reset to default value (true)
+            _setUserModerator(); // Reset to default value (false)
           }
         });
 
@@ -88,10 +91,23 @@ class FirebaseController with ChangeNotifier {
         FavoriteModel.toMap(content: favorite, createdAt: DateTime.now()),
       );
 
+  bool _isTagVisible = true;
+  bool get isTagVisible => _isTagVisible;
+  void _setTagVisibility([bool? isTagVisible]) {
+    _isTagVisible = isTagVisible ?? true;
+    notifyListeners();
+  }
+
+  void switchTagVisibility() async {
+    _setTagVisibility(!_isTagVisible);
+    // Set cloud value after setting local value for stable offline working
+    await _userData?.update({Constants.isTagVisibleKey: _isTagVisible});
+  }
+
   bool _isUserModerator = false;
   bool get isUserModerator => _isUserModerator;
-  void _setUserModerator(bool isModerator) {
-    _isUserModerator = isModerator;
+  void _setUserModerator([bool? isModerator]) {
+    _isUserModerator = isModerator ?? false;
     notifyListeners();
   }
 }
