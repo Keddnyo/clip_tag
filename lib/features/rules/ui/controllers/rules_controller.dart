@@ -19,9 +19,7 @@ class RulesController with ChangeNotifier {
       (sectionQuery) => _setSections(
         sectionQuery.docs.map(
           (sectionSnapshot) => ForumSection.fromModel(
-            ForumSectionModel.fromMap(
-              sectionSnapshot.data(),
-            ),
+            ForumSectionModel.fromMap(sectionSnapshot.data()),
           ),
         ),
       ),
@@ -31,9 +29,7 @@ class RulesController with ChangeNotifier {
       (favoritesSnapshot) => _setFavorites(
         favoritesSnapshot.docs.map(
           (favoriteSnapshot) => Favorite.fromModel(
-            FavoriteModel.fromMap(
-              favoriteSnapshot.data(),
-            ),
+            FavoriteModel.fromMap(favoriteSnapshot.data()),
             reference: favoriteSnapshot.reference,
           ),
         ),
