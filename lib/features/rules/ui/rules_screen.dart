@@ -32,21 +32,29 @@ class _RulesScreenState extends State<RulesScreen> {
     final firebase = FirebaseProvider.of(context);
     final controller = RulesProvider.of(context);
 
-    final favoriteScrollController = ScrollController();
     final sectionsScrollController = ScrollController();
 
     if (firebase.isUserAnonymous) {
-      _switchForumSections(true); // Disables access to favorites for guest mode
+      // Disables access to favorites for guest mode
+      _switchForumSections(true);
     }
 
-    void addRulesToFavorites([String? rule]) =>
-        controller.addRulesToFavorites(singleRule: rule).then((_) {
+    void addRulesToFavorites([String? rule]) {
+      final newFavorite = controller.section!
+          .mergeChoosenRules(rule != null ? [rule] : controller.choosenRules);
+
+      if (firebase.favorites.contains(newFavorite)) {
+        showSnackbar(context: context, message: 'Тег уже существует');
+      } else {
+        firebase.addToFavorites(newFavorite).then((_) {
           if (controller.choosenRules.isNotEmpty) {
             controller.deselectAllRules();
           }
-          _switchForumSections();
           showSnackbar(context: context, message: 'Тег добавлен');
+          _switchForumSections();
         });
+      }
+    }
 
     return WillPopScope(
       onWillPop: () async {
@@ -71,15 +79,6 @@ class _RulesScreenState extends State<RulesScreen> {
 
         if (!firebase.isUserAnonymous && _showForumSections) {
           _switchForumSections();
-          return false;
-        }
-
-        if (favoriteScrollController.offset > 0) {
-          favoriteScrollController.animateTo(
-            0,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.linear,
-          );
           return false;
         }
 
@@ -109,7 +108,7 @@ class _RulesScreenState extends State<RulesScreen> {
                   ),
                 ]
               : [
-                  if (!_showForumSections && controller.favorites.isNotEmpty)
+                  if (!_showForumSections && firebase.favorites.isNotEmpty)
                     IconButton(
                       onPressed: firebase.switchTagVisibility,
                       icon: Icon(
@@ -172,7 +171,7 @@ class _RulesScreenState extends State<RulesScreen> {
                       itemCount: controller.section!.categories.length,
                     ),
                   )
-            : controller.favorites.isEmpty
+            : firebase.favorites.isEmpty
                 ? const Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.max,
@@ -182,52 +181,59 @@ class _RulesScreenState extends State<RulesScreen> {
                         Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(
-                            'Добавьте теги в список',
+                            'Добавьте правила в список',
                             style: TextStyle(fontSize: 18.0),
                           ),
                         ),
                       ],
                     ),
                   )
-                : ListView.builder(
-                    controller: favoriteScrollController,
+                : ReorderableListView.builder(
                     itemBuilder: (context, index) {
-                      final favorite = controller.favorites[index];
+                      final favorite = firebase.favorites[index];
 
-                      return Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Dismissible(
-                          key: ValueKey(favorite.reference),
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            color: getColorScheme(context).error,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: Icon(
-                                Icons.delete,
-                                color: getColorScheme(context).onError,
-                              ),
-                            ),
-                          ),
-                          onDismissed: (_) => favorite.reference.delete().then(
-                                (value) => showSnackbar(
-                                  context: context,
-                                  message: 'Тег удалён',
+                      return ReorderableDelayedDragStartListener(
+                        key: ValueKey(favorite),
+                        index: index,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Dismissible(
+                            key: ValueKey(favorite),
+                            background: Container(
+                              alignment: Alignment.centerRight,
+                              color: getColorScheme(context).error,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 16.0),
+                                child: Icon(
+                                  Icons.delete,
+                                  color: getColorScheme(context).onError,
                                 ),
                               ),
-                          direction: DismissDirection.endToStart,
-                          child: InkWell(
-                            onTap: () => controller.sendToFourpda(index),
-                            child: ForumTag(
-                              content: favorite.content,
-                              tag: controller.tag,
-                              isTagVisible: firebase.isTagVisible,
+                            ),
+                            onDismissed: (_) =>
+                                firebase.removeFromFavorites(index).then(
+                                      (value) => showSnackbar(
+                                        context: context,
+                                        message: 'Тег удалён',
+                                      ),
+                                    ),
+                            direction: DismissDirection.endToStart,
+                            child: InkWell(
+                              onTap: () => controller.sendToFourpda(index),
+                              child: ForumTag(
+                                content: favorite,
+                                tag: controller.tag,
+                                isTagVisible: firebase.isTagVisible,
+                              ),
                             ),
                           ),
                         ),
                       );
                     },
-                    itemCount: controller.favorites.length,
+                    itemCount: firebase.favorites.length,
+                    onReorder: (oldIndex, newIndex) => firebase.reorderFavorite(
+                        oldIndex: oldIndex, newIndex: newIndex),
+                    buildDefaultDragHandles: false,
                   ),
         floatingActionButton:
             _showForumSections && controller.choosenRules.isNotEmpty
@@ -239,7 +245,8 @@ class _RulesScreenState extends State<RulesScreen> {
                 : null,
         bottomNavigationBar: !_showForumSections &&
                 firebase.isUserModerator &&
-                controller.favorites.isNotEmpty
+                firebase.favorites.isNotEmpty &&
+                firebase.isTagVisible
             ? NavigationBar(
                 selectedIndex: controller.favoritesTagIndex,
                 destinations: ForumTags.values

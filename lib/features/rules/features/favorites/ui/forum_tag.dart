@@ -23,7 +23,21 @@ class ForumTag extends StatelessWidget {
 
     const margin = EdgeInsets.all(4.0);
 
-    final bbcodeContent = BBCodeRenderer(content);
+    final bbcodeContent = Flexible(
+      fit: FlexFit.tight,
+      child: Container(
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isTagVisible ? background : Colors.black12,
+          ),
+        ),
+        child: Padding(
+          padding: margin,
+          child: BBCodeRenderer(content),
+        ),
+      ),
+    );
 
     return isTagVisible
         ? IntrinsicHeight(
@@ -41,24 +55,14 @@ class ForumTag extends StatelessWidget {
                       child: Text(
                         tag.leadingSymbol,
                         style: const TextStyle(
-                            color: Colors.white, fontSize: 26.0),
+                          color: Colors.white,
+                          fontSize: 26.0,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: background),
-                    ),
-                    child: Padding(
-                      padding: margin,
-                      child: bbcodeContent,
-                    ),
-                  ),
-                ),
+                bbcodeContent,
               ],
             ),
           )

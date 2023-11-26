@@ -5,11 +5,10 @@ import '../../../../shared/constants.dart';
 import '../../../../shared/firebase/firebase_controller.dart';
 import '../../../../utils/copy_to_clipboard.dart';
 import '../../../../utils/open_url.dart';
-import '../../features/favorites/data/model/favorite_model.dart';
-import '../../features/favorites/domain/entity/favorite.dart';
 import '../../features/favorites/domain/entity/forum_tags.dart';
 import '../../features/forum_sections/data/model/forum_section_model.dart';
 import '../../features/forum_sections/domain/entity/forum_section.dart';
+import '../../utils/wrap_text_with_tag.dart';
 
 class RulesController with ChangeNotifier {
   final FirebaseController firebase;
@@ -20,17 +19,6 @@ class RulesController with ChangeNotifier {
         sectionQuery.docs.map(
           (sectionSnapshot) => ForumSection.fromModel(
             ForumSectionModel.fromMap(sectionSnapshot.data()),
-          ),
-        ),
-      ),
-    );
-
-    firebase.favorites?.listen(
-      (favoritesSnapshot) => _setFavorites(
-        favoritesSnapshot.docs.map(
-          (favoriteSnapshot) => Favorite.fromModel(
-            FavoriteModel.fromMap(favoriteSnapshot.data()),
-            reference: favoriteSnapshot.reference,
           ),
         ),
       ),
@@ -81,16 +69,6 @@ class RulesController with ChangeNotifier {
 
   // // // // // //
 
-  final _favorites = <Favorite>[];
-  List<Favorite> get favorites => _favorites;
-  void _setFavorites(Iterable<Favorite> favorites) {
-    if (_favorites.isNotEmpty) {
-      _favorites.clear();
-    }
-    _favorites.addAll(favorites);
-    notifyListeners();
-  }
-
   int _favoritesTagIndex = 0;
   int get favoritesTagIndex => _favoritesTagIndex;
   void setFavoritesTagIndex(int index) {
@@ -102,22 +80,18 @@ class RulesController with ChangeNotifier {
 
   // // // // // //
 
-  Future<void> addRulesToFavorites({String? singleRule}) async =>
-      await firebase.addFavorite(section!
-          .mergeChoosenRules(singleRule != null ? [singleRule] : choosenRules));
-
   void sendToFourpda(int favoriteIndex) {
-    const client = Constants.fourpdaClientPackageName;
+    final favorite = firebase.favorites[favoriteIndex];
 
-    var content = _favorites[favoriteIndex].content;
-    if (firebase.isTagVisible) {
-      content = _favorites[favoriteIndex].wrapWithTag(tag);
-    }
+    const fourPDAclient = Constants.fourpdaClientPackageName;
 
-    copyToClipboard(content).then(
-      (_) => DeviceApps.isAppInstalled(client).then((isInstalled) => isInstalled
-          ? DeviceApps.openApp(client)
-          : openUrl(Constants.fourpdaDefaultUrl)),
+    copyToClipboard(
+      firebase.isTagVisible ? wrapTextWithTag(favorite, tag: tag) : favorite,
+    ).then(
+      (_) => DeviceApps.isAppInstalled(fourPDAclient).then((isInstalled) =>
+          isInstalled
+              ? DeviceApps.openApp(fourPDAclient)
+              : openUrl(Constants.fourpdaDefaultUrl)),
     );
   }
 }

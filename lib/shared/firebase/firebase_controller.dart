@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../features/rules/features/favorites/data/model/favorite_model.dart';
 import '../constants.dart';
 
 class FirebaseController with ChangeNotifier {
@@ -21,6 +20,7 @@ class FirebaseController with ChangeNotifier {
             final userData = user.data();
             _setTagVisibility(userData?[Constants.isTagVisibleKey]);
             _setUserModerator(userData?[Constants.isUserModeratorKey]);
+            _setFavorites(userData?['favorites']);
           });
         }
       },
@@ -81,15 +81,43 @@ class FirebaseController with ChangeNotifier {
   DocumentReference<Map<String, dynamic>>? get _userData =>
       _firebase.collection('users').doc(_userID);
 
-  CollectionReference<Map<String, dynamic>>? get _favorites =>
-      _userData?.collection('favorites');
+  final List<String> _favorites = [];
+  List<String> get favorites => _favorites;
+  void _setFavorites([List<dynamic>? favorites]) {
+    if (_favorites.isNotEmpty) {
+      _favorites.clear();
+    }
+    _favorites.addAll(List.from(favorites ?? []));
+  }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>>? get favorites =>
-      _favorites?.orderBy('createdAt', descending: true).snapshots();
+  Future<void> _updateFavorites(List<String> favorites) async =>
+      await _userData?.update({'favorites': favorites});
 
-  Future<void> addFavorite(String favorite) async => await _favorites?.add(
-        FavoriteModel.toMap(content: favorite, createdAt: DateTime.now()),
-      );
+  Future<void> addToFavorites(String favorite) async {
+    final newFavorites = favorites;
+    newFavorites.add(favorite);
+    await _updateFavorites(newFavorites);
+  }
+
+  Future<void> removeFromFavorites(int index) async {
+    final newFavorites = favorites;
+    newFavorites.removeAt(index);
+    await _updateFavorites(newFavorites);
+  }
+
+  Future<void> reorderFavorite({
+    required int oldIndex,
+    required int newIndex,
+  }) async {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+
+    final newFavorites = favorites;
+    final favorite = newFavorites.removeAt(oldIndex);
+    newFavorites.insert(newIndex, favorite);
+    await _updateFavorites(newFavorites);
+  }
 
   bool _isTagVisible = true;
   bool get isTagVisible => _isTagVisible;
