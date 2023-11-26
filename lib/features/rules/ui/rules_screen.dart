@@ -36,7 +36,7 @@ class _RulesScreenState extends State<RulesScreen> {
     final sectionsScrollController = ScrollController();
 
     if (firebase.isUserAnonymous) {
-      _switchForumSections(true);
+      _switchForumSections(true); // Disables access to favorites for guest mode
     }
 
     void addRulesToFavorites([String? rule]) =>
