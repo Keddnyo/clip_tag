@@ -82,7 +82,7 @@ class FirebaseController with ChangeNotifier {
       _userData?.collection('favorites');
 
   Stream<QuerySnapshot<Map<String, dynamic>>>? get favorites =>
-      _favorites?.orderBy('createdAt').snapshots();
+      _favorites?.orderBy('createdAt', descending: true).snapshots();
 
   Future<void> addFavorite(String favorite) async => await _favorites?.add(
         FavoriteModel.toMap(content: favorite, createdAt: DateTime.now()),

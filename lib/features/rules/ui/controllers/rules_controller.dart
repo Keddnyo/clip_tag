@@ -29,7 +29,7 @@ class RulesController with ChangeNotifier {
 
     firebase.favorites?.listen(
       (favoritesSnapshot) => _setFavorites(
-        favoritesSnapshot.docs.reversed.map(
+        favoritesSnapshot.docs.map(
           (favoriteSnapshot) => Favorite.fromModel(
             FavoriteModel.fromMap(
               favoriteSnapshot.data(),
