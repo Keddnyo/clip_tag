@@ -231,8 +231,14 @@ class _RulesScreenState extends State<RulesScreen> {
                       );
                     },
                     itemCount: firebase.favorites.length,
-                    onReorder: (oldIndex, newIndex) => firebase.reorderFavorite(
-                        oldIndex: oldIndex, newIndex: newIndex),
+                    onReorder: (oldIndex, newIndex) => firebase
+                        .reorderFavorite(oldIndex: oldIndex, newIndex: newIndex)
+                        .then(
+                          (_) => showSnackbar(
+                            context: context,
+                            message: 'Сортировка сохранена',
+                          ),
+                        ),
                     buildDefaultDragHandles: false,
                   ),
         floatingActionButton:
