@@ -1,4 +1,4 @@
-import 'package:clip_tag/shared/ui/show_snackbar.dart';
+import '../../../shared/ui/show_snackbar.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
