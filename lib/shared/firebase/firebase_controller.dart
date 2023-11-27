@@ -94,7 +94,7 @@ class FirebaseController with ChangeNotifier {
 
   Future<void> addToFavorites(String favorite) async {
     final newFavorites = favorites;
-    newFavorites.add(favorite);
+    newFavorites.insert(0, favorite);
     await _updateFavorites(newFavorites);
   }
 

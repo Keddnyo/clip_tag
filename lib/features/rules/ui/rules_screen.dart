@@ -45,7 +45,7 @@ class _RulesScreenState extends State<RulesScreen> {
           _switchForumSections();
           showSnackbar(
             context: context,
-            message: 'Добавлено в конец списка',
+            message: 'Добавлено в начало списка',
           );
         },
         onFailed: () => showSnackbar(
@@ -214,8 +214,12 @@ class _RulesScreenState extends State<RulesScreen> {
                                 ),
                               ),
                             ),
-                            onDismissed: (_) =>
-                                firebase.removeFromFavorites(index),
+                            onDismissed: (_) => firebase
+                                .removeFromFavorites(index)
+                                .then((_) => showSnackbar(
+                                      context: context,
+                                      message: 'Тег удалён',
+                                    )),
                             direction: DismissDirection.endToStart,
                             child: InkWell(
                               onTap: () => controller.sendToFourpda(favorite),
