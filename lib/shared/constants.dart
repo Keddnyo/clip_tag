@@ -3,7 +3,10 @@ class Constants {
   static const useMaterial3 = true;
 
   static const String isTagVisibleKey = 'isTagVisible';
+  static const bool isTagVisibleDefaultValue = true;
+
   static const String isUserModeratorKey = 'isModerator';
+  static const bool isUserModeratorDefaultValue = false;
 
   static const fourpdaClientPackageName = 'ru.fourpda.client';
   static const fourpdaDefaultUrl = 'https://4pda.to/forum/index.php?act=idx';

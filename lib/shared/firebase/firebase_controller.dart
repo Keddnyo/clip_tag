@@ -55,7 +55,10 @@ class FirebaseController with ChangeNotifier {
           .then((userCredential) => userCredential.user
               ?.updateDisplayName(username)
               .then((_) => _userData?.set({
-                    Constants.isUserModeratorKey: false,
+                    Constants.isUserModeratorKey:
+                        Constants.isUserModeratorDefaultValue,
+                    Constants.isTagVisibleKey:
+                        Constants.isTagVisibleDefaultValue,
                     'email': email,
                     'username': username,
                     'createdAt': DateTime.now(),
@@ -121,7 +124,7 @@ class FirebaseController with ChangeNotifier {
   bool _isTagVisible = true;
   bool get isTagVisible => _isTagVisible;
   void _setTagVisibility([bool? isTagVisible]) {
-    _isTagVisible = isTagVisible ?? true;
+    _isTagVisible = isTagVisible ?? Constants.isTagVisibleDefaultValue;
     notifyListeners();
   }
 
@@ -134,7 +137,7 @@ class FirebaseController with ChangeNotifier {
   bool _isUserModerator = false;
   bool get isUserModerator => _isUserModerator;
   void _setUserModerator([bool? isModerator]) {
-    _isUserModerator = isModerator ?? false;
+    _isUserModerator = isModerator ?? Constants.isUserModeratorDefaultValue;
     notifyListeners();
   }
 }
