@@ -23,20 +23,9 @@ class ForumTag extends StatelessWidget {
 
     const margin = EdgeInsets.all(4.0);
 
-    final bbcodeContent = Flexible(
-      fit: FlexFit.tight,
-      child: Container(
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isTagVisible ? background : Colors.black12,
-          ),
-        ),
-        child: Padding(
-          padding: margin,
-          child: BBCodeRenderer(content),
-        ),
-      ),
+    final bbcodeContent = Padding(
+      padding: margin,
+      child: BBCodeRenderer(content),
     );
 
     return isTagVisible
@@ -62,7 +51,18 @@ class ForumTag extends StatelessWidget {
                     ),
                   ),
                 ),
-                bbcodeContent,
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: isTagVisible ? background : Colors.black12,
+                      ),
+                    ),
+                    child: bbcodeContent,
+                  ),
+                ),
               ],
             ),
           )
