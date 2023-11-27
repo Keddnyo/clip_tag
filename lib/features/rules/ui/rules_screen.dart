@@ -46,19 +46,13 @@ class _RulesScreenState extends State<RulesScreen> {
           .mergeChoosenRules(rule != null ? [rule] : controller.choosenRules);
 
       if (firebase.favorites.contains(newFavorite)) {
-        showSnackbar(
-          context: context,
-          message: 'Тег уже сущесвтует',
-        );
+        showSnackbar(context: context, message: 'Тег уже сущесвтует');
       } else {
         firebase.addToFavorites(newFavorite).then((_) {
           if (controller.choosenRules.isNotEmpty) {
             controller.deselectAllRules();
           }
-          showSnackbar(
-            context: context,
-            message: 'Тег добавлен в список',
-          );
+          showSnackbar(context: context, message: 'Тег добавлен в список');
         });
       }
     }
