@@ -220,13 +220,12 @@ class _RulesScreenState extends State<RulesScreen> {
                                 ),
                               ),
                             ),
-                            onDismissed: (_) =>
-                                firebase.removeFromFavorites(index).then(
-                                      (value) => showSnackbar(
-                                        context: context,
-                                        message: 'Удаление завершено',
-                                      ),
-                                    ),
+                            onDismissed: (_) => firebase
+                                .removeFromFavorites(index)
+                                .then((value) => showSnackbar(
+                                      context: context,
+                                      message: 'Удаление завершено',
+                                    )),
                             direction: DismissDirection.endToStart,
                             child: InkWell(
                               onTap: () => controller.sendToFourpda(favorite),
