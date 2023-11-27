@@ -32,6 +32,7 @@ class _RulesScreenState extends State<RulesScreen> {
     final firebase = FirebaseProvider.of(context);
     final controller = RulesProvider.of(context);
 
+    final favoriteScrollController = ScrollController();
     final sectionsScrollController = ScrollController();
 
     if (firebase.isUserAnonymous) {
@@ -76,6 +77,14 @@ class _RulesScreenState extends State<RulesScreen> {
         if (controller.sectionIndex != 0) {
           controller.setSectionIndex(0);
           return false;
+        }
+
+        if (favoriteScrollController.offset > 0) {
+          favoriteScrollController.animateTo(
+            0,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.linear,
+          );
         }
 
         if (!firebase.isUserAnonymous && _showForumSections) {
@@ -241,6 +250,7 @@ class _RulesScreenState extends State<RulesScreen> {
                           ),
                         ),
                     buildDefaultDragHandles: false,
+                    scrollController: favoriteScrollController,
                   ),
         floatingActionButton:
             _showForumSections && controller.choosenRules.isNotEmpty
