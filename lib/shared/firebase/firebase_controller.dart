@@ -69,6 +69,7 @@ class FirebaseController with ChangeNotifier {
           if (_isUserModerator == true) {
             _setTagVisibility(); // Reset to default value (true)
             _setUserModerator(); // Reset to default value (false)
+            _setFavorites(); // Reset to default value (empty array)
           }
         });
 
@@ -95,7 +96,7 @@ class FirebaseController with ChangeNotifier {
 
   Future<void> addToFavorites(String favorite) async {
     final newFavorites = favorites;
-    newFavorites.insert(0, favorite);
+    newFavorites.add(favorite);
     await _updateFavorites(newFavorites);
   }
 
