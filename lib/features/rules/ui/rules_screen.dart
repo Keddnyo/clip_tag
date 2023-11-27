@@ -46,7 +46,7 @@ class _RulesScreenState extends State<RulesScreen> {
           }
           showSnackbar(
             context: context,
-            message: 'Добавлено в начало списка',
+            message: 'Тег добавлен',
           );
         },
         onFailed: () => showSnackbar(
@@ -139,9 +139,7 @@ class _RulesScreenState extends State<RulesScreen> {
                     ),
                     child: ListView.builder(
                       controller: sectionsScrollController,
-                      padding: controller.choosenRules.isNotEmpty
-                          ? const EdgeInsets.only(bottom: 96.0)
-                          : null,
+                      padding: const EdgeInsets.only(bottom: 96.0),
                       itemBuilder: (context, index) {
                         final category = controller.section!.categories[index];
 
