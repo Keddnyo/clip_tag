@@ -229,7 +229,7 @@ class _RulesScreenState extends State<RulesScreen> {
                                     ),
                             direction: DismissDirection.endToStart,
                             child: InkWell(
-                              onTap: () => controller.sendToFourpda(index),
+                              onTap: () => controller.sendToFourpda(favorite),
                               child: ForumTag(
                                 content: favorite,
                                 tag: controller.tag,

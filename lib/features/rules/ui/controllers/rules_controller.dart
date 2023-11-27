@@ -80,9 +80,7 @@ class RulesController with ChangeNotifier {
 
   // // // // // //
 
-  void sendToFourpda(int favoriteIndex) {
-    final favorite = firebase.favorites[favoriteIndex];
-
+  void sendToFourpda(String favorite) {
     const fourPDAclient = Constants.fourpdaClientPackageName;
 
     copyToClipboard(
