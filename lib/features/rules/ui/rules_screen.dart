@@ -104,15 +104,6 @@ class _RulesScreenState extends State<RulesScreen> {
                   ),
                 ]
               : [
-                  if (!_showForumSections && firebase.favorites.isNotEmpty)
-                    IconButton(
-                      onPressed: firebase.switchTagVisibility,
-                      icon: Icon(
-                        firebase.isTagVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                      ),
-                    ),
                   if (controller.choosenRules.isEmpty)
                     IconButton(
                       onPressed: _switchForumSections,
@@ -131,6 +122,7 @@ class _RulesScreenState extends State<RulesScreen> {
                     ),
                     child: ListView.builder(
                       controller: sectionsScrollController,
+                      padding: const EdgeInsets.only(bottom: 96.0),
                       itemBuilder: (context, index) {
                         final category = controller.section!.categories[index];
 
@@ -311,6 +303,21 @@ class _RulesScreenState extends State<RulesScreen> {
                         onPressed: firebase.signOut,
                         icon: const Icon(Icons.logout),
                       ),
+                    ),
+                    const Divider(),
+                    ListTile(
+                      leading: Icon(
+                        firebase.isTagVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      title: Text(
+                        firebase.isTagVisible ? 'Cкрыть теги' : 'Показать теги',
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                        firebase.switchTagVisibility();
+                      },
                     ),
                     const Divider(),
                     AboutListTile(

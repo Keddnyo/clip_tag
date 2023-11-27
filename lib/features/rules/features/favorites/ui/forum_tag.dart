@@ -23,49 +23,52 @@ class ForumTag extends StatelessWidget {
 
     const margin = EdgeInsets.all(4.0);
 
-    final bbcodeContent = Padding(
-      padding: margin,
-      child: BBCodeRenderer(content),
+    final bbcodeContent = Container(
+      alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isTagVisible ? background : Colors.grey,
+          width: isTagVisible ? 1.0 : 0.2,
+        ),
+      ),
+      child: Padding(
+        padding: margin,
+        child: BBCodeRenderer(content),
+      ),
     );
 
-    return isTagVisible
-        ? IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  color: background,
-                  width: 48.0,
-                  constraints: const BoxConstraints(minHeight: 48.0),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        tag.leadingSymbol,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 26.0,
-                        ),
-                      ),
-                    ),
+    if (!isTagVisible) {
+      return bbcodeContent;
+    }
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            color: background,
+            width: 48.0,
+            constraints: const BoxConstraints(minHeight: 48.0),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  tag.leadingSymbol,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 26.0,
                   ),
                 ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isTagVisible ? background : Colors.black12,
-                      ),
-                    ),
-                    child: bbcodeContent,
-                  ),
-                ),
-              ],
+              ),
             ),
-          )
-        : bbcodeContent;
+          ),
+          Flexible(
+            fit: FlexFit.tight,
+            child: bbcodeContent,
+          ),
+        ],
+      ),
+    );
   }
 }
