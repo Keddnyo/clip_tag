@@ -1,3 +1,4 @@
+import 'package:clip_tag/shared/ui/show_snackbar.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants.dart';
@@ -35,11 +36,23 @@ class _RulesScreenState extends State<RulesScreen> {
     final sectionsScrollController = ScrollController();
 
     void addToFavorites([String? rule]) {
-      _switchForumSections();
-      controller.addRulesToFavorites(rule);
-      if (controller.choosenRules.isNotEmpty) {
-        controller.choosenRules.clear();
-      }
+      controller.addRulesToFavorites(
+        rule: rule,
+        onSuccess: () {
+          if (controller.choosenRules.isNotEmpty) {
+            controller.choosenRules.clear();
+          }
+          _switchForumSections();
+          showSnackbar(
+            context: context,
+            message: 'Добавлено в конец списка',
+          );
+        },
+        onFailed: () => showSnackbar(
+          context: context,
+          message: 'Тег уже существует',
+        ),
+      );
     }
 
     // Disables access to favorites for guest mode

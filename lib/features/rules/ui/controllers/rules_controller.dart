@@ -80,7 +80,11 @@ class RulesController with ChangeNotifier {
 
   // // // // // //
 
-  void addRulesToFavorites([String? rule]) {
+  void addRulesToFavorites({
+    required String? rule,
+    required VoidCallback onSuccess,
+    required VoidCallback onFailed,
+  }) {
     final newFavorite =
         section!.mergeChoosenRules(rule != null ? [rule] : choosenRules);
 
@@ -89,7 +93,10 @@ class RulesController with ChangeNotifier {
         if (choosenRules.isNotEmpty) {
           deselectAllRules();
         }
+        onSuccess();
       });
+    } else {
+      onFailed();
     }
   }
 
