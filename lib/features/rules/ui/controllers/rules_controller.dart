@@ -80,18 +80,14 @@ class RulesController with ChangeNotifier {
 
   // // // // // //
 
-  void sendToFourpda(String favorite) {
-    const fourPDAclient = Constants.fourpdaClientPackageName;
-
-    copyToClipboard(
-      firebase.isTagVisible ? wrapTextWithTag(favorite, tag: tag) : favorite,
-    ).then(
-      (_) => DeviceApps.isAppInstalled(fourPDAclient).then((isInstalled) =>
-          isInstalled
-              ? DeviceApps.openApp(fourPDAclient)
-              : openUrl(Constants.fourpdaDefaultUrl)),
-    );
-  }
+  void sendToFourpda(String favorite) => copyToClipboard(
+        firebase.isTagVisible ? wrapTextWithTag(favorite, tag: tag) : favorite,
+      ).then(
+        (_) => DeviceApps.isAppInstalled(Constants.fourpdaClientPackageName)
+            .then((isInstalled) => isInstalled
+                ? DeviceApps.openApp(Constants.fourpdaClientPackageName)
+                : openUrl(Constants.fourpdaDefaultUrl)),
+      );
 }
 
 class RulesProvider extends InheritedNotifier {
