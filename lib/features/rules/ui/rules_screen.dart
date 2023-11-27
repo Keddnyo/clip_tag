@@ -36,13 +36,14 @@ class _RulesScreenState extends State<RulesScreen> {
     final sectionsScrollController = ScrollController();
 
     void addToFavorites([String? rule]) {
+      _switchForumSections();
+
       controller.addRulesToFavorites(
         rule: rule,
         onSuccess: () {
           if (controller.choosenRules.isNotEmpty) {
             controller.choosenRules.clear();
           }
-          _switchForumSections();
           showSnackbar(
             context: context,
             message: 'Добавлено в начало списка',
