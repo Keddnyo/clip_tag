@@ -66,11 +66,9 @@ class FirebaseController with ChangeNotifier {
   void signOut() => isUserAnonymous
       ? _user?.delete()
       : _auth.signOut().then((_) {
-          if (_isUserModerator == true) {
-            _setTagVisibility(); // Reset to default value (true)
-            _setUserModerator(); // Reset to default value (false)
-            _setFavorites(); // Reset to default value (empty array)
-          }
+          _setTagVisibility(); // Reset to default value (true)
+          _setUserModerator(); // Reset to default value (false)
+          _setFavorites(); // Reset to default value (empty array)
         });
 
   Future<void> resetPassword({required String email}) async =>
