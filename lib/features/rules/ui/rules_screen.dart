@@ -308,21 +308,28 @@ class _RulesScreenState extends State<RulesScreen> {
                       ),
                     ),
                     const Divider(),
-                    ListTile(
-                      leading: Icon(
-                        firebase.isTagVisible
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                    if (firebase.favorites.isNotEmpty)
+                      Column(
+                        children: [
+                          ListTile(
+                            leading: Icon(
+                              firebase.isTagVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                            ),
+                            title: Text(
+                              firebase.isTagVisible
+                                  ? 'Cкрыть теги'
+                                  : 'Показать теги',
+                            ),
+                            onTap: () {
+                              Navigator.pop(context);
+                              firebase.switchTagVisibility();
+                            },
+                          ),
+                          const Divider(),
+                        ],
                       ),
-                      title: Text(
-                        firebase.isTagVisible ? 'Cкрыть теги' : 'Показать теги',
-                      ),
-                      onTap: () {
-                        Navigator.pop(context);
-                        firebase.switchTagVisibility();
-                      },
-                    ),
-                    const Divider(),
                     AboutListTile(
                       icon: const Icon(Icons.info_outline),
                       applicationVersion: 'Агрегатор правил 4PDA',
