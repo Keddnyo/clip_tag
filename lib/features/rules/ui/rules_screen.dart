@@ -37,6 +37,9 @@ class _RulesScreenState extends State<RulesScreen> {
     void addToFavorites([String? rule]) {
       _switchForumSections();
       controller.addRulesToFavorites(rule);
+      if (controller.choosenRules.isNotEmpty) {
+        controller.choosenRules.clear();
+      }
     }
 
     // Disables access to favorites for guest mode
