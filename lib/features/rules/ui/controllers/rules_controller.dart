@@ -80,6 +80,19 @@ class RulesController with ChangeNotifier {
 
   // // // // // //
 
+  void addRulesToFavorites([String? rule]) {
+    final newFavorite =
+        section!.mergeChoosenRules(rule != null ? [rule] : choosenRules);
+
+    if (!firebase.favorites.contains(newFavorite)) {
+      firebase.addToFavorites(newFavorite).then((_) {
+        if (choosenRules.isNotEmpty) {
+          deselectAllRules();
+        }
+      });
+    }
+  }
+
   void sendToFourpda(String favorite) => copyToClipboard(
         firebase.isTagVisible ? wrapTextWithTag(favorite, tag: tag) : favorite,
       ).then(

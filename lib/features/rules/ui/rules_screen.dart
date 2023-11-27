@@ -35,27 +35,14 @@ class _RulesScreenState extends State<RulesScreen> {
     final favoriteScrollController = ScrollController();
     final sectionsScrollController = ScrollController();
 
+    void addToFavorites([String? rule]) {
+      _switchForumSections();
+      controller.addRulesToFavorites(rule);
+    }
+
     // Disables access to favorites for guest mode
     if (firebase.isUserAnonymous) {
       _switchForumSections(true);
-    }
-
-    void addRulesToFavorites([String? rule]) {
-      _switchForumSections();
-
-      final newFavorite = controller.section!
-          .mergeChoosenRules(rule != null ? [rule] : controller.choosenRules);
-
-      if (firebase.favorites.contains(newFavorite)) {
-        showSnackbar(context: context, message: 'Тег уже сущесвтует');
-      } else {
-        firebase.addToFavorites(newFavorite).then((_) {
-          if (controller.choosenRules.isNotEmpty) {
-            controller.deselectAllRules();
-          }
-          showSnackbar(context: context, message: 'Тег добавлен в список');
-        });
-      }
     }
 
     return WillPopScope(
@@ -164,7 +151,7 @@ class _RulesScreenState extends State<RulesScreen> {
                                         ? controller.choosenRules.contains(rule)
                                             ? controller.deselectRule(rule)
                                             : controller.selectRule(rule)
-                                        : addRulesToFavorites(rule)
+                                        : addToFavorites(rule)
                                     : null,
                                 onLongPress: !firebase.isUserAnonymous &&
                                         controller.choosenRules.isEmpty
@@ -240,21 +227,15 @@ class _RulesScreenState extends State<RulesScreen> {
                       );
                     },
                     itemCount: firebase.favorites.length,
-                    onReorder: (oldIndex, newIndex) => firebase
-                        .reorderFavorite(oldIndex: oldIndex, newIndex: newIndex)
-                        .then(
-                          (_) => showSnackbar(
-                            context: context,
-                            message: 'Сортировка сохранена',
-                          ),
-                        ),
+                    onReorder: (oldIndex, newIndex) => firebase.reorderFavorite(
+                        oldIndex: oldIndex, newIndex: newIndex),
                     buildDefaultDragHandles: false,
                     scrollController: favoriteScrollController,
                   ),
         floatingActionButton:
             _showForumSections && controller.choosenRules.isNotEmpty
                 ? FloatingActionButton.extended(
-                    onPressed: addRulesToFavorites,
+                    onPressed: addToFavorites,
                     icon: const Icon(Icons.bookmark_add),
                     label: Text('Добавить (${controller.choosenRules.length})'),
                   )
