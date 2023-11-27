@@ -266,12 +266,10 @@ class _RulesScreenState extends State<RulesScreen> {
             ? NavigationBar(
                 selectedIndex: controller.favoritesTagIndex,
                 destinations: ForumTags.values
-                    .map(
-                      (tag) => NavigationDestination(
-                        icon: Icon(tag.icon),
-                        label: tag.title,
-                      ),
-                    )
+                    .map((tag) => NavigationDestination(
+                          icon: Icon(tag.icon),
+                          label: tag.title,
+                        ))
                     .toList(),
                 onDestinationSelected: (index) =>
                     controller.setFavoritesTagIndex(index),
