@@ -21,8 +21,6 @@ class ForumTag extends StatelessWidget {
         ? tag.darkColor
         : tag.lightColor;
 
-    const margin = EdgeInsets.all(4.0);
-
     final bbcodeContent = Container(
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
@@ -32,7 +30,7 @@ class ForumTag extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: margin,
+        padding: EdgeInsets.all(isTagVisible ? 4.0 : 8.0),
         child: BBCodeRenderer(content),
       ),
     );
