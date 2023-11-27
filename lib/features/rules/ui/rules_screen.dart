@@ -40,18 +40,25 @@ class _RulesScreenState extends State<RulesScreen> {
     }
 
     void addRulesToFavorites([String? rule]) {
+      _switchForumSections();
+
       final newFavorite = controller.section!
           .mergeChoosenRules(rule != null ? [rule] : controller.choosenRules);
 
       if (firebase.favorites.contains(newFavorite)) {
-        showSnackbar(context: context, message: 'Тег уже существует');
+        showSnackbar(
+          context: context,
+          message: 'Тег уже сущесвтует',
+        );
       } else {
         firebase.addToFavorites(newFavorite).then((_) {
           if (controller.choosenRules.isNotEmpty) {
             controller.deselectAllRules();
           }
-          showSnackbar(context: context, message: 'Тег добавлен');
-          _switchForumSections();
+          showSnackbar(
+            context: context,
+            message: 'Тег добавлен в список',
+          );
         });
       }
     }
@@ -214,7 +221,7 @@ class _RulesScreenState extends State<RulesScreen> {
                                 firebase.removeFromFavorites(index).then(
                                       (value) => showSnackbar(
                                         context: context,
-                                        message: 'Тег удалён',
+                                        message: 'Удаление завершено',
                                       ),
                                     ),
                             direction: DismissDirection.endToStart,
