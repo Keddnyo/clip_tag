@@ -5,7 +5,6 @@ import '../../../shared/firebase/firebase_controller.dart';
 import '../../../shared/ui/bbcode_renderer.dart';
 import '../../../shared/ui/get_color_scheme.dart';
 import '../../../shared/ui/loading_circle.dart';
-import '../../../shared/ui/show_snackbar.dart';
 import '../features/favorites/domain/entity/forum_tags.dart';
 import '../features/favorites/ui/forum_tag.dart';
 import '../features/forum_sections/utils/get_forum_section_icon.dart';
@@ -207,12 +206,8 @@ class _RulesScreenState extends State<RulesScreen> {
                                 ),
                               ),
                             ),
-                            onDismissed: (_) => firebase
-                                .removeFromFavorites(index)
-                                .then((value) => showSnackbar(
-                                      context: context,
-                                      message: 'Удаление завершено',
-                                    )),
+                            onDismissed: (_) =>
+                                firebase.removeFromFavorites(index),
                             direction: DismissDirection.endToStart,
                             child: InkWell(
                               onTap: () => controller.sendToFourpda(favorite),
