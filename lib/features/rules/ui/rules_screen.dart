@@ -139,7 +139,9 @@ class _RulesScreenState extends State<RulesScreen> {
                     ),
                     child: ListView.builder(
                       controller: sectionsScrollController,
-                      padding: const EdgeInsets.only(bottom: 96.0),
+                      padding: controller.choosenRules.isNotEmpty
+                          ? const EdgeInsets.only(bottom: 96.0)
+                          : null,
                       itemBuilder: (context, index) {
                         final category = controller.section!.categories[index];
 
