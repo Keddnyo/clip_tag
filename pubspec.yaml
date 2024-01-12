@@ -1,10 +1,10 @@
 name: clip_tag
 description: 4PDA website rules aggregator
-publish_to: 'none'
-version: 4.0.0+7
+publish_to: "none"
+version: 4.0.1+8
 
 environment:
-  sdk: '>=3.1.5 <4.0.0'
+  sdk: ">=3.1.5 <4.0.0"
 
 dependencies:
   cloud_firestore: ^4.12.2
